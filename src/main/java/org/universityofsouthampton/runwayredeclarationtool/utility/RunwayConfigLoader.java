@@ -27,7 +27,7 @@ public class RunwayConfigLoader {
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            e.printStackTrace(); // Handle exceptions appropriately in your application
+            e.printStackTrace();
         }
 
         return runways;

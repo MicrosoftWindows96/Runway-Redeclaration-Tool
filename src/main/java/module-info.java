@@ -13,4 +13,8 @@ module org.universityofsouthampton.runwayredeclarationtool {
 
     opens org.universityofsouthampton.runwayredeclarationtool to javafx.fxml;
     exports org.universityofsouthampton.runwayredeclarationtool;
+    exports org.universityofsouthampton.runwayredeclarationtool.airport;
+    opens org.universityofsouthampton.runwayredeclarationtool.airport to javafx.fxml;
+    exports org.universityofsouthampton.runwayredeclarationtool.utility;
+    opens org.universityofsouthampton.runwayredeclarationtool.utility to javafx.fxml;
 }

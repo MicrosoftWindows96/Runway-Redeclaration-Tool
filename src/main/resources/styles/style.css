@@ -1,0 +1,37 @@
+/* resources/styles/style.css */
+.root {
+    -fx-background-color: #f0f0f0;
+}
+
+MenuBar {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+}
+
+Menu {
+    -fx-background-color: #333;
+}
+
+Menu .label {
+    -fx-text-fill: white; /* Set Menu text color */
+}
+
+MenuItem {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+}
+
+.title-label {
+    -fx-font-size: 24px;
+    -fx-text-fill: #333;
+}
+
+.action-button {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: #555;
+}

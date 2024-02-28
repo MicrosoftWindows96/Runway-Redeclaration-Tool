@@ -8,6 +8,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 public class HelloController {
 
@@ -21,13 +23,13 @@ public class HelloController {
     public void initialize() {
         // Initial title
         FontIcon titleIcon = new FontIcon(FontAwesomeSolid.PLANE);
-        titleIcon.setIconSize(24); // Adjust icon size as needed
+        titleIcon.setIconSize(24);
         titleLabel.setGraphic(titleIcon);
-        titleLabel.setText(" RunwayRedeclarationTool"); // Add a space for separation
+        titleLabel.setText(" RunwayRedeclarationTool");
 
         // Button w/ icon
         FontIcon actionIcon = new FontIcon(FontAwesomeSolid.MOUSE_POINTER);
-        actionIcon.setIconSize(16); // Adjust icon size as needed
+        actionIcon.setIconSize(16);
         actionButton.setGraphic(actionIcon);
         actionButton.setText(" Click Me!");
 
@@ -51,7 +53,26 @@ public class HelloController {
 
     @FXML
     private void handleAction() {
-        // Custom action for the button click
         System.out.println("Button clicked!");
+    }
+
+    @FXML
+    private TextField usernameField;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private void handleLogin() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        if ("admin".equals(username) && "password".equals(password)) {
+            System.out.println("Login successful.");
+            // Here you would transition to the main part of your application
+        } else {
+            System.out.println("Login failed.");
+            // Optionally, update the UI to reflect an unsuccessful login attempt
+        }
     }
 }

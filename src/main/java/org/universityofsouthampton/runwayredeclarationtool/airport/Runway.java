@@ -8,10 +8,10 @@ public class Runway {
     private final String name;
     private final int length;
     private final int width;
-    private int TORA; // Take-Off Run Available
-    private int TODA; // Take-Off Distance Available
-    private int ASDA; // Accelerate-Stop Distance Available
-    private int LDA; // Landing Distance Available
+    private int tora; // Take-Off Run Available
+    private int toda; // Take-Off Distance Available
+    private int asda; // Accelerate-Stop Distance Available
+    private int lda; // Landing Distance Available
 
     public Runway(String name, int length, int width) {
         this.name = name;
@@ -29,35 +29,35 @@ public class Runway {
     }
 
     // Setters and Getters for the runway distances available to update
-    public void setTORA(int TORA) {
-        this.TORA = TORA;
+    public void setTora(int tora) {
+        this.tora = tora;
     }
 
-    public void setTODA(int TODA) {
-        this.TODA = TODA;
+    public void setToda(int toda) {
+        this.toda = toda;
     }
 
-    public void setASDA(int ASDA) {
-        this.ASDA = ASDA;
+    public void setAsda(int asda) {
+        this.asda = asda;
     }
 
-    public void setLDA(int LDA) {
-        this.LDA = LDA;
+    public void setLda(int lda) {
+        this.lda = lda;
     }
 
-    public int getTORA() {
-        return TORA;
+    public int getTora() {
+        return tora;
     }
 
-    public int getTODA() {
-        return TODA;
+    public int getToda() {
+        return toda;
     }
 
-    public int getASDA() {
-        return ASDA;
+    public int getAsda() {
+        return asda;
     }
 
-    public int getLDA() {
-        return LDA;
+    public int getLda() {
+        return lda;
     }
 }

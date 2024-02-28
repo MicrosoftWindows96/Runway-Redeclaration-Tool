@@ -6,6 +6,12 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -24,6 +30,15 @@
     <center>
         <Label fx:id="titleLabel" styleClass="title-label"/>
         <Button fx:id="actionButton" text="Click Me!" onAction="#handleAction" styleClass="action-button"/>
+    </center>
+
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <Text text="Login" styleClass="title-label"/>
+            <TextField fx:id="usernameField" promptText="Username"/>
+            <PasswordField fx:id="passwordField" promptText="Password"/>
+            <Button text="Login" onAction="#handleLogin" styleClass="action-button"/>
+        </VBox>
     </center>
 
 </BorderPane>

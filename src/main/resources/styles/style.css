@@ -3,21 +3,26 @@
     -fx-background-color: #f0f0f0;
 }
 
-MenuBar {
+.menu-bar {
+    -fx-background-color: #333;
+}
+
+.menu-bar .menu {
     -fx-background-color: #333;
     -fx-text-fill: white;
 }
 
-Menu {
-    -fx-background-color: #333;
+.menu-bar .menu .label {
+    -fx-text-fill: white;
 }
 
-Menu .label {
-    -fx-text-fill: white; /* Set Menu text color */
+.menu-item {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
 }
 
-MenuItem {
-    -fx-background-color: #333;
+.menu-item:hover {
+    -fx-background-color: #555;
     -fx-text-fill: white;
 }
 

@@ -6,30 +6,43 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 
 public class HelloController {
 
+    @FXML
     public BorderPane borderPane;
     @FXML
     private Label titleLabel;
-
     @FXML
     private Button actionButton;
 
     public void initialize() {
-        // Set initial title
-        titleLabel.setText("RunwayRedeclarationTool");
+        // Initial title
+        FontIcon titleIcon = new FontIcon(FontAwesomeSolid.PLANE);
+        titleIcon.setIconSize(24); // Adjust icon size as needed
+        titleLabel.setGraphic(titleIcon);
+        titleLabel.setText(" RunwayRedeclarationTool"); // Add a space for separation
 
-        // Add a hover effect to the button
+        // Button w/ icon
+        FontIcon actionIcon = new FontIcon(FontAwesomeSolid.MOUSE_POINTER);
+        actionIcon.setIconSize(16); // Adjust icon size as needed
+        actionButton.setGraphic(actionIcon);
+        actionButton.setText(" Click Me!");
+
+        // Hover effect
         actionButton.setOnMouseEntered(event -> {
-            actionButton.setStyle("-fx-background-color: #555; -fx-text-fill: white;");
+            actionButton.setScaleX(1.1);
+            actionButton.setScaleY(1.1);
         });
 
         actionButton.setOnMouseExited(event -> {
-            actionButton.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+            actionButton.setScaleX(1.0);
+            actionButton.setScaleY(1.0);
         });
 
-        // Add fade transition for a smooth entry animation
+        // Fade transition for smooth entry animation
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), titleLabel);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
@@ -38,7 +51,7 @@ public class HelloController {
 
     @FXML
     private void handleAction() {
-        // Add custom action for the button click
+        // Custom action for the button click
         System.out.println("Button clicked!");
     }
 }

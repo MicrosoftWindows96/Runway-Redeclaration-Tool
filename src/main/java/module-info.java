@@ -10,6 +10,7 @@ module org.universityofsouthampton.runwayredeclarationtool {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires org.kordamp.ikonli.fontawesome5;
 
     opens org.universityofsouthampton.runwayredeclarationtool to javafx.fxml;
     exports org.universityofsouthampton.runwayredeclarationtool;

@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class HelloApplication extends Application {
 
     @Override
@@ -18,7 +20,7 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(root, 960, 600);
 
         // Load the stylesheet
-        scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/style.css")).toExternalForm());
 
         // Set the scene
         stage.setScene(scene);

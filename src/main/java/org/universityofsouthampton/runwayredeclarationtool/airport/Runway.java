@@ -29,6 +29,12 @@ public class Runway {
     }
 
     // Setters and Getters for the runway distances available to update
+
+    // Used to reference the runway to be selected.
+    public String getName() {
+        return name;
+    }
+
     public void setTORA(int TORA) {
         this.TORA = TORA;
     }

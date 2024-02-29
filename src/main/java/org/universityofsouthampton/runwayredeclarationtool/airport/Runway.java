@@ -5,28 +5,26 @@ package org.universityofsouthampton.runwayredeclarationtool.airport;
  */
 public class Runway {
 
-    private final String name;
-    private final int length;
-    private final int width;
+    private String type; //single or parallel runway
+    private String name;
     private int TORA; // Take-Off Run Available
     private int TODA; // Take-Off Distance Available
     private int ASDA; // Accelerate-Stop Distance Available
     private int LDA; // Landing Distance Available
 
-    public Runway(String name, int length, int width) {
-        this.name = name;
-        this.length = length;
-        this.width = width;
+    public Runway() {
+     this.type = "Single";
+     this.name = "00";
     }
 
-    @Override
-    public String toString() {
+    //@Override
+    /*public String toString() {
         return "Runway{" +
                 "name='" + name + '\'' +
                 ", length=" + length +
                 ", width=" + width +
                 '}';
-    }
+    }*/
 
     // Setters and Getters for the runway distances available to update
     public void setTORA(int TORA) {

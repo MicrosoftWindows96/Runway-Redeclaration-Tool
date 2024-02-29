@@ -3,7 +3,7 @@ package org.universityofsouthampton.runwayredeclarationtool.airport;
 /**
  * This class stores the individual information of a runway to be retrieved by UI classes to visualise the info.
  */
-public class Runway {
+public class Runway extends Airport{
 
     private final String name;
     private final int length;
@@ -14,6 +14,7 @@ public class Runway {
     private int LDA; // Landing Distance Available
 
     public Runway(String name, int length, int width) {
+        super();
         this.name = name;
         this.length = length;
         this.width = width;

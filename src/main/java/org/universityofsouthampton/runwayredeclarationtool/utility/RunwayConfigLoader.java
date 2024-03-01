@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RunwayConfigLoader {
+    public static final String CONFIG_FILE_PATH = "src/main/resources/runway_config.txt";
 
-    private static final String CONFIG_FILE_PATH = "src/main/resources/runway_config.txt";
 
     public static List<Runway> loadRunwayConfigurations() {
         List<Runway> runways = new ArrayList<>();
@@ -19,11 +19,16 @@ public class RunwayConfigLoader {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 3) {
-                    String name = parts[0].trim();
-                    int length = Integer.parseInt(parts[1].trim());
-                    int width = Integer.parseInt(parts[2].trim());
-                    runways.add(new Runway());
+
+                if (parts.length == 7) {
+                    String type = parts[0].trim();
+                    String name = parts[1].trim();
+                    int TORA = Integer.parseInt(parts[2].trim());
+                    int TODA = Integer.parseInt(parts[3].trim());
+                    int ASDA = Integer.parseInt(parts[4].trim());
+                    int LDA = Integer.parseInt(parts[5].trim());
+                    int displacedThreshold = Integer.parseInt(parts[6].trim());
+                    runways.add(new Runway(type, name, TORA, TODA, ASDA, LDA, displacedThreshold));
                 }
             }
         } catch (IOException | NumberFormatException e) {

@@ -1,5 +1,7 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import java.util.ArrayList;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -9,17 +11,40 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 
 public class AirportListScene extends VBox {
+
+    /**
+     * Scroll pane to display the airports
+     */
+    private ScrollPane scrollPane = new ScrollPane();
+
+    /**
+     * Observable arraylist of airports to be displayed
+     */
+    private ObservableList<Airport> airports = FXCollections.observableArrayList();
+
+    /**
+     * Airports from the XML file
+     */
+    private ArrayList<Airport> importedAirports;
+
+    /**
+     * Variable to store currently selected airport
+     */
+    private Airport selectedAirport;
 
     public AirportListScene(MainApplication app) {
         setPadding(new Insets(20));
@@ -28,17 +53,24 @@ public class AirportListScene extends VBox {
         Text title = new Text("List of Airports");
         title.setFont(Font.font("Arial", 20));
 
-        ListView<String> listView = new ListView<>();
-        ObservableList<String> airports = FXCollections.observableArrayList();
 
-        // Populate list of airports
-        airports.addAll("Airport 1", "Airport 2", "Airport 3"); // Placeholders for now
-        listView.setItems(airports);
+        // Populate list of airports from XML file
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefSize(700,500);
+        importedAirports = app.getAirports();
+        updateList();
 
         Button selectButton = new Button();
         styleButton(selectButton, MaterialDesign.MDI_PLUS_BOX, "Select");
         selectButton.setOnAction(e -> {
             // Handle airport selection (we may need to implement database/xml func early)
+            // Selection error handling
+            if (selectedAirport.getAirportName().isEmpty()) {
+                System.out.println("Nothing Selected!");
+            } else {
+                app.displayRunwayListScene(selectedAirport);
+            }
+
         });
 
         Button backButton = new Button();
@@ -48,7 +80,41 @@ public class AirportListScene extends VBox {
         HBox buttonBox = new HBox(10);
         buttonBox.getChildren().addAll(selectButton, backButton);
 
-        getChildren().addAll(title, listView, buttonBox);
+        getChildren().addAll(title, scrollPane, buttonBox);
+    }
+
+    private void updateList() {
+        airports.clear();
+        var airportsBox = new VBox();
+        airportsBox.setSpacing(5);
+
+        for (Airport airport : importedAirports) {
+            var name = (airport.getAirportName() + " -- " + airport.getAirportCode());
+            var airportButton = new Button(name);
+
+            // Button to select the airport
+            airportButton.setOnMouseClicked(event -> {
+                setSelectedAirport(airport);
+                System.out.println("Currently selected: " + getSelectedAirport().getAirportName());
+            });
+
+            airportsBox.getChildren().add(airportButton);
+
+            airports.add(airport);
+        }
+
+        scrollPane.setContent(airportsBox);
+    }
+
+    /*
+    Member Variable of selected airport changes to be referenced for next screen!
+     */
+    private void setSelectedAirport (Airport airport) {
+        selectedAirport = airport;
+    }
+
+    private Airport getSelectedAirport () {
+        return selectedAirport;
     }
 
     private void styleButton(Button button, MaterialDesign icon, String text) {

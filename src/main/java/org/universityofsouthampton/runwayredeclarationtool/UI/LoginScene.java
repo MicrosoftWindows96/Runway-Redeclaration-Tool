@@ -1,4 +1,4 @@
-package org.universityofsouthampton.runwayredeclarationtool;
+package org.universityofsouthampton.runwayredeclarationtool.UI;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
@@ -11,7 +11,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class MainController {
+public class LoginScene {
 
     @FXML
     public BorderPane borderPane;

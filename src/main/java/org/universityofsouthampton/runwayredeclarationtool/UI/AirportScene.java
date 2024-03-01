@@ -19,6 +19,7 @@ import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import javafx.stage.Stage;
 import javafx.stage.Screen;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 
 public class AirportScene extends VBox {
 
@@ -120,7 +121,9 @@ public class AirportScene extends VBox {
           // Data valid, add airport
           // For now, just close the form
           Stage stage = (Stage) form.getScene().getWindow();
+          app.addAirport(new Airport(airportName,airportCode)); // add the Airport!
           stage.close();
+
         } catch (NumberFormatException ex) {
           showErrorDialog("Invalid input for number of runways. Please enter a valid integer.");
         } catch (IllegalArgumentException ex) {

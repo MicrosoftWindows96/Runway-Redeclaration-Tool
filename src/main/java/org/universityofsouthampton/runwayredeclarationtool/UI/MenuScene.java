@@ -11,11 +11,14 @@ import javafx.scene.text.Text;
 
 public class MenuScene extends StackPane {
 
-  public MenuScene (Window window) {
+  public MenuScene(Window window) {
+    setAlignment(Pos.CENTER);
+
+    StackPane root = this;
 
     var menuPane = new BorderPane();
     menuPane.setMaxSize(window.getWidth(), window.getHeight());
-    menuPane.setStyle("-fx-background-color: #f0f0f0;"); // Neutral background color
+    menuPane.setStyle("-fx-background-color: transparent;");
 
     var title = new Text("Runway Declaration Tool");
     title.setFont(Font.font("Arial", 24)); // Modern font and size
@@ -42,15 +45,14 @@ public class MenuScene extends StackPane {
     menuPane.setTop(titleBox);
     menuPane.setCenter(buttons);
 
-    getChildren().add(menuPane);
+    root.getChildren().addAll(AnimatedPatternBackground.getInstance(), menuPane);
   }
 
   private void styleButton(Button button) {
     button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"); // Button style
-    button.setFont(Font.font("Arial", 16)); // Font style
-    button.setPrefWidth(120); // Set a preferred width
+    button.setFont(Font.font("Arial", 16));
+    button.setPrefWidth(120);
     button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;")); // Hover effect
     button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;")); // Hover effect reset
   }
-
 }

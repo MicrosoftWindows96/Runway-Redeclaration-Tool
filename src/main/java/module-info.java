@@ -11,6 +11,8 @@ module org.universityofsouthampton.runwayredeclarationtool {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires org.kordamp.ikonli.fontawesome5;
+    requires java.desktop;
+    requires org.kordamp.ikonli.materialdesign;
 
     opens org.universityofsouthampton.runwayredeclarationtool to javafx.fxml;
     exports org.universityofsouthampton.runwayredeclarationtool;

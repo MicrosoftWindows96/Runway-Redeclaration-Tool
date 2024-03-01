@@ -12,23 +12,24 @@ import javafx.scene.text.Text;
 public class AirportScene extends StackPane {
 
   public AirportScene (Window window) {
-
     setAlignment(Pos.CENTER);
+
+    StackPane root = this;
 
     var airportPane = new BorderPane();
     airportPane.setMaxSize(window.getWidth(), window.getHeight());
-    airportPane.setStyle("-fx-background-color: #f0f0f0;"); // Neutral background color
+    airportPane.setStyle("-fx-background-color: transparent;");
 
     var title = new Text("Airports");
-    title.setFont(Font.font("Arial", 24)); // Modern font and size
-    title.setStyle("-fx-fill: #333;"); // Dark text for better contrast
+    title.setFont(Font.font("Arial", 24));
+    title.setStyle("-fx-fill: #333;");
 
     var titleBox = new HBox();
     titleBox.setAlignment(Pos.CENTER);
     titleBox.getChildren().add(title);
-    titleBox.setStyle("-fx-padding: 20;"); // Padding for the title
+    titleBox.setStyle("-fx-padding: 20;");
 
-    var buttons = new VBox(10); // Spacing between buttons
+    var buttons = new VBox(10);
     buttons.setAlignment(Pos.CENTER);
 
     Button addAirport = new Button("Add Airport");
@@ -46,7 +47,7 @@ public class AirportScene extends StackPane {
     airportPane.setTop(titleBox);
     airportPane.setCenter(buttons);
 
-    getChildren().add(airportPane);
+    root.getChildren().addAll(AnimatedPatternBackground.getInstance(), airportPane);
   }
 
   private void styleButton(Button button) {

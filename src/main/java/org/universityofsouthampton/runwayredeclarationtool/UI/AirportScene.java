@@ -4,12 +4,18 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import javafx.stage.Stage;
 import javafx.stage.Screen;
@@ -19,7 +25,7 @@ public class AirportScene extends VBox {
   public AirportScene (MainApplication app) {
     setAlignment(Pos.TOP_CENTER);
 
-    var title = new Text("Airports");
+    var title = new Text("Airports Database");
     title.setFont(Font.font("Arial", 24));
     title.setStyle("-fx-fill: #333;");
     VBox.setMargin(title, new Insets(10, 0, 20, 0));
@@ -28,16 +34,16 @@ public class AirportScene extends VBox {
     buttons.setAlignment(Pos.CENTER);
     this.setSpacing(200);
 
-    Button addAirport = new Button("Add Airport");
-    styleButton(addAirport);
+    Button addAirport = new Button();
+    styleButton(addAirport, MaterialDesign.MDI_PLUS_BOX, "Add");
     addAirport.setOnAction(e -> promptAddAirportForm(app));
 
-    Button selectAirport = new Button("List Airports");
-    styleButton(selectAirport);
+    Button selectAirport = new Button();
+    styleButton(selectAirport, MaterialDesign.MDI_VIEW_LIST, "List");
     selectAirport.setOnAction(e -> app.displayAirportListScene());
 
-    Button back = new Button("Back");
-    styleButton(back);
+    Button back = new Button();
+    styleButton(back, MaterialDesign.MDI_ARROW_LEFT, "Return");
     back.setOnAction(e -> app.displayMenu());
 
     buttons.getChildren().addAll(addAirport, selectAirport, back);
@@ -45,12 +51,28 @@ public class AirportScene extends VBox {
     this.getChildren().addAll(title, buttons);
   }
 
-  private void styleButton(Button button) {
+  private void styleButton(Button button, MaterialDesign icon, String text) {
     button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
-    button.setFont(Font.font("Arial", 16));
+    button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
     button.setPrefWidth(120);
     button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
     button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
+
+    FontIcon buttonIcon = new FontIcon(icon);
+    buttonIcon.setIconColor(Color.WHITE);
+    button.setGraphic(buttonIcon);
+    button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Only display the icon
+
+    Label label = new Label(text);
+    label.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+    label.setTextFill(Color.WHITE);
+    label.setAlignment(Pos.CENTER);
+
+    HBox hbox = new HBox(buttonIcon, label);
+    hbox.setAlignment(Pos.CENTER_LEFT);
+    hbox.setSpacing(10);
+
+    button.setGraphic(hbox);
   }
 
   private void promptAddAirportForm(MainApplication app) {
@@ -70,11 +92,12 @@ public class AirportScene extends VBox {
     TextField runwayInput = new TextField();
     styleTextField(runwayInput);
 
-    Button submitButton = new Button("Add Airport");
-    styleButton(submitButton);
+    Button submitButton = new Button();
+    styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
+    // Add airport
 
-    Button cancelButton = new Button("Cancel");
-    styleButton(cancelButton);
+    Button cancelButton = new Button();
+    styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
     cancelButton.setOnAction(e -> {
       Stage stage = (Stage) form.getScene().getWindow();
       stage.close();
@@ -132,8 +155,8 @@ public class AirportScene extends VBox {
     VBox dialogVbox = new VBox(20);
 
     Text errorMessage = new Text(message);
-    Button okButton = new Button("OK");
-    styleButton(okButton);
+    Button okButton = new Button();
+    styleButton(okButton, MaterialDesign.MDI_CHECK, "OK");
 
     okButton.setOnAction(e -> dialog.close());
     dialogVbox.setPadding(new Insets(20));

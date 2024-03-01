@@ -11,7 +11,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class HelloController {
+public class MainController {
 
     @FXML
     public BorderPane borderPane;
@@ -21,19 +21,16 @@ public class HelloController {
     private Button actionButton;
 
     public void initialize() {
-        // Initial title
         FontIcon titleIcon = new FontIcon(FontAwesomeSolid.PLANE);
         titleIcon.setIconSize(24);
         titleLabel.setGraphic(titleIcon);
         titleLabel.setText(" RunwayRedeclarationTool");
 
-        // Button w/ icon
         FontIcon actionIcon = new FontIcon(FontAwesomeSolid.MOUSE_POINTER);
         actionIcon.setIconSize(16);
         actionButton.setGraphic(actionIcon);
         actionButton.setText(" Click Me!");
 
-        // Hover effect
         actionButton.setOnMouseEntered(event -> {
             actionButton.setScaleX(1.1);
             actionButton.setScaleY(1.1);
@@ -44,7 +41,6 @@ public class HelloController {
             actionButton.setScaleY(1.0);
         });
 
-        // Fade transition for smooth entry animation
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), titleLabel);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
@@ -69,10 +65,8 @@ public class HelloController {
 
         if ("admin".equals(username) && "password".equals(password)) {
             System.out.println("Login successful.");
-            // Here you would transition to the main part of your application
         } else {
             System.out.println("Login failed.");
-            // Optionally, update the UI to reflect an unsuccessful login attempt
         }
     }
 }

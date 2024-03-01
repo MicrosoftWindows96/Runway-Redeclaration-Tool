@@ -40,8 +40,6 @@ public class AnimatedPatternBackground extends Pane {
   private void createPattern() {
     cloudLayer.getChildren().clear();
 
-    random.setSeed(42);
-
     double areaWidth = cloudLayer.getPrefWidth();
     double areaHeight = cloudLayer.getPrefHeight();
     int maxCloudSize = 48;

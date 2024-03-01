@@ -121,7 +121,7 @@ public class AirportScene extends VBox {
           // Data valid, add airport
           // For now, just close the form
           Stage stage = (Stage) form.getScene().getWindow();
-          app.addAirport(new Airport(airportName,airportCode)); // add the Airport!
+          app.addAirport(new Airport(airportName,airportCode)); // add the Airport into the list
           stage.close();
 
         } catch (NumberFormatException ex) {

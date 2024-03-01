@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class Airport {
     String airportName;
-    String airportCode;
+    String code;
     ArrayList<Runway> runways;
     public Airport(String name, String code){
         airportName = name;
         runways = new ArrayList<>();
-        airportCode = code;
+        code = code;
     }
     public void addRunway (Runway runway){
         runways.add(runway);
@@ -23,10 +23,10 @@ public class Airport {
 
     public void setAirportName(String name) {this.airportName = name;}
 
-    public String getAirportCode() { return airportCode; }
+    public String getAirportCode() { return code; }
 
     public void setAirportCode(String code){
-        airportCode = code;
+        code = code;
     }
 
 }

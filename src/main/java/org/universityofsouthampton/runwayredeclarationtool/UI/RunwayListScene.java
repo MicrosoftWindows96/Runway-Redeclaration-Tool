@@ -59,7 +59,7 @@ public class RunwayListScene extends VBox {
     Text title = new Text("List of Runways in " + this.airport.getAirportName());
     title.setFont(Font.font("Arial", 20));
 
-    // Populate list of runways from Airport's arrayList
+    // Populate list of runways from Airport's arrayLists
     scrollPane.setFitToWidth(true);
     scrollPane.setPrefSize(700,500);
     updateList();

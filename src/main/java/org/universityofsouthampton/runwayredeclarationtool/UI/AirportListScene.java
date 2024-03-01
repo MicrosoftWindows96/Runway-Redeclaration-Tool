@@ -29,7 +29,7 @@ public class AirportListScene extends VBox {
     /**
      * Scroll pane to display the airports
      */
-    private ScrollPane scrollPane = new ScrollPane();
+    private final ScrollPane scrollPane = new ScrollPane();
 
     /**
      * Observable arraylist of airports to be displayed

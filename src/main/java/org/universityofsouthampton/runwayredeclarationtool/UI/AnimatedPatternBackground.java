@@ -17,7 +17,7 @@ public class AnimatedPatternBackground extends Pane {
   private final Pane cloudLayer = new Pane();
   private final double iconSize = 24;
   private final double speed = 1.0;
-  private final double planeSpeed = 4.0;
+  //private final double planeSpeed = 4.0;
   private static AnimatedPatternBackground instance;
 
   public AnimatedPatternBackground(double initialWidth, double initialHeight) {
@@ -86,7 +86,7 @@ public class AnimatedPatternBackground extends Pane {
 
 
   private void launchPlanes() {
-    Timeline planeTimeline = new Timeline(new KeyFrame(Duration.seconds(random.nextInt(5) + 5), e -> {
+    Timeline planeTimeline = new Timeline(new KeyFrame(Duration.seconds(random.nextDouble(5,  10)), e -> {
       FontIcon planeIcon = FontIcon.of(MaterialDesign.MDI_AIRPLANE, (int) iconSize);
 
       planeIcon.setLayoutX(random.nextDouble() * (getWidth() - iconSize));
@@ -110,7 +110,6 @@ public class AnimatedPatternBackground extends Pane {
 
         planeLayer.getChildren().addFirst(smoke);
 
-
         smokeTrail.add(smoke);
 
         if (smokeTrail.size() > 5) {
@@ -132,6 +131,7 @@ public class AnimatedPatternBackground extends Pane {
         }
       });
 
+      double planeSpeed = random.nextDouble() * 2 + 3; // Randomize plane speed
       Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(50), ev -> {
         planeIcon.setLayoutY(planeIcon.getLayoutY() + planeSpeed);
 
@@ -145,6 +145,7 @@ public class AnimatedPatternBackground extends Pane {
     planeTimeline.setCycleCount(Timeline.INDEFINITE);
     planeTimeline.play();
   }
+
 
   public static synchronized AnimatedPatternBackground getInstance() {
     if (instance == null) {

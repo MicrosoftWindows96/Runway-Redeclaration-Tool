@@ -20,7 +20,7 @@ public class MenuScene extends VBox {
   public MenuScene(MainApplication app) {
     this.setAlignment(Pos.TOP_CENTER);
 
-    var title = new Text("SkyGate");
+    var title = new Text("King Zagrosi's Runway Re-declaration Tool");
     title.setFont(Font.font("Arial", 24));
     title.setStyle("-fx-fill: #333;");
     VBox.setMargin(title, new Insets(10, 0, 10, 0));

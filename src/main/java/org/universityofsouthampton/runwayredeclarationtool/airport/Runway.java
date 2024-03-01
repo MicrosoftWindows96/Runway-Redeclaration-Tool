@@ -7,8 +7,9 @@ import java.util.List;
  */
 public class Runway {
 
-    private String type; // Single or parallel runway
     private String name; // Runway name
+    String logicalRunway1, getLogicalRunway2;
+    private String logicalRunway; //runway name if used from the other side. 09L -> 27R
     private int TORA; // Take-Off Run Available
     private int TODA; // Take-Off Distance Available
     private int ASDA; // Accelerate-Stop Distance Available
@@ -19,11 +20,10 @@ public class Runway {
     private int TOCS; // Take-Off Climb Surface
     private int ALS; // Approach Landing Surface
 
-    public Runway(String type, String name, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
-        if(type == null || name == null || TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
+    public Runway(String name, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
+        if(!isValidName(name) || name == null || TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
             throw new IllegalArgumentException("Invalid runway parameters");
         }
-        this.type = type;
         this.name = name;
         this.TORA = TORA;
         this.TODA = TODA;
@@ -49,7 +49,7 @@ public class Runway {
     @Override
     public String toString() {
         return "Runway{" +
-                "type='" + type + '\'' +
+                "type='" + '\'' +
                 ", name='" + name + '\'' +
                 ", TORA=" + TORA +
                 ", TODA=" + TODA +
@@ -94,6 +94,31 @@ public class Runway {
 
     public int getLDA() {
         return LDA;
+    }
+
+    public boolean isValidName(String name){
+        int value = Integer.parseInt(name);
+        if (value >= 1 && value <= 9 && name.matches("0[1-9]")) {
+            return true;
+        }
+        return (value >= 10 && value <= 36);
+    }
+    public void getName(String name) throws Exception{
+        if(!isValidName(name)){
+            throw new Exception("Invalid name");
+        }
+        else this.name = name;
+    }
+
+    public String getVerticalOpposite(String number) {
+        try {
+            int num = Integer.parseInt(number); // Convert string to integer
+            int opposite = num + 18; // Add 18 to get the opposite
+            if (opposite > 36) opposite -= 36; // Wrap around if necessary
+            return String.format("%02d", opposite);
+        } catch (NumberFormatException e) {
+            return "Invalid input";
+        }
     }
 
     public void recalculateLDA(Obstacle obstacle) {

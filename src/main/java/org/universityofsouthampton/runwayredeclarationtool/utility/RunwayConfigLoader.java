@@ -28,7 +28,7 @@ public class RunwayConfigLoader {
                     int ASDA = Integer.parseInt(parts[4].trim());
                     int LDA = Integer.parseInt(parts[5].trim());
                     int displacedThreshold = Integer.parseInt(parts[6].trim());
-                    runways.add(new Runway(type, name, TORA, TODA, ASDA, LDA, displacedThreshold));
+                    runways.add(new Runway(name, TORA, TODA, ASDA, LDA, displacedThreshold));
                 }
             }
         } catch (IOException | NumberFormatException e) {

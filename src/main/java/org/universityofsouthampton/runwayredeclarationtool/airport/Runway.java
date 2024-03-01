@@ -46,14 +46,6 @@ public class Runway {
         obstacles.remove(obstacle);
     }
 
-    public void exportToXML(String filePath) {
-        // Implement
-    }
-
-    public void importFromXML(String filePath) {
-        // Implement
-    }
-
     @Override
     public String toString() {
         return "Runway{" +

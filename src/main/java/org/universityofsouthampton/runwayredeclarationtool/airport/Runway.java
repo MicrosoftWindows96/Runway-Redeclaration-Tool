@@ -96,6 +96,10 @@ public class Runway {
         return LDA;
     }
 
+    public int getDisplacedThreshold() {
+        return displacedThreshold;
+    }
+
     public boolean isValidName(String name){
         int value = Integer.parseInt(name);
         if (value >= 1 && value <= 9 && name.matches("0[1-9]")) {

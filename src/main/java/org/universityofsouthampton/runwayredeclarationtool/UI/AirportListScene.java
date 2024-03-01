@@ -34,7 +34,7 @@ public class AirportListScene extends VBox {
     /**
      * Observable arraylist of airports to be displayed
      */
-    private ObservableList<Airport> airports = FXCollections.observableArrayList();
+    private ObservableList<Airport> airportsObserve = FXCollections.observableArrayList();
 
     /**
      * Airports from the XML file
@@ -84,7 +84,7 @@ public class AirportListScene extends VBox {
     }
 
     private void updateList() {
-        airports.clear();
+        airportsObserve.clear();
         var airportsBox = new VBox();
         airportsBox.setSpacing(5);
 
@@ -100,7 +100,7 @@ public class AirportListScene extends VBox {
 
             airportsBox.getChildren().add(airportButton);
 
-            airports.add(airport);
+            airportsObserve.add(airport);
         }
 
         scrollPane.setContent(airportsBox);

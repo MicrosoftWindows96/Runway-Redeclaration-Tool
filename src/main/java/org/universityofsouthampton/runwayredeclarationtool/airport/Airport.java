@@ -9,7 +9,7 @@ public class Airport {
     public Airport(String name, String code){
         airportName = name;
         runways = new ArrayList<>();
-        code = code;
+        this.code = code;
     }
     public void addRunway (Runway runway){
         runways.add(runway);

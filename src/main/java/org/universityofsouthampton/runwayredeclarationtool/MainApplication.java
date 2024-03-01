@@ -9,6 +9,7 @@ import org.universityofsouthampton.runwayredeclarationtool.UI.AirportListScene;
 import org.universityofsouthampton.runwayredeclarationtool.UI.AirportScene;
 import org.universityofsouthampton.runwayredeclarationtool.UI.AnimatedPatternBackground;
 import org.universityofsouthampton.runwayredeclarationtool.UI.MenuScene;
+import org.universityofsouthampton.runwayredeclarationtool.UI.RunwayConfigViewScene;
 import org.universityofsouthampton.runwayredeclarationtool.UI.RunwayListScene;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
@@ -54,14 +55,19 @@ public class MainApplication extends Application {
         root.getChildren().setAll(background, airportListScene);
     }
 
-    public void displayRunwayListScene(Airport airport) {
+    public void displayRunwayListScene(Airport airport) { // Airport object needed to be passed to scene
         RunwayListScene runwayListScene = new RunwayListScene(this, airport);
         root.getChildren().setAll(background, runwayListScene);
     }
 
+    public void displayRunwayConfigScene(Airport airport, Runway runway) {
+        RunwayConfigViewScene runwayConfigScene = new RunwayConfigViewScene(this,airport,runway);
+        root.getChildren().setAll(background, runwayConfigScene);
+    }
+
     /**
      * This method collects the created / creates the airport objects from the XML file
-     * (Objects are manually made for now)
+     * (Objects are manually made for now!)
      */
     private void initaliseAirportsXML () {
         airports = new ArrayList<>();

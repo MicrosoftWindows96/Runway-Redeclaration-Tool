@@ -32,11 +32,9 @@ public class AirportScene extends VBox {
     styleButton(addAirport);
     addAirport.setOnAction(e -> promptAddAirportForm(app));
 
-    Button selectAirport = new Button("Select Airport");
+    Button selectAirport = new Button("List Airports");
     styleButton(selectAirport);
-    selectAirport.setOnAction(e -> {
-      app.displayAirportListScene();
-    });
+    selectAirport.setOnAction(e -> app.displayAirportListScene());
 
     Button back = new Button("Back");
     styleButton(back);
@@ -64,6 +62,10 @@ public class AirportScene extends VBox {
     TextField nameInput = new TextField();
     styleTextField(nameInput);
 
+    Label codeLabel = new Label("Airport Code:");
+    TextField codeInput = new TextField();
+    styleTextField(codeInput);
+
     Label runwayLabel = new Label("Number of Runways:");
     TextField runwayInput = new TextField();
     styleTextField(runwayInput);
@@ -71,16 +73,40 @@ public class AirportScene extends VBox {
     Button submitButton = new Button("Add Airport");
     styleButton(submitButton);
 
-    submitButton.setOnAction(e -> {
-      String airportName = nameInput.getText();
-      int runways = Integer.parseInt(runwayInput.getText());
-      // Handle the data (add to database)
-
+    Button cancelButton = new Button("Cancel");
+    styleButton(cancelButton);
+    cancelButton.setOnAction(e -> {
       Stage stage = (Stage) form.getScene().getWindow();
       stage.close();
     });
 
-    form.getChildren().addAll(nameLabel, nameInput, runwayLabel, runwayInput, submitButton);
+    submitButton.setOnAction(e -> {
+      String airportName = nameInput.getText();
+      String airportCode = codeInput.getText();
+      String runwayText = runwayInput.getText();
+
+      // Validate
+      if (airportName.isEmpty() || airportCode.isEmpty() || runwayText.isEmpty()) {
+        showErrorDialog("All fields are required. Please fill in all fields.");
+      } else {
+        try {
+          int runways = Integer.parseInt(runwayText);
+          if (runways <= 0) {
+            throw new IllegalArgumentException("Number of runways must be a positive integer.");
+          }
+          // Data valid, add airport
+          // For now, just close the form
+          Stage stage = (Stage) form.getScene().getWindow();
+          stage.close();
+        } catch (NumberFormatException ex) {
+          showErrorDialog("Invalid input for number of runways. Please enter a valid integer.");
+        } catch (IllegalArgumentException ex) {
+          showErrorDialog(ex.getMessage());
+        }
+      }
+    });
+
+    form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, runwayLabel, runwayInput, submitButton, cancelButton);
 
     Stage dialogStage = new Stage();
     dialogStage.initModality(Modality.APPLICATION_MODAL);
@@ -98,4 +124,29 @@ public class AirportScene extends VBox {
     textField.setStyle("-fx-background-color: white; -fx-text-fill: black;");
     textField.setFont(Font.font("Arial", 16));
   }
+
+  private void showErrorDialog(String message) {
+    Stage dialog = new Stage();
+    dialog.initModality(Modality.APPLICATION_MODAL);
+
+    VBox dialogVbox = new VBox(20);
+
+    Text errorMessage = new Text(message);
+    Button okButton = new Button("OK");
+    styleButton(okButton);
+
+    okButton.setOnAction(e -> dialog.close());
+    dialogVbox.setPadding(new Insets(20));
+
+    dialogVbox.getChildren().addAll(errorMessage, okButton);
+    Scene dialogScene = new Scene(dialogVbox);
+    dialog.setScene(dialogScene);
+    dialog.sizeToScene();
+    dialog.centerOnScreen();
+    dialogVbox.setAlignment(Pos.CENTER);
+
+    dialog.showAndWait();
+  }
+
+
 }

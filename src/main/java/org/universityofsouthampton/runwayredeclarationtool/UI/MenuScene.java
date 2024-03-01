@@ -23,7 +23,7 @@ public class MenuScene extends VBox {
 
     this.setSpacing(200);
 
-    Button airport = new Button("Airport");
+    Button airport = new Button("Database");
     styleButton(airport);
     airport.setOnAction(e -> app.displayAirportScene());
 

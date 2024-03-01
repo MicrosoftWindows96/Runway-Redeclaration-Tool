@@ -5,59 +5,63 @@ package org.universityofsouthampton.runwayredeclarationtool.airport;
  */
 public class Runway {
 
-    private final String name;
-    private final int length;
-    private final int width;
-    private int tora; // Take-Off Run Available
-    private int toda; // Take-Off Distance Available
-    private int asda; // Accelerate-Stop Distance Available
-    private int lda; // Landing Distance Available
+    private String type; //single or parallel runway
+    private String name;
+    private int TORA; // Take-Off Run Available
+    private int TODA; // Take-Off Distance Available
+    private int ASDA; // Accelerate-Stop Distance Available
+    private int LDA; // Landing Distance Available
 
-    public Runway(String name, int length, int width) {
-        this.name = name;
-        this.length = length;
-        this.width = width;
+    public Runway() {
+     this.type = "Single";
+     this.name = "00";
     }
 
-    @Override
-    public String toString() {
+    //@Override
+    /*public String toString() {
         return "Runway{" +
                 "name='" + name + '\'' +
                 ", length=" + length +
                 ", width=" + width +
                 '}';
-    }
+    }*/
 
     // Setters and Getters for the runway distances available to update
-    public void setTora(int tora) {
-        this.tora = tora;
+
+    // Used to reference the runway to be selected.
+    public String getName() {
+        return name;
     }
 
-    public void setToda(int toda) {
-        this.toda = toda;
+    public void setTORA(int TORA) {
+        this.TORA = TORA;
     }
 
-    public void setAsda(int asda) {
-        this.asda = asda;
+    public void setTODA(int TODA) {
+        this.TODA = TODA;
     }
 
-    public void setLda(int lda) {
-        this.lda = lda;
+    public void setASDA(int ASDA) {
+        this.ASDA = ASDA;
     }
 
-    public int getTora() {
-        return tora;
+    public void setLDA(int LDA) {
+        this.LDA = LDA;
     }
 
-    public int getToda() {
-        return toda;
+    public int getTORA() {
+        return TORA;
     }
 
-    public int getAsda() {
-        return asda;
+    public int getTODA() {
+        return TODA;
     }
 
-    public int getLda() {
-        return lda;
+    public int getASDA() {
+        return ASDA;
+    }
+
+    public int getLDA() {
+        return LDA;
     }
 }

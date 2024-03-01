@@ -3,26 +3,26 @@
     -fx-background-color: #f0f0f0;
 }
 
-.menu-bar {
-    -fx-background-color: #333;
-}
-
-.menu-bar .menu {
+MenuBar {
     -fx-background-color: #333;
     -fx-text-fill: white;
 }
 
-.menu-bar .menu .label {
-    -fx-text-fill: white;
-}
-
-.menu-item {
+Menu {
     -fx-background-color: #333;
-    -fx-text-fill: white;
 }
 
-.menu-item:hover {
-    -fx-background-color: #555;
+Menu .label {
+    -fx-text-fill: white; /* Set Menu text color */
+}
+
+.menu-background {
+    -fx-background-image: url("../images/plane.png");
+    -fx-background-size: cover;
+}
+
+MenuItem {
+    -fx-background-color: #333;
     -fx-text-fill: white;
 }
 

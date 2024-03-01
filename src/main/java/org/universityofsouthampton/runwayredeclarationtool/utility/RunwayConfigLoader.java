@@ -23,7 +23,7 @@ public class RunwayConfigLoader {
                     String name = parts[0].trim();
                     int length = Integer.parseInt(parts[1].trim());
                     int width = Integer.parseInt(parts[2].trim());
-                    runways.add(new Runway(name, length, width));
+                    runways.add(new Runway());
                 }
             }
         } catch (IOException | NumberFormatException e) {

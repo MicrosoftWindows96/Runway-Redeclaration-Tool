@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.universityofsouthampton.runwayredeclarationtool.UI.AirportListScene;
 import org.universityofsouthampton.runwayredeclarationtool.UI.AirportScene;
 import org.universityofsouthampton.runwayredeclarationtool.UI.AnimatedPatternBackground;
 import org.universityofsouthampton.runwayredeclarationtool.UI.MenuScene;
@@ -36,6 +37,11 @@ public class MainApplication extends Application {
     public void displayAirportScene() {
         AirportScene airportScene = new AirportScene(this);
         root.getChildren().setAll(background, airportScene);
+    }
+
+    public void displayAirportListScene() {
+        AirportListScene airportListScene = new AirportListScene(this);
+        root.getChildren().setAll(background, airportListScene);
     }
 
     public static void main(String[] args) {

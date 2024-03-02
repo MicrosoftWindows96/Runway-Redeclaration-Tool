@@ -34,6 +34,10 @@ public class MenuScene extends VBox {
     styleButton(airport, MaterialDesign.MDI_DATABASE, "Airports");
     airport.setOnAction(e -> app.displayAirportScene());
 
+//    Button obstacle = new Button();
+//    styleButton(obstacle, MaterialDesign.MDI_DATABASE, "Obstacles");
+//    obstacle.setOnAction(e -> app.displayObstacleScene());
+
     Button quit = new Button();
     styleButton(quit, MaterialDesign.MDI_EXIT_TO_APP, "Quit");
     quit.setOnAction(e -> System.exit(0));

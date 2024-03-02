@@ -125,7 +125,7 @@ public class RunwayListScene extends VBox {
   }
 
   public Runway getSelectedRunway () {
-    return selectedRunway;
+    return this.selectedRunway;
   }
 
   private void promptAddRunwayForm(MainApplication app) {

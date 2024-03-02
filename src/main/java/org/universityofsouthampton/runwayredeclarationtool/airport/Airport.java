@@ -3,30 +3,30 @@ package org.universityofsouthampton.runwayredeclarationtool.airport;
 import java.util.ArrayList;
 
 public class Airport {
-    String airportName;
-    String code;
-    ArrayList<Runway> runways;
+    private String airportName;
+    private String code;
+    private ArrayList<Runway> runways;
     public Airport(String name, String code){
         airportName = name;
         runways = new ArrayList<>();
         this.code = code;
     }
     public void addRunway (Runway runway){
-        runways.add(runway);
+        this.runways.add(runway);
     }
 
     public ArrayList<Runway> getRunways(){
-        return runways;
+        return this.runways;
     }
 
-    public String getAirportName(){ return airportName; }
+    public String getAirportName(){ return this.airportName; }
 
     public void setAirportName(String name) {this.airportName = name;}
 
-    public String getAirportCode() { return code; }
+    public String getAirportCode() { return this.code; }
 
     public void setAirportCode(String code){
-        code = code;
+        this.code = code;
     }
 
 }

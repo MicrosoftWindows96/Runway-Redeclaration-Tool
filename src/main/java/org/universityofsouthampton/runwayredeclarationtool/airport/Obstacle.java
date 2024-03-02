@@ -1,37 +1,45 @@
 package org.universityofsouthampton.runwayredeclarationtool.airport;
 
 public class Obstacle {
+    private String name;
     private int height;
     private int distanceFromThreshold;
-    private int distanceFromCenterline;
+    private int distanceFromCentreline;
 
-    public Obstacle(int height, int distanceFromThreshold, int distanceFromCenterline) {
+    public Obstacle(String name, int height, int distanceFromThreshold, int distanceFromCentreline) {
+        this.name = name;
         this.height = height;
         this.distanceFromThreshold = distanceFromThreshold;
-        this.distanceFromCenterline = distanceFromCenterline;
+        this.distanceFromCentreline = distanceFromCentreline;
     }
-
-    public int getHeight() {
-        return height;
+    public void setName(String name) {
+        this.name = name;
     }
-
+    public String getName() {
+        return this.name;
+    }
     public void setHeight(int height) {
         this.height = height;
     }
-
-    public int getDistanceFromThreshold() {
-        return distanceFromThreshold;
+    public int getHeight() {
+        return this.height;
     }
+
 
     public void setDistanceFromThreshold(int distanceFromThreshold) {
         this.distanceFromThreshold = distanceFromThreshold;
     }
-
-    public int getDistanceFromCenterline() {
-        return distanceFromCenterline;
+    public int getDistanceFromThreshold() {
+        return this.distanceFromThreshold;
     }
 
-    public void setDistanceFromCenterline(int distanceFromCenterline) {
-        this.distanceFromCenterline = distanceFromCenterline;
+    public void setDistanceFromCentreline(int distanceFromCentreline) {
+        this.distanceFromCentreline = distanceFromCentreline;
     }
+
+    public int getDistanceFromCentreline() {
+        return this.distanceFromCentreline;
+    }
+
+
 }

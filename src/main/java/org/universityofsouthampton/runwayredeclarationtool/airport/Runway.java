@@ -1,5 +1,6 @@
 package org.universityofsouthampton.runwayredeclarationtool.airport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,9 @@ public class Runway {
     private int ASDA; // Accelerate-Stop Distance Available
     private int LDA; // Landing Distance Available
     private int displacedThreshold; // Displaced Threshold
-    private List<Obstacle> obstacles; // List of obstacles
+
+    private ArrayList<Obstacle> obstacles;
+//    private List<Obstacle> obstacles; // List of obstacles
     private int RESA; // Runway End Safety Area
     private int TOCS; // Take-Off Climb Surface
     private int ALS; // Approach Landing Surface
@@ -30,20 +33,27 @@ public class Runway {
         this.ASDA = ASDA;
         this.LDA = LDA;
         this.displacedThreshold = displacedThreshold;
+
+        this.obstacles = new ArrayList<>();
+
+    }
+
+    public ArrayList<Obstacle> getObstacles(){
+        return this.obstacles;
     }
 
     public void addObstacle(Obstacle obstacle) {
         if(obstacle == null){
             throw new IllegalArgumentException("Invalid obstacle");
         }
-        obstacles.add(obstacle);
+        this.obstacles.add(obstacle);
     }
 
     public void removeObstacle(Obstacle obstacle) {
         if(obstacle == null){
             throw new IllegalArgumentException("Invalid obstacle");
         }
-        obstacles.remove(obstacle);
+        this.obstacles.remove(obstacle);
     }
 
     @Override

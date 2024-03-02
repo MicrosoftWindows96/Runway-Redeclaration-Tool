@@ -74,7 +74,7 @@ public class RunwayListScene extends VBox {
     selectButton.setOnAction(e -> {
       // Handle airport selection (we may need to implement database/xml func early)
       // Selection error handling
-      if (selectedRunway.getName().isEmpty()) {
+      if (this.selectedRunway == null) {
         System.out.println("Nothing Selected!");
       } else {
         app.displayRunwayConfigScene(airport, selectedRunway);

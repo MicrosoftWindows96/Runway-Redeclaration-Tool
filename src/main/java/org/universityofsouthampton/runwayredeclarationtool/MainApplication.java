@@ -10,6 +10,7 @@ import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
 /**
  * Class that handles the scene changes (Controller)
@@ -28,8 +29,8 @@ public class MainApplication extends Application {
 
         root.getChildren().add(background);
 
-        initialiseAirportsXML();
-//        initialiseObstaclesXML();
+        importXML importXML = new importXML();
+        airports = importXML.convertToArrayList();
 
         displayMenu();
 
@@ -50,9 +51,9 @@ public class MainApplication extends Application {
         root.getChildren().setAll(background, airportScene);
     }
 
-    public void displayObstacleScene(Airport airport, Runway runway) {
-        ObstacleUpdateScene obstacleScene = new ObstacleUpdateScene(this, airport, runway);
-        root.getChildren().setAll(background, obstacleScene);
+    public void displayObstacleListScene(Airport airport, Runway runway) {
+        ObstacleListScene obstacleListScene = new ObstacleListScene(this, airport, runway);
+        root.getChildren().setAll(background, obstacleListScene);
     }
 
     public void displayAirportListScene() {
@@ -115,5 +116,13 @@ public class MainApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public ArrayList<Obstacle> getObstacles() {
+        return obstacles;
+    }
+
+    public void addObstacle(Obstacle obstacle) {
+        obstacles.add(obstacle);
     }
 }

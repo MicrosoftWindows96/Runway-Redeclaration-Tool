@@ -42,7 +42,7 @@ public class RunwayConfigViewScene extends VBox {
 
     Button obstacleUpdateButton = new Button();
     styleButton(obstacleUpdateButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Obstacle");
-    obstacleUpdateButton.setOnAction(e -> app.displayObstacleScene(airport,runway));
+    obstacleUpdateButton.setOnAction(e -> app.displayObstacleListScene(airport,runway));
 
     Button backButton = new Button();
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");

@@ -85,24 +85,24 @@ public class ObstacleListScene extends VBox {
 //
 //        });
 
-        Button selectButton = new Button();
-        styleButton(selectButton, MaterialDesign.MDI_PLUS_BOX, "Update");
-        selectButton.setOnAction(e -> {
-            // Handle airport selection (we may need to implement database/xml func early)
-            // Selection error handling
-            if (this.selectedObstacle == null) {
-                System.out.println("Nothing Selected!");
-            } else {
-                viewObstacleInfo(this.selectedObstacle);
-            }
-
-        });
+//        Button selectButton = new Button();
+//        styleButton(selectButton, MaterialDesign.MDI_PLUS_BOX, "Update");
+//        selectButton.setOnAction(e -> {
+//            // Handle airport selection (we may need to implement database/xml func early)
+//            // Selection error handling
+//            if (this.selectedObstacle == null) {
+//                System.out.println("Nothing Selected!");
+//            } else {
+//                viewObstacleInfo(this.selectedObstacle);
+//            }
+//
+//        });
 
 
 
 //        Button addObstacle = new Button();
 //        styleButton(addObstacle, MaterialDesign.MDI_PLUS_BOX, "Add");
-//        addObstacle.setOnAction(e -> promptAddObstacleForm(app));
+//        addObstacle.setOnAction(e -> addObstacleForm(app));
 //
 ////                Button updateObstacle = new Button();
 ////                styleButton(updateObstacle, MaterialDesign.MDI_PLUS_BOX, "Add");
@@ -117,14 +117,39 @@ public class ObstacleListScene extends VBox {
         backButton.setOnAction(e -> app.displayRunwayConfigScene(airport,runway));
 
 
-        HBox buttonBox = new HBox(10);
-        buttonBox.getChildren().addAll(backButton);
+
 
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefSize(700, 500);
         importedObstacles = app.getObstacles();
         updateObstaclesList();
+
+
+        Button addButton = new Button();
+        styleButton(addButton, MaterialDesign.MDI_PLUS_BOX, "Add");
+        addButton.setOnAction(e -> {
+            // Handle airport selection (we may need to implement database/xml func early)
+            // Selection error handling
+            if (this.selectedObstacle == null) {
+                System.out.println("Nothing Selected!");
+            } else {
+                this.importedObstacles.add(this.selectedObstacle);
+            }});
+
+        Button removeButton = new Button();
+        styleButton(removeButton, MaterialDesign.MDI_PLUS_BOX, "Remove");
+        removeButton.setOnAction(e -> {
+            // Handle airport selection (we may need to implement database/xml func early)
+            // Selection error handling
+            if (this.selectedObstacle == null) {
+                System.out.println("Nothing Selected!");
+            } else {
+                this.importedObstacles.remove(this.selectedObstacle);
+            }});
+
+        HBox buttonBox = new HBox(10);
+        buttonBox.getChildren().addAll(backButton,addButton,removeButton);
 
         this.getChildren().addAll(title,scrollPane,buttonBox);
     }
@@ -163,6 +188,8 @@ public class ObstacleListScene extends VBox {
 
         var obstaclesBox = new VBox();
         obstaclesBox.setSpacing(5);
+        importedObstacles = new ArrayList<>();
+        importedObstacles.add(new Obstacle("Tree",10,20,30));
 
         for (Obstacle obstacle : importedObstacles) {
             var name = (" -- " + obstacle.getName() + " -- ");

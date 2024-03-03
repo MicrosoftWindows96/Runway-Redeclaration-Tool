@@ -70,12 +70,8 @@ public class ObstacleListScene extends VBox {
         this.airport = airport;
         this.runway = runway;
 
-//        this.otherObstacles = runway.getObstacles();
-//        this.currentObstacles = runway.getObstacles();
-        this.otherObstacles = new ArrayList<>();
-        this.currentObstacles = new ArrayList<>();
-        this.currentObstacles.add(new Obstacle("Tree",10,20,30));
-        this.otherObstacles.add(new Obstacle("Tree",10,20,30));
+        currentObstacles = runway.getObstacles();
+        otherObstacles = app.getObstacles();
 
         var title = new Text("Obstacle Update");
         title.setFont(Font.font("Arial", 24));
@@ -106,10 +102,10 @@ public class ObstacleListScene extends VBox {
 
         this.currentObstacleScroll.setFitToWidth(true);
         this.currentObstacleScroll.setPrefSize(700, 500);
-//        this.currentObstacles = app.getObstacles();
+        this.currentObstacles = this.runway.getObstacles();
         this.otherObstaclesScroll.setFitToWidth(true);
         this.otherObstaclesScroll.setPrefSize(700, 500);
-//        this.otherObstacles = app.getObstacles();
+        this.otherObstacles = app.getObstacles();
         updateObstaclesList();
 
 
@@ -136,9 +132,9 @@ public class ObstacleListScene extends VBox {
             if (this.selectedObstacle == null) {
                 System.out.println("Nothing Selected!");}
             else if (this.otherObstacles.contains(this.selectedObstacle )) {
-                    System.out.println("Already in other obstacles");
-                }
-             else {
+                System.out.println("Already in other obstacles");
+            }
+            else {
                 this.otherObstacles.add(this.selectedObstacle);
                 this.currentObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
@@ -179,6 +175,9 @@ public class ObstacleListScene extends VBox {
         button.setGraphic(hbox);
     }
 
+    private void updateRunwayData(){
+
+    }
     private void updateObstaclesList() {
 
 
@@ -234,171 +233,7 @@ public class ObstacleListScene extends VBox {
     }
 
 
-//    private void promptAddObstacleForm(MainApplication app) {
-//
-//        VBox form = new VBox(10);
-//        form.setAlignment(Pos.CENTER);
-//        form.setPadding(new Insets(20));
-//
-//        Label nameLabel = new Label("Obstacle Name:");
-//        TextField nameInput = new TextField();
-//        styleTextField(nameInput);
-//
-//        Label TORALabel = new Label("TORA:");
-//        TextField TORAInput = new TextField();
-//        styleTextField(TORAInput);
-//
-//        Label TODALabel = new Label("TODA:");
-//        TextField TODAInput = new TextField();
-//        styleTextField(TODAInput);
-//
-//        Label ASDALabel = new Label("ASDA:");
-//        TextField ASDAInput = new TextField();
-//        styleTextField(ASDAInput);
-//
-//        Button submitButton = new Button();
-//        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
-//
-//        Button cancelButton = new Button();
-//        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-//        cancelButton.setOnAction(e -> {
-//            Stage stage = (Stage) form.getScene().getWindow();
-//            stage.close();
-//        });
-//
-//        submitButton.setOnAction(e -> {
-//            String name = nameInput.getText();
-//            String TORAname = TORAInput.getText();
-//            String TODAname = TODAInput.getText();
-//            String ASDAname = ASDAInput.getText();
-//
-//            // Validate
-//            if (name.isEmpty() || TODAname.isEmpty() || TORAname.isEmpty() || ASDAname.isEmpty() ) {
-//                showErrorDialog("All fields are required. Please fill in all fields.");
-//            } else {
-//                try {
-//                    int TORA = Integer.parseInt(TORAInput.getText());
-//                    int TODA = Integer.parseInt(TODAInput.getText());
-//                    int ASDA = Integer.parseInt(ASDAInput.getText());
-//
-//                    if (TODA <= 0 || TORA <= 0 || ASDA <= 0 ) {
-//                        throw new IllegalArgumentException("Invalid measurements for runway.");
-//                    }
-//                    // Data valid, add runway
-//                    // For now, just close the form
-//                    Stage stage = (Stage) form.getScene().getWindow();
-//
-//                    // add the Runway into the list
-//                    this.obstacles.add(new Obstacle(name,TODA,TORA,ASDA));
-//                    updateObstaclesList();
-//
-//                    stage.close();
-//
-//                } catch (NumberFormatException ex) {
-//                    showErrorDialog("Invalid input for number of runways. Please enter a valid integer.");
-//                } catch (IllegalArgumentException ex) {
-//                    showErrorDialog(ex.getMessage());
-//                }
-//            }
-//        });
-//
-//        form.getChildren().addAll(nameLabel, nameInput, TORALabel, TORAInput, TODALabel, TODAInput,
-//                ASDALabel, ASDAInput, submitButton, cancelButton);
-//
-//        Stage dialogStage = new Stage();
-//        dialogStage.initModality(Modality.APPLICATION_MODAL);
-//        dialogStage.setTitle("Add Obstacle");
-//        dialogStage.setScene(new Scene(form));
-//
-//        double centerX = Screen.getPrimary().getVisualBounds().getWidth() / 2;
-//        double centerY = Screen.getPrimary().getVisualBounds().getHeight() / 2;
-//        dialogStage.setX(centerX - 150);
-//        dialogStage.setY(centerY - 100);
-//        dialogStage.showAndWait();
-//    }
 
-//    private void promptUpdateObstacleForm(MainApplication app) {
-//
-//        VBox form = new VBox(10);
-//        form.setAlignment(Pos.CENTER);
-//        form.setPadding(new Insets(20));
-//
-//        Label nameLabel = new Label("Obstacle Name:");
-//        TextField nameInput = new TextField();
-//        styleTextField(nameInput);
-//
-//        Label TORALabel = new Label("TORA:");
-//        TextField TORAInput = new TextField();
-//        styleTextField(TORAInput);
-//
-//        Label TODALabel = new Label("TODA:");
-//        TextField TODAInput = new TextField();
-//        styleTextField(TODAInput);
-//
-//        Label ASDALabel = new Label("ASDA:");
-//        TextField ASDAInput = new TextField();
-//        styleTextField(ASDAInput);
-//
-//        Button submitButton = new Button();
-//        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Update");
-//
-//        Button cancelButton = new Button();
-//        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-//        cancelButton.setOnAction(e -> {
-//            Stage stage = (Stage) form.getScene().getWindow();
-//            stage.close();
-//        });
-//
-//        submitButton.setOnAction(e -> {
-//            String name = nameInput.getText();
-//            String TORAname = TORAInput.getText();
-//            String TODAname = TODAInput.getText();
-//            String ASDAname = ASDAInput.getText();
-//
-//            // Validate
-//            if (name.isEmpty() || TODAname.isEmpty() || TORAname.isEmpty() || ASDAname.isEmpty() ) {
-//                showErrorDialog("All fields are required. Please fill in all fields.");
-//            } else {
-//                try {
-//                    int TORA = Integer.parseInt(TORAInput.getText());
-//                    int TODA = Integer.parseInt(TODAInput.getText());
-//                    int ASDA = Integer.parseInt(ASDAInput.getText());
-//
-//                    if (TODA <= 0 || TORA <= 0 || ASDA <= 0 ) {
-//                        throw new IllegalArgumentException("Invalid measurements for runway.");
-//                    }
-//                    // Data valid, add runway
-//                    // For now, just close the form
-//                    Stage stage = (Stage) form.getScene().getWindow();
-//
-//                    // add the Runway into the list
-//                    this.obstacles.add(new Obstacle(name,TODA,TORA,ASDA));
-//                    updateObstaclesList();
-//
-//                    stage.close();
-//
-//                } catch (NumberFormatException ex) {
-//                    showErrorDialog("Invalid input for number of runways. Please enter a valid integer.");
-//                } catch (IllegalArgumentException ex) {
-//                    showErrorDialog(ex.getMessage());
-//                }
-//            }
-//        });
-//
-//        form.getChildren().addAll(nameLabel, nameInput, TORALabel, TORAInput, TODALabel, TODAInput,
-//                ASDALabel, ASDAInput, submitButton, cancelButton);
-//
-//        Stage dialogStage = new Stage();
-//        dialogStage.initModality(Modality.APPLICATION_MODAL);
-//        dialogStage.setTitle("Add Obstacle");
-//        dialogStage.setScene(new Scene(form));
-//
-//        double centerX = Screen.getPrimary().getVisualBounds().getWidth() / 2;
-//        double centerY = Screen.getPrimary().getVisualBounds().getHeight() / 2;
-//        dialogStage.setX(centerX - 150);
-//        dialogStage.setY(centerY - 100);
-//        dialogStage.showAndWait();
-//    }
 
 
     private void styleTextField(TextField textField) {
@@ -430,29 +265,6 @@ public class ObstacleListScene extends VBox {
         dialog.showAndWait();
     }
 
-//    private void updateList() {
-//        obstaclesObserve.clear();
-//
-//        var runwaysBox = new VBox();
-//        runwaysBox.setSpacing(5);
-//
-//        for (Obstacle obstacle : importedObstacles) {
-//            var name = (" -- " + runway.getName() + " -- ");
-//            var runwayButton = new Button(name);
-//
-//            // Button to select the airport
-//            runwayButton.setOnMouseClicked(event -> {
-//                setSelectedObstacle(obstacle);
-//                System.out.println("Currently selected: " + getSelectedObstacle().getName());
-//            });
-//
-//            runwaysBox.getChildren().add(runwayButton);
-//
-//            obstaclesObserve.add(obstacle);
-//        }
-//
-//        otherObstacles.setContent(runwaysBox);
-//    }
+
 
 }
-

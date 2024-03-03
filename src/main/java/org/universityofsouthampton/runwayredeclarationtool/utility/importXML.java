@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,16 +21,12 @@ import org.w3c.dom.NodeList;
 public class importXML {
 
     private final ArrayList<Airport> importedAirports = new ArrayList<>();
+    private final ArrayList<Obstacle> importedObstacles = new ArrayList<>();
+    private Element root;
 
-    public importXML () {
-
-    }
-
-    // Assuming the input is valid:
-    public ArrayList<Airport> convertToArrayList() {
+    public importXML (File file) {
 
         try {
-            File file = new File("src/main/resources/XML/testAirports.xml");
             InputStream inputStream = new FileInputStream(file);
 
             // Create a DocumentBuilderFactory (Used to parse XML files)
@@ -41,57 +39,104 @@ public class importXML {
             Document doc = dBuilder.parse(inputStream);
             doc.getDocumentElement().normalize();
 
-            // Retrieve the root element
-            Element root = doc.getDocumentElement();
-            // Extract the child elements
-            NodeList nodeList = root.getChildNodes();
+            // Retrieve the root element of the passed file
+            root = doc.getDocumentElement();
 
-            // Iterate over the Airport nodes
-            NodeList airportList = root.getElementsByTagName("Airport");
-            for (int i = 0; i < airportList.getLength(); i++) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Airport> makeAirportsXML() {
+        try {
+            // Collect Airport nodes
+            NodeList airportNodes = root.getElementsByTagName("Airport");
+
+            // Loop through each "Airport" element
+            for (int i = 0; i < airportNodes.getLength(); i++) {
+                Element airportElement = (Element) airportNodes.item(i);
+
+                // Get Object parameters
+                String airportName = airportElement.getAttribute("name");
+                String codeName = airportElement.getAttribute("code");
+
                 // New airport object to be added to the arraylist
-                Airport airport;
+                Airport airport = new Airport(airportName,codeName);
 
-                Node airportNode = airportList.item(i);
-                if (airportNode.getNodeType() == Node.ELEMENT_NODE) {
-                    // Retrieve the airport elements
-                    Element airportElement = (Element) airportNode;
-                    String airportName = airportElement.getAttribute("name");
-                    String code = airportElement.getAttribute("code");
+                // Get the "Runway" element
+                Element runwayElement = (Element) airportElement.getElementsByTagName("Runway").item(0);
 
-                    // Initialise the airport object and it's runways
-                    airport = new Airport(airportName,code);
+                // Collect Logical Runway nodes
+                NodeList logicalRunwayNodes = runwayElement.getElementsByTagName("LogicalRunway");
 
-                    // Add the Runways
-                    NodeList runwayList = airportElement.getElementsByTagName("LogicalRunway");
-                    for (int j = 0; j < runwayList.getLength(); j++) {
-                        // New Runway object to be added to arrayList
-                        Runway runway;
+                for (int j = 0; j < logicalRunwayNodes.getLength(); j++ ) {
+                    Element logicalRunwayElement = (Element) logicalRunwayNodes.item(j);
 
-                        Node runwayNode = runwayList.item(j);
-                        if (runwayNode.getNodeType() == Node.ELEMENT_NODE) {
-                            Element runwayElement = (Element) runwayNode;
-                            String runwayName = runwayElement.getAttribute("degree");
-                            String direction = runwayElement.getElementsByTagName("direction").item(0).getTextContent();
+                    // Get Object Parameters
+                    String degree = logicalRunwayElement.getAttribute("degree");
+                    String direction = logicalRunwayElement.getElementsByTagName("direction").item(0).getTextContent();
+                    int TORA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TORA").item(0).getTextContent());
+                    int TODA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TODA").item(0).getTextContent());
+                    int ASDA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("ASDA").item(0).getTextContent());
+                    int LDA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("LDA").item(0).getTextContent());
+                    int dispThresh = Integer.parseInt(logicalRunwayElement.getElementsByTagName("dispThresh").item(0).getTextContent());
 
-                            int TORA = Integer.parseInt(runwayElement.getElementsByTagName("TORA").item(0).getTextContent());
-                            int TODA = Integer.parseInt(runwayElement.getElementsByTagName("TODA").item(0).getTextContent());
-                            int ASDA = Integer.parseInt(runwayElement.getElementsByTagName("ASDA").item(0).getTextContent());
-                            int LDA = Integer.parseInt(runwayElement.getElementsByTagName("LDA").item(0).getTextContent());
-                            int dispThresh = Integer.parseInt(runwayElement.getElementsByTagName("dispThresh").item(0).getTextContent());
+                    Runway runway = new Runway(degree,TORA,TODA,ASDA,LDA,dispThresh);
 
-                            runway = new Runway(runwayName,TORA,TODA,ASDA,LDA,dispThresh);
-                            airport.addRunway(runway);
+                    // Get the "Obstacles" Element
+                    Element obstaclesElement = (Element) logicalRunwayElement.getElementsByTagName("Obstacles").item(0);
+
+                    if (obstaclesElement != null) {
+                        // Collect all "Obstacle" Element is not null
+                        NodeList obstacleNodes = obstaclesElement.getElementsByTagName("Obstacle");
+
+                        for (int k = 0; k < obstacleNodes.getLength(); k ++) {
+                            Element obstacleElement = (Element) obstacleNodes.item(k);
+
+                            // Get Obstacle Object parameters
+                            String obstacleName = obstacleElement.getAttribute("name");
+                            int height = Integer.parseInt(logicalRunwayElement.getElementsByTagName("Height").item(0).getTextContent());
+                            int distThreshold = Integer.parseInt(logicalRunwayElement.getElementsByTagName("DistThreshold").item(0).getTextContent());
+                            int distCent = Integer.parseInt(logicalRunwayElement.getElementsByTagName("DistCent").item(0).getTextContent());
+
+                            Obstacle obstacle = new Obstacle(obstacleName,height,distThreshold,distCent);
+                            runway.addObstacle(obstacle);
+
                         }
                     }
-                    // Add newly constructed airport object to arrayList
-                    importedAirports.add(airport);
+                    airport.addRunway(runway);
                 }
+                // Add newly constructed airport object to arrayList
+                importedAirports.add(airport);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return importedAirports;
     }
+
+    public ArrayList<Obstacle> makeObstaclesXML() {
+        try {
+            // Iterate over the Obstacle nodes
+            NodeList obstacleList = root.getElementsByTagName("Obstacle");
+
+            for (int i = 0; i < obstacleList.getLength(); i++) {
+                // New Obstacle object to be added to the arraylist
+                Element obstacleElement = (Element) obstacleList.item(i);
+
+                String name = obstacleElement.getAttribute("name");
+                int height = Integer.parseInt(obstacleElement.getElementsByTagName("Height").item(0).getTextContent());
+                int disThreshold = Integer.parseInt(obstacleElement.getElementsByTagName("DistThreshold").item(0).getTextContent());
+                int distCent = Integer.parseInt(obstacleElement.getElementsByTagName("DistCent").item(0).getTextContent());
+
+                Obstacle obstacle = new Obstacle(name,height,disThreshold,distCent);
+                importedObstacles.add(obstacle);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return importedObstacles;
+    }
+
 
 }

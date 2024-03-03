@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <xs:element name="Models">
@@ -19,6 +18,22 @@
                                                     <xs:element name="ASDA" type="xs:integer"/>
                                                     <xs:element name="LDA" type="xs:integer"/>
                                                     <xs:element name="dispThresh" type="xs:integer"/>
+                                                    <xs:element name="Obstacles" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Obstacle" minOccurs="0" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element name="Height" type="xs:integer"/>
+                                                                            <xs:element name="DistThreshold" type="xs:integer"/>
+                                                                            <xs:element name="DistCent" type="xs:integer"/>
+                                                                        </xs:sequence>
+                                                                        <xs:attribute name="name" type="xs:string" use="required"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
                                                 </xs:sequence>
                                                 <xs:attribute name="degree" type="xs:string" use="required"/>
                                             </xs:complexType>

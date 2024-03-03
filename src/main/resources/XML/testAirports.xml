@@ -11,6 +11,18 @@
                 <ASDA>3902</ASDA>
                 <LDA>3595</LDA>
                 <dispThresh>306</dispThresh>
+                <Obstacles>
+                    <Obstacle name="Tree">
+                        <Height>3</Height>
+                        <DistThreshold>5</DistThreshold>
+                        <DistCent>1</DistCent>
+                    </Obstacle>
+                    <Obstacle name="Tower">
+                        <Height>10</Height>
+                        <DistThreshold>29</DistThreshold>
+                        <DistCent>36</DistCent>
+                    </Obstacle>
+                </Obstacles>
             </LogicalRunway>
 
             <LogicalRunway degree="27">

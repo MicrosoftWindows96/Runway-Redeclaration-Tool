@@ -11,6 +11,7 @@ import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
 /**
@@ -128,5 +129,13 @@ public class MainApplication extends Application {
 
     public void addObstacle(Obstacle obstacle) {
         obstacles.add(obstacle);
+    }
+
+    public void updateXMLs() {
+        exportXML airportXML = new exportXML(airports,obstacles,new File("src/main/resources/XML/testAirports.xml"));
+        airportXML.buildAirportsXML();
+
+        exportXML obstacleXML = new exportXML(airports,obstacles,new File("src/main/resources/XML/testObstacles.xml"));
+        obstacleXML.buildObstaclesXML();
     }
 }

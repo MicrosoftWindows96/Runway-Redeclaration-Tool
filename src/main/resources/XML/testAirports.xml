@@ -1,8 +1,6 @@
-<?xml version = "1.0"?>
-<Models xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="airport.xsd">
-
-    <Airport name = "Heathrow" code = "LHR" >
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Models xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="airport.xsd">
+    <Airport code="LHR" name="Heathrow">
         <Runway>
             <LogicalRunway degree="09">
                 <direction>R</direction>
@@ -18,26 +16,23 @@
                         <DistCent>1</DistCent>
                     </Obstacle>
                     <Obstacle name="Tower">
-                        <Height>10</Height>
-                        <DistThreshold>29</DistThreshold>
-                        <DistCent>36</DistCent>
+                        <Height>3</Height>
+                        <DistThreshold>5</DistThreshold>
+                        <DistCent>1</DistCent>
                     </Obstacle>
                 </Obstacles>
             </LogicalRunway>
-
             <LogicalRunway degree="27">
-                <direction>L</direction>
+                <direction>R</direction>
                 <TORA>3884</TORA>
                 <TODA>3962</TODA>
                 <ASDA>3884</ASDA>
                 <LDA>3884</LDA>
                 <dispThresh>5</dispThresh>
             </LogicalRunway>
-
         </Runway>
     </Airport>
-
-    <Airport name = "Southampton" code = "SOU">
+    <Airport code="SOU" name="Southampton">
         <Runway>
             <LogicalRunway degree="09">
                 <direction>R</direction>
@@ -47,9 +42,8 @@
                 <LDA>3595</LDA>
                 <dispThresh>306</dispThresh>
             </LogicalRunway>
-
             <LogicalRunway degree="27">
-                <direction>L</direction>
+                <direction>R</direction>
                 <TORA>3884</TORA>
                 <TODA>3962</TODA>
                 <ASDA>3884</ASDA>
@@ -58,5 +52,4 @@
             </LogicalRunway>
         </Runway>
     </Airport>
-
 </Models>

@@ -1,5 +1,5 @@
-<Obstacles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="obstacle.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Obstacles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="obstacle.xsd">
     <Obstacle name="Bus">
         <Height>3</Height>
         <DistThreshold>20</DistThreshold>
@@ -11,5 +11,3 @@
         <DistCent>20</DistCent>
     </Obstacle>
 </Obstacles>
-
-

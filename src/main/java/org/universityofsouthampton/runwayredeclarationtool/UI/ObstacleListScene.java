@@ -94,7 +94,10 @@ public class ObstacleListScene extends VBox {
 
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        backButton.setOnAction(e -> app.displayRunwayConfigScene(airport,runway));
+        backButton.setOnAction(e -> {
+            app.displayRunwayConfigScene(airport,runway);
+            app.updateXMLs();
+        });
 
 
 

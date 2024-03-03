@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * This class deals with parsing the XML files to convert into arrayLists of airports
+ * This class deals with parsing the XML files to convert into arrayLists of airports and obstacles
  */
 public class importXML {
 

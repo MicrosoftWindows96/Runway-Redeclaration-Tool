@@ -1,6 +1,7 @@
 package org.universityofsouthampton.runwayredeclarationtool;
 
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -29,8 +30,11 @@ public class MainApplication extends Application {
 
         root.getChildren().add(background);
 
-        importXML importXML = new importXML();
-        airports = importXML.convertToArrayList();
+        importXML airportXML = new importXML(new File("src/main/resources/XML/testAirports.xml"));
+        airports = airportXML.makeAirportsXML();
+
+        importXML obstacleXML = new importXML(new File("src/main/resources/XML/testObstacles.xml"));
+        obstacles = obstacleXML.makeObstaclesXML();
 
         displayMenu();
 

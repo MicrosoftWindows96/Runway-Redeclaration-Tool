@@ -70,12 +70,8 @@ public class ObstacleListScene extends VBox {
         this.airport = airport;
         this.runway = runway;
 
-//        this.otherObstacles = runway.getObstacles();
-//        this.currentObstacles = runway.getObstacles();
-        this.otherObstacles = new ArrayList<>();
-        this.currentObstacles = new ArrayList<>();
-        this.currentObstacles.add(new Obstacle("Tree",10,20,30));
-        this.otherObstacles.add(new Obstacle("Tree",10,20,30));
+        currentObstacles = runway.getObstacles();
+        otherObstacles = app.getObstacles();
 
         var title = new Text("Obstacle Update");
         title.setFont(Font.font("Arial", 24));

@@ -1,6 +1,6 @@
 package org.universityofsouthampton.runwayredeclarationtool;
 
-import java.awt.event.KeyEvent;
+import java.io.InputStream;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -10,12 +10,12 @@ import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
 /**
  * Class that handles the scene changes (Controller)
  */
 public class MainApplication extends Application {
-
     private StackPane root;
     private AnimatedPatternBackground background;
     private ArrayList<Airport> airports;
@@ -28,7 +28,12 @@ public class MainApplication extends Application {
 
         root.getChildren().add(background);
 
-        initialiseAirportsXML();
+        // populate arrayList of Airports via the XML importer class
+        importXML importXML = new importXML();
+        airports = importXML.convertToArrayList();
+
+
+//        initialiseAirportsXML();
 //        initialiseObstaclesXML();
 
         displayMenu();
@@ -74,27 +79,24 @@ public class MainApplication extends Application {
      * This method collects the created / creates the airport objects from the XML file
      * (Objects are manually made for now!)
      */
-    private void initialiseAirportsXML () {
-        airports = new ArrayList<>();
-
-        Runway runway1LHR = new Runway("09",3902,3902,3902,3595,306);
-        Airport heathrow = new Airport("Heathrow", "LHR");
-        heathrow.addRunway(runway1LHR);
-        Obstacle obstacle1 = new Obstacle("Obstacle1",25,306,241);
-        Obstacle obstacle2 = new Obstacle("Obstacle2",40,320,250);
-        runway1LHR.addObstacle(obstacle1);
-        runway1LHR.addObstacle(obstacle2);
-
-        Runway runway1SOU = new Runway("09",3902,3902,3902,3595,306);
-        Runway runway2SOU = new Runway("27",3884,3962,3884,4884,0);
-        Airport southampton = new Airport("Southampton", "SOU");
-        southampton.addRunway(runway1SOU);
-        southampton.addRunway(runway2SOU);
-
-        airports.add(heathrow);
-        airports.add(southampton);
-
-    }
+//    private void initialiseAirportsXML () {
+//        Runway runway1LHR = new Runway("09",3902,3902,3902,3595,306);
+//        Airport heathrow = new Airport("Heathrow", "LHR");
+//        heathrow.addRunway(runway1LHR);
+//        Obstacle obstacle1 = new Obstacle("Obstacle1",25,306,241);
+//        Obstacle obstacle2 = new Obstacle("Obstacle2",40,320,250);
+//        runway1LHR.addObstacle(obstacle1);
+//        runway1LHR.addObstacle(obstacle2);
+//
+//        Runway runway1SOU = new Runway("09",3902,3902,3902,3595,306);
+//        Runway runway2SOU = new Runway("27",3884,3962,3884,4884,0);
+//        Airport southampton = new Airport("Southampton", "SOU");
+//        southampton.addRunway(runway1SOU);
+//        southampton.addRunway(runway2SOU);
+//
+//        airports.add(heathrow);
+//        airports.add(southampton);
+//    }
 
 //    private void initialiseObstaclesXML () {
 //        obstacles = new ArrayList<>();

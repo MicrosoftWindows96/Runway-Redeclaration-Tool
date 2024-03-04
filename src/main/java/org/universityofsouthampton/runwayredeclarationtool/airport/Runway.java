@@ -9,7 +9,7 @@ import java.util.List;
 public class Runway {
 
     private String name; // Runway name
-    String logicalRunway1, getLogicalRunway2;
+    String logicalRunway1, logicalRunway2;
     private String logicalRunway; //runway name if used from the other side. 09L -> 27R
     private int TORA; // Take-Off Run Available
     private int TODA; // Take-Off Distance Available
@@ -130,17 +130,28 @@ public class Runway {
         else this.name = name;
     }
 
-    public String getVerticalOpposite(String number) {
-        try {
-            int num = Integer.parseInt(number); // Convert string to integer
-            int opposite = num + 18; // Add 18 to get the opposite
-            if (opposite > 36) opposite -= 36; // Wrap around if necessary
-            return String.format("%02d", opposite);
-        } catch (NumberFormatException e) {
-            return "Invalid input";
+    //get logical runways out of one runway name.
+    public void setLogicalRunways(String runwayName) {
+        int runwayNumber = Integer.parseInt(runwayName);
+
+        int oppositeRunwayNumber = runwayNumber + 18;
+        if (oppositeRunwayNumber > 36) {
+            oppositeRunwayNumber -= 36;
         }
+
+        // Convert back to strings, ensuring they are formatted with leading zeros if necessary
+        logicalRunway1 = String.format("%02d", runwayNumber);
+        logicalRunway2 = String.format("%02d", oppositeRunwayNumber);
     }
 
+    // Getters for the logical runways
+    public String getLogicalRunway1() {
+        return logicalRunway1;
+    }
+
+    public String getLogicalRunway2() {
+        return logicalRunway2;
+    }
     public void recalculateLDA(Obstacle obstacle) {
         int obstacleHeight = obstacle.getHeight();
         int distanceFromThreshold = obstacle.getDistanceFromThreshold();

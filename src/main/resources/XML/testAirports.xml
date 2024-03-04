@@ -20,6 +20,11 @@
                         <DistThreshold>5</DistThreshold>
                         <DistCent>1</DistCent>
                     </Obstacle>
+                    <Obstacle name="Bus">
+                        <Height>3</Height>
+                        <DistThreshold>5</DistThreshold>
+                        <DistCent>1</DistCent>
+                    </Obstacle>
                 </Obstacles>
             </LogicalRunway>
             <LogicalRunway degree="27">

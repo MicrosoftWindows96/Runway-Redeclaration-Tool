@@ -22,6 +22,12 @@ public class Runway {
     private int RESA; // Runway End Safety Area
     private int TOCS; // Take-Off Climb Surface
     private int ALS; // Approach Landing Surface
+    private int stripEnd = 60;
+    private int blastProtectionValue;
+    private boolean landingOver;
+    private boolean landingToward;
+    private boolean takeoffAway;
+    private boolean takeoffToward;
 
     public Runway(String name, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
         if(!isValidName(name) || name == null || TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
@@ -161,5 +167,58 @@ public class Runway {
             // Subtract total distance to clear the obstacle from LDA
             this.LDA = Math.max(this.LDA - totalDistanceToSubtract, 0);
         }
+    }
+
+    private void calculateLDA(Obstacle obstacle) {
+
+        if (landingOver) {
+            int temporaryThreshold;
+            int obstacleHeight = obstacle.getHeight();
+
+
+            if (obstacleHeight * ALS >= RESA) {
+                temporaryThreshold = obstacleHeight * ALS;
+            } else {
+                temporaryThreshold = RESA;
+            }
+
+            if ((temporaryThreshold + stripEnd) >= blastProtectionValue) {
+                this.LDA = LDA - obstacle.getDistanceFromThreshold() - temporaryThreshold - stripEnd;
+            } else {
+                this.LDA =  LDA - obstacle.getDistanceFromThreshold() - blastProtectionValue;
+            }
+
+
+        }
+        else if (landingToward) {
+
+            this.LDA = obstacle.getDistanceFromThreshold() - RESA - stripEnd;
+
+        }
+    }
+
+
+    private void calculateTORA_ASDA_TODA(Obstacle obstacle) {
+        if (takeoffToward) {
+            int temporaryThreshold;
+            int obstacleHeight = obstacle.getHeight();
+
+            if (obstacleHeight * TOCS >= RESA) {
+                temporaryThreshold = obstacle.getHeight() * TOCS;
+            } else {
+                temporaryThreshold = RESA;
+            }
+
+            this.TORA = obstacle.getDistanceFromThreshold() + displacedThreshold - temporaryThreshold - stripEnd;
+            this.ASDA = TORA;
+            this.TODA = TORA;
+        }
+
+        else if (takeoffAway) {
+
+            this.TORA = TORA - blastProtectionValue - obstacle.getDistanceFromThreshold() - displacedThreshold ;
+
+        }
+
     }
 }

@@ -3,15 +3,9 @@ package org.universityofsouthampton.runwayredeclarationtool.UI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 
@@ -33,10 +27,6 @@ public class MenuScene extends VBox {
     Button airport = new Button();
     styleButton(airport, MaterialDesign.MDI_DATABASE, "Airports");
     airport.setOnAction(e -> app.displayAirportScene());
-
-//    Button obstacle = new Button();
-//    styleButton(obstacle, MaterialDesign.MDI_DATABASE, "Obstacles");
-//    obstacle.setOnAction(e -> app.displayObstacleScene());
 
     Button quit = new Button();
     styleButton(quit, MaterialDesign.MDI_EXIT_TO_APP, "Quit");

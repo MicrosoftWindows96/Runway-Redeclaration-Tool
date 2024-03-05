@@ -1,12 +1,11 @@
 package org.universityofsouthampton.runwayredeclarationtool.airport;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class Airport {
     private String airportName;
     private String code;
-    private ArrayList<Runway> runways;
+    private final ArrayList<Runway> runways;
     public Airport(String name, String code){
         airportName = name;
         runways = new ArrayList<>();
@@ -30,7 +29,6 @@ public class Airport {
         this.code = code;
     }
 
-    //checks for parallel runways in an airport
     public ArrayList<Integer> getParallelRunways() {
         int numberOfRunways = runways.size();
         ArrayList<Integer> parallelRunwayIndex = new ArrayList<>();

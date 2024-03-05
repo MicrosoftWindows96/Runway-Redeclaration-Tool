@@ -87,7 +87,7 @@ public class exportXML {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
     Transformer transformer = transformerFactory.newTransformer();
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); // 4 spaces for indentation
+    transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4"); // 4 spaces for indentation
     DOMSource domSource = new DOMSource(document);
     StreamResult streamResult = new StreamResult(filePath);
     transformer.transform(domSource, streamResult);

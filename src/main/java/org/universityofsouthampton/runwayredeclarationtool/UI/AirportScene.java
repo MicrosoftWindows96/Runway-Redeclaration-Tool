@@ -4,25 +4,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
-import org.kordamp.ikonli.javafx.FontIcon;
+import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
-import javafx.stage.Stage;
-import javafx.stage.Screen;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
-import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
-
-import java.util.Optional;
 
 import static javafx.stage.Modality.APPLICATION_MODAL;
 
@@ -88,7 +79,7 @@ public class AirportScene extends VBox {
       String airportCode = codeInput.getText();
 
       if (airportName.isEmpty() || airportCode.isEmpty()) {
-        showErrorDialog("Please fill in all fields.");
+        showErrorDialog();
         return;
       }
 
@@ -107,13 +98,7 @@ public class AirportScene extends VBox {
   }
 
   static void extractedDialogStageMethod(VBox form, Stage dialogStage) {
-    dialogStage.setScene(new Scene(form));
-
-    double centerX = Screen.getPrimary().getVisualBounds().getWidth() / 2;
-    double centerY = Screen.getPrimary().getVisualBounds().getHeight() / 2;
-    dialogStage.setX(centerX - 150);
-    dialogStage.setY(centerY - 100);
-    dialogStage.showAndWait();
+    ObstacleListScene.dialogGenerator(form, dialogStage);
   }
 
   private void styleTextField(TextField textField) {
@@ -121,14 +106,14 @@ public class AirportScene extends VBox {
     textField.setFont(Font.font("Arial", 16));
   }
 
-  private void showErrorDialog(String message) {
+  private void showErrorDialog() {
     Stage dialog;
       dialog = new Stage();
       dialog.initModality(APPLICATION_MODAL);
 
     VBox dialogVbox = new VBox(20);
 
-    Text errorMessage = new Text(message);
+    Text errorMessage = new Text("Please fill in all fields.");
     Button okButton = new Button();
     styleButton(okButton, MaterialDesign.MDI_CHECK, "OK");
 

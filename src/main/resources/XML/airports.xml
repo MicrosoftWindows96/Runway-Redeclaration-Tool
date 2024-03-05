@@ -4,37 +4,6 @@
         <Runway>
             <LogicalRunway degree="20">
                 <direction>R</direction>
-                <TORA>20</TORA>
-                <TODA>10</TODA>
-                <ASDA>30</ASDA>
-                <LDA>40</LDA>
-                <dispThresh>50</dispThresh>
-                <Obstacles>
-                    <Obstacle name="Test">
-                        <Height>1</Height>
-                        <DistThreshold>1</DistThreshold>
-                        <DistCent>1</DistCent>
-                    </Obstacle>
-                </Obstacles>
-            </LogicalRunway>
-            <LogicalRunway degree="30">
-                <direction>L</direction>
-                <TORA>2</TORA>
-                <TODA>1</TODA>
-                <ASDA>3</ASDA>
-                <LDA>4</LDA>
-                <dispThresh>5</dispThresh>
-            </LogicalRunway>
-            <LogicalRunway degree="20">
-                <direction>R</direction>
-                <TORA>2</TORA>
-                <TODA>1</TODA>
-                <ASDA>3</ASDA>
-                <LDA>4</LDA>
-                <dispThresh>5</dispThresh>
-            </LogicalRunway>
-            <LogicalRunway degree="10">
-                <direction>C</direction>
                 <TORA>2</TORA>
                 <TODA>1</TODA>
                 <ASDA>3</ASDA>

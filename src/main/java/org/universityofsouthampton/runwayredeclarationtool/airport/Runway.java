@@ -14,28 +14,28 @@ public class Runway {
     private int TODA; // Take-Off Distance Available
     private int ASDA; // Accelerate-Stop Distance Available
     private int LDA; // Landing Distance Available
-    private int displacedThreshold; // Displaced Threshold
+    private final int displacedThreshold; // Displaced Threshold
 
-    private ArrayList<Obstacle> obstacles;
+    private final ArrayList<Obstacle> obstacles;
 //    private List<Obstacle> obstacles; // List of obstacles
     private int RESA; // Runway End Safety Area
     private int TOCS; // Take-Off Climb Surface
     private int ALS; // Approach Landing Surface
-    private int stripEnd = 60;
+    private final int stripEnd = 60;
     private int blastProtectionValue;
     private boolean landingOver;
     private boolean landingToward;
     private boolean takeoffAway;
     private boolean takeoffToward;
-    private String direction;
-    private String degrees;
+    private final String direction;
+    private final String degrees;
 
     public Runway(String degrees, String direction, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
         this.degrees = degrees;
         this.direction = direction;
         this.name = degrees + direction;
 
-        if (!isValidName(name)) {
+        if (isValidName(name)) {
             throw new IllegalArgumentException("Invalid degrees/direction");
         } else if ((TORA < 0) || (TODA < 0) || (ASDA < 0) || (LDA < 0) || (displacedThreshold < 0)) {
             throw new IllegalArgumentException("Invalid runway parameters");
@@ -58,6 +58,7 @@ public class Runway {
         if(obstacle == null){
             throw new IllegalArgumentException("Invalid obstacle");
         }
+
         this.obstacles.add(obstacle);
     }
 
@@ -65,6 +66,7 @@ public class Runway {
         if(obstacle == null){
             throw new IllegalArgumentException("Invalid obstacle");
         }
+
         this.obstacles.remove(obstacle);
     }
 
@@ -123,18 +125,18 @@ public class Runway {
     }
 
     public boolean isValidName(String name){
-        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])(L|R|C)?$";
-        return name.matches(regex);
+        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])([LRC])?$";
+        return !name.matches(regex);
     }
     public void setName(String name) throws Exception{
-        if(!isValidName(name)){
+        if(isValidName(name)){
             throw new Exception("Invalid name");
         }
+
         else this.name = name;
         setLogicalRunways(name);
     }
 
-    //get logical runways out of one runway name.
     public void setLogicalRunways(String runwayName) {
         int runwayNumber = Integer.parseInt(runwayName);
 
@@ -143,12 +145,10 @@ public class Runway {
             oppositeRunwayNumber -= 36;
         }
 
-        // Convert back to strings, ensuring they are formatted with leading zeros if necessary
         logicalRunway1 = String.format("%02d", runwayNumber);
         logicalRunway2 = String.format("%02d", oppositeRunwayNumber);
     }
 
-    // Getters for the logical runways
     public String getLogicalRunway1() {
         return logicalRunway1;
     }
@@ -192,11 +192,7 @@ public class Runway {
             int obstacleHeight = obstacle.getHeight();
 
 
-            if (obstacleHeight * ALS >= RESA) {
-                temporaryThreshold = obstacleHeight * ALS;
-            } else {
-                temporaryThreshold = RESA;
-            }
+            temporaryThreshold = Math.max(obstacleHeight * ALS, RESA);
 
             if ((temporaryThreshold + stripEnd) >= blastProtectionValue) {
                 this.LDA = LDA - obstacle.getDistanceFromThreshold() - temporaryThreshold - stripEnd;
@@ -236,10 +232,6 @@ public class Runway {
 
         }
 
-    }
-
-    private void setDirection () {
-        this.direction = direction;
     }
 
     public String getDirection() {

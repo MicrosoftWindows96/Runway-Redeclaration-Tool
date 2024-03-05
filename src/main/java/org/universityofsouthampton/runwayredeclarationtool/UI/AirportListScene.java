@@ -1,31 +1,23 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import java.io.File;
-import java.util.ArrayList;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.util.Pair;
-import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class AirportListScene extends VBox {
 
@@ -110,7 +102,7 @@ public class AirportListScene extends VBox {
                     airportButton.setStyle(("-fx-background-color: #333; -fx-text-fill: white;"));
                 }
             });
-            // Button to select the airport
+
             airportButton.setOnMouseClicked(e -> {
                 if (currentlySelectedButton != null) {
                     currentlySelectedButton.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
@@ -130,9 +122,6 @@ public class AirportListScene extends VBox {
         scrollPane.setContent(airportsBox);
     }
 
-    /*
-    Member Variable of selected airport changes to be referenced for next screen!
-     */
     private void setSelectedAirport (Airport airport) {
         selectedAirport = airport;
     }
@@ -153,21 +142,7 @@ public class AirportListScene extends VBox {
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
         button.setOnMouseClicked(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
 
-        FontIcon buttonIcon = new FontIcon(icon);
-        buttonIcon.setIconColor(Color.WHITE);
-        button.setGraphic(buttonIcon);
-        button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Only display the icon
-
-        Label label = new Label(text);
-        label.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-        label.setTextFill(Color.WHITE);
-        label.setAlignment(Pos.CENTER);
-
-        HBox hbox = new HBox(buttonIcon, label);
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        hbox.setSpacing(10);
-
-        button.setGraphic(hbox);
+        ObstacleListScene.styleIcon(button, icon, text);
     }
 
     private void importAirportsFromXML() {
@@ -182,11 +157,6 @@ public class AirportListScene extends VBox {
             app.setAirports(airports);
             updateList();
         }
-
     }
 
-
-    public Scene createScene(MainApplication app) {
-        return new Scene(this, 300, 400);
-    }
 }

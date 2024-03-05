@@ -1,18 +1,11 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
@@ -41,11 +34,11 @@ public class RunwayConfigViewScene extends VBox {
     setUpParameters();
 
     Button obstacleUpdateButton = new Button();
-    styleButton(obstacleUpdateButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Obstacle");
+    styleButton(obstacleUpdateButton, "Obstacle");
     obstacleUpdateButton.setOnAction(e -> app.displayObstacleListScene(airport,runway));
 
     Button backButton = new Button();
-    styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
+    styleButton(backButton, "Return");
     backButton.setOnAction(e -> app.displayRunwayListScene(airport));
 
     HBox buttonBox = new HBox(10);
@@ -75,7 +68,7 @@ public class RunwayConfigViewScene extends VBox {
     return new HBox(new Text(name + distance + " m"));
   }
 
-  private void styleButton(Button button, MaterialDesign icon, String text) {
-    AirportListScene.extractedStylingMethod(button, icon, text);
+  private void styleButton(Button button, String text) {
+    AirportListScene.extractedStylingMethod(button, MaterialDesign.MDI_KEYBOARD_RETURN, text);
   }
 }

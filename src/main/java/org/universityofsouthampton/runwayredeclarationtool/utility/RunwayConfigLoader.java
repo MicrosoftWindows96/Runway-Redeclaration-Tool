@@ -21,14 +21,14 @@ public class RunwayConfigLoader {
                 String[] parts = line.split(",");
 
                 if (parts.length == 7) {
-                    String type = parts[0].trim();
-                    String name = parts[1].trim();
+                    String degrees = parts[0].trim();
+                    String direction = parts[1].trim();
                     int TORA = Integer.parseInt(parts[2].trim());
                     int TODA = Integer.parseInt(parts[3].trim());
                     int ASDA = Integer.parseInt(parts[4].trim());
                     int LDA = Integer.parseInt(parts[5].trim());
                     int displacedThreshold = Integer.parseInt(parts[6].trim());
-                    runways.add(new Runway(name, TORA, TODA, ASDA, LDA, displacedThreshold));
+                    runways.add(new Runway(degrees, direction, TORA, TODA, ASDA, LDA, displacedThreshold));
                 }
             }
         } catch (IOException | NumberFormatException e) {

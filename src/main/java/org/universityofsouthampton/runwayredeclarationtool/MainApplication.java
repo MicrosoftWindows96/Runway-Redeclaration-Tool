@@ -122,7 +122,7 @@ public class MainApplication extends Application {
     private void initialiseAirportsXML () {
         airports = new ArrayList<>();
 
-        Runway runway1LHR = new Runway("09",3902,3902,3902,3595,306);
+        Runway runway1LHR = new Runway("09", "R", 3902,3902,3902,3595,306);
         Airport heathrow = new Airport("Heathrow", "LHR");
         heathrow.addRunway(runway1LHR);
         Obstacle obstacle1 = new Obstacle("Obstacle1",25,306,241);
@@ -130,8 +130,8 @@ public class MainApplication extends Application {
         runway1LHR.addObstacle(obstacle1);
         runway1LHR.addObstacle(obstacle2);
 
-        Runway runway1SOU = new Runway("09",3902,3902,3902,3595,306);
-        Runway runway2SOU = new Runway("27",3884,3962,3884,4884,0);
+        Runway runway1SOU = new Runway("09", "C", 3902,3902,3902,3595,306);
+        Runway runway2SOU = new Runway("27", "L",3884,3962,3884,4884,0);
         Airport southampton = new Airport("Southampton", "SOU");
         southampton.addRunway(runway1SOU);
         southampton.addRunway(runway2SOU);

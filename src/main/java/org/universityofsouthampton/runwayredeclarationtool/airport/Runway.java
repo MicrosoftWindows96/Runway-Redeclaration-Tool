@@ -1,7 +1,6 @@
 package org.universityofsouthampton.runwayredeclarationtool.airport;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class stores the individual information of a runway to be retrieved by UI classes to visualise the info.
@@ -28,12 +27,18 @@ public class Runway {
     private boolean landingToward;
     private boolean takeoffAway;
     private boolean takeoffToward;
+    private String direction;
+    private String degrees;
 
-    public Runway(String name, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
-        if(!isValidName(name) || TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
+    public Runway(String degrees, String direction, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
+        this.degrees = degrees;
+        this.direction = direction;
+        this.name = degrees + direction;
+
+        if(!isValidName(name)|| TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
             throw new IllegalArgumentException("Invalid runway parameters");
         }
-        this.name = name;
+
         this.TORA = TORA;
         this.TODA = TODA;
         this.ASDA = ASDA;
@@ -233,6 +238,14 @@ public class Runway {
     }
 
     private void setDirection () {
+        this.direction = direction;
+    }
 
+    public String getDirection() {
+        return this.direction;
+    }
+
+    public String getDegrees() {
+        return this.degrees;
     }
 }

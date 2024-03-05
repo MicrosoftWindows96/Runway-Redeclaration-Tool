@@ -205,7 +205,7 @@ public class RunwayListScene extends VBox {
           }
 
           Stage stage = (Stage) form.getScene().getWindow();
-          runways.add(new Runway(name, TODA, TORA, ASDA, LDA, DisThresh));
+          runways.add(new Runway(degree, direction, TODA, TORA, ASDA, LDA, DisThresh));
           updateList();
           stage.close();
 

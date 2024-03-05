@@ -62,7 +62,7 @@ public class exportXML {
       airportElement.appendChild(runwayElement);
 
       for (Runway runway : airport.getRunways()) {
-        createRunwayElement(document,runwayElement,runway.getName(),"R",
+        createRunwayElement(document,runwayElement, runway.getDegrees(), runway.getDirection(),
             String.valueOf(runway.getTORA()),
             String.valueOf(runway.getTODA()),
             String.valueOf(runway.getASDA()),

@@ -82,7 +82,7 @@ public class importXML {
                     int LDA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("LDA").item(0).getTextContent());
                     int dispThresh = Integer.parseInt(logicalRunwayElement.getElementsByTagName("dispThresh").item(0).getTextContent());
 
-                    Runway runway = new Runway(name,TORA,TODA,ASDA,LDA,dispThresh);
+                    Runway runway = new Runway(degree, direction, TORA,TODA,ASDA,LDA,dispThresh);
 
                     // Get the "Obstacles" Element
                     Element obstaclesElement = (Element) logicalRunwayElement.getElementsByTagName("Obstacles").item(0);

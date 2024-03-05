@@ -102,8 +102,7 @@ public class RunwayListScene extends VBox {
     runwaysBox.setSpacing(5);
 
     for (Runway runway : runways) {
-      // Use the full runway name directly
-      var name = runway.getName(); // Directly use the runway's name, assuming it includes direction
+      var name = runway.getName();
       var runwayButton = new Button(name);
       styleButton(runwayButton, MaterialDesign.MDI_ARROW_UP, name);
 
@@ -132,9 +131,15 @@ public class RunwayListScene extends VBox {
     form.setAlignment(Pos.CENTER);
     form.setPadding(new Insets(20));
 
-    Label nameLabel = new Label("Runway Name:");
-    TextField nameInput = new TextField();
-    styleTextField(nameInput);
+    Label degreeLabel = new Label("Degree:");
+    TextField degreeInput = new TextField();
+    styleTextField(degreeInput);
+    degreeInput.setPromptText("Degree");
+
+    Label directionLabel = new Label("Direction (L, R, C):");
+    TextField directionInput = new TextField();
+    styleTextField(directionInput);
+    directionInput.setPromptText("Direction (L, R, C)");
 
     Label TORALabel = new Label("TORA:");
     TextField TORAInput = new TextField();
@@ -158,7 +163,6 @@ public class RunwayListScene extends VBox {
 
     Button submitButton = new Button();
     styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
-    // Add airport
 
     Button cancelButton = new Button();
     styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
@@ -168,16 +172,13 @@ public class RunwayListScene extends VBox {
     });
 
     submitButton.setOnAction(e -> {
-      String name = nameInput.getText();
-      String TORAname = TORAInput.getText();
-      String TODAname = TODAInput.getText();
-      String ASDAname = ASDAInput.getText();
-      String LDAname = LDAInput.getText();
-      String DisThreshname = DisThreshInput.getText();
+      String degree = degreeInput.getText().trim();
+      String direction = directionInput.getText().trim();
+      String name = degree + direction;
 
-      // Validate
-      if (name.isEmpty() || TODAname.isEmpty() || TORAname.isEmpty() || ASDAname.isEmpty() || LDAname.isEmpty() || DisThreshname.isEmpty()) {
-        showErrorDialog("All fields are required. Please fill in all fields.");
+
+      if (!name.matches("\\d{2}[LCR]")) {
+        showErrorDialog("Invalid runway name. The name must consist of two digits followed by L, C, or R.");
       } else {
         try {
           int TORA = Integer.parseInt(TORAInput.getText());
@@ -189,14 +190,10 @@ public class RunwayListScene extends VBox {
           if (TODA <= 0 || TORA <= 0 || ASDA <= 0 || LDA <= 0 || DisThresh < 0) {
             throw new IllegalArgumentException("Invalid measurements for runway.");
           }
-          // Data valid, add runway
-          // For now, just close the form
+
           Stage stage = (Stage) form.getScene().getWindow();
-
-          // add the Runway into the list
-          runways.add(new Runway(name,TODA,TORA,ASDA,LDA,DisThresh));
+          runways.add(new Runway(name, TODA, TORA, ASDA, LDA, DisThresh));
           updateList();
-
           stage.close();
 
         } catch (NumberFormatException ex) {
@@ -207,8 +204,9 @@ public class RunwayListScene extends VBox {
       }
     });
 
-    form.getChildren().addAll(nameLabel, nameInput, TORALabel, TORAInput, TODALabel, TODAInput,
-        ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
+    form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput,
+            ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput,
+            submitButton, cancelButton);
 
     Stage dialogStage = new Stage();
     dialogStage.initModality(Modality.APPLICATION_MODAL);

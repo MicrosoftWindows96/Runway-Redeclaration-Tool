@@ -74,10 +74,6 @@ public class AirportScene extends VBox {
     TextField codeInput = new TextField();
     styleTextField(codeInput);
 
-    Label runwayLabel = new Label("Number of Runways:");
-    TextField runwayInput = new TextField();
-    styleTextField(runwayInput);
-
     Button submitButton = new Button("Add Airport");
     styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
 
@@ -85,50 +81,21 @@ public class AirportScene extends VBox {
     styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
     cancelButton.setOnAction(e -> ((Stage) form.getScene().getWindow()).close());
 
-    form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, runwayLabel, runwayInput, submitButton, cancelButton);
+    form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, submitButton, cancelButton);
 
     submitButton.setOnAction(e -> {
       String airportName = nameInput.getText();
       String airportCode = codeInput.getText();
-      String numOfRunwaysText = runwayInput.getText();
 
-      if (airportName.isEmpty() || airportCode.isEmpty() || numOfRunwaysText.isEmpty()) {
+      if (airportName.isEmpty() || airportCode.isEmpty()) {
         showErrorDialog("Please fill in all fields.");
         return;
       }
 
-      int numOfRunways;
-      try {
-        numOfRunways = Integer.parseInt(numOfRunwaysText);
-        if (numOfRunways <= 0) {
-          throw new NumberFormatException();
-        }
-      } catch (NumberFormatException nfe) {
-        showErrorDialog("Number of runways must be a positive integer.");
-        return;
-      }
-
       Airport newAirport = new Airport(airportName, airportCode);
-
-      boolean allRunwaysEntered = true;
-      for (int i = 0; i < numOfRunways; i++) {
-        RunwayDetailsDialog runwayDialog = new RunwayDetailsDialog();
-        Optional<Runway> result = runwayDialog.showAndWait();
-        if (result.isPresent()) {
-          newAirport.addRunway(result.get());
-        } else {
-          allRunwaysEntered = false;
-          break;
-        }
-      }
-
-      if (allRunwaysEntered && newAirport.getRunways().size() == numOfRunways) {
-        app.addAirport(newAirport);
-        app.updateAirportsXML();
-        ((Stage) form.getScene().getWindow()).close();
-      } else {
-        showErrorDialog("Runway details must be provided for all runways.");
-      }
+      app.addAirport(newAirport);
+      app.updateAirportsXML();
+      ((Stage) form.getScene().getWindow()).close();
     });
 
 

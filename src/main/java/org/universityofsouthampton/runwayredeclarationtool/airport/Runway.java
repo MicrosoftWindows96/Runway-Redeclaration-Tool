@@ -14,30 +14,33 @@ public class Runway {
     private int TODA; // Take-Off Distance Available
     private int ASDA; // Accelerate-Stop Distance Available
     private int LDA; // Landing Distance Available
-    private final int displacedThreshold; // Displaced Threshold
 
-    private final ArrayList<Obstacle> obstacles;
+    private int newTORA; // Calculated Take-Off Run Available
+    private int newTODA; // Calculated Take-Off Distance Available
+    private int newASDA; // Calculated Accelerate-Stop Distance Available
+    private int newLDA; // Calculated Landing Distance Available
+    private int displacedThreshold; // Displaced Threshold
+
+    private ArrayList<Obstacle> obstacles;
 //    private List<Obstacle> obstacles; // List of obstacles
     private int RESA; // Runway End Safety Area
     private int TOCS; // Take-Off Climb Surface
     private int ALS; // Approach Landing Surface
-    private final int stripEnd = 60;
+    private int stripEnd = 60;
     private int blastProtectionValue;
     private boolean landingOver;
     private boolean landingToward;
     private boolean takeoffAway;
     private boolean takeoffToward;
-    private final String direction;
-    private final String degrees;
+    private String direction;
+    private String degrees;
 
     public Runway(String degrees, String direction, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
         this.degrees = degrees;
         this.direction = direction;
         this.name = degrees + direction;
 
-        if (isValidName(name)) {
-            throw new IllegalArgumentException("Invalid degrees/direction");
-        } else if ((TORA < 0) || (TODA < 0) || (ASDA < 0) || (LDA < 0) || (displacedThreshold < 0)) {
+        if(!isValidName(name)|| TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
             throw new IllegalArgumentException("Invalid runway parameters");
         }
 
@@ -45,12 +48,13 @@ public class Runway {
         this.TODA = TODA;
         this.ASDA = ASDA;
         this.LDA = LDA;
-
         this.displacedThreshold = displacedThreshold;
+
         this.obstacles = new ArrayList<>();
+
     }
 
-    public ArrayList<Obstacle> getObstacles() {
+    public ArrayList<Obstacle> getObstacles(){
         return this.obstacles;
     }
 
@@ -58,16 +62,32 @@ public class Runway {
         if(obstacle == null){
             throw new IllegalArgumentException("Invalid obstacle");
         }
-
         this.obstacles.add(obstacle);
+        if (obstacle.getDistanceFromThreshold() <= 1000) {
+            this.takeoffAway = true;
+            this.landingOver = true;
+            this.landingToward = false;
+            this.takeoffToward = false;
+        } else {
+            this.landingToward = true;
+            this.takeoffToward = true;
+            this.takeoffAway = false;
+            this.landingOver = false;
+        }
+        this.calculateLDA();
+        this.calculateTORA_ASDA_TODA();
     }
 
     public void removeObstacle(Obstacle obstacle) {
         if(obstacle == null){
             throw new IllegalArgumentException("Invalid obstacle");
         }
-
         this.obstacles.remove(obstacle);
+        this.newASDA = this.ASDA;
+        this.newTODA = this.TODA;
+        this.newTORA = this.TORA;
+        this.newLDA = this.LDA;
+
     }
 
     @Override
@@ -125,18 +145,18 @@ public class Runway {
     }
 
     public boolean isValidName(String name){
-        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])([LRC])?$";
-        return !name.matches(regex);
+        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])(L|R|C)?$";
+        return name.matches(regex);
     }
     public void setName(String name) throws Exception{
-        if(isValidName(name)){
+        if(!isValidName(name)){
             throw new Exception("Invalid name");
         }
-
         else this.name = name;
         setLogicalRunways(name);
     }
 
+    //get logical runways out of one runway name.
     public void setLogicalRunways(String runwayName) {
         int runwayNumber = Integer.parseInt(runwayName);
 
@@ -145,10 +165,12 @@ public class Runway {
             oppositeRunwayNumber -= 36;
         }
 
+        // Convert back to strings, ensuring they are formatted with leading zeros if necessary
         logicalRunway1 = String.format("%02d", runwayNumber);
         logicalRunway2 = String.format("%02d", oppositeRunwayNumber);
     }
 
+    // Getters for the logical runways
     public String getLogicalRunway1() {
         return logicalRunway1;
     }
@@ -185,32 +207,41 @@ public class Runway {
         }
     }
 
-    private void calculateLDA(Obstacle obstacle) {
+    private void calculateLDA() {
+
+        Obstacle obstacle = obstacles.getFirst();
 
         if (landingOver) {
             int temporaryThreshold;
             int obstacleHeight = obstacle.getHeight();
 
 
-            temporaryThreshold = Math.max(obstacleHeight * ALS, RESA);
+            if (obstacleHeight * ALS >= RESA) {
+                temporaryThreshold = obstacleHeight * ALS;
+            } else {
+                temporaryThreshold = RESA;
+            }
 
             if ((temporaryThreshold + stripEnd) >= blastProtectionValue) {
-                this.LDA = LDA - obstacle.getDistanceFromThreshold() - temporaryThreshold - stripEnd;
+                this.newLDA = LDA - obstacle.getDistanceFromThreshold() - temporaryThreshold - stripEnd;
             } else {
-                this.LDA =  LDA - obstacle.getDistanceFromThreshold() - blastProtectionValue;
+                this.newLDA =  LDA - obstacle.getDistanceFromThreshold() - blastProtectionValue;
             }
 
 
         }
         else if (landingToward) {
 
-            this.LDA = obstacle.getDistanceFromThreshold() - RESA - stripEnd;
+            this.newLDA = obstacle.getDistanceFromThreshold() - RESA - stripEnd;
 
         }
     }
 
 
-    private void calculateTORA_ASDA_TODA(Obstacle obstacle) {
+    private void calculateTORA_ASDA_TODA() {
+
+        Obstacle obstacle = obstacles.getFirst();
+
         if (takeoffToward) {
             int temporaryThreshold;
             int obstacleHeight = obstacle.getHeight();
@@ -221,17 +252,22 @@ public class Runway {
                 temporaryThreshold = RESA;
             }
 
-            this.TORA = obstacle.getDistanceFromThreshold() + displacedThreshold - temporaryThreshold - stripEnd;
-            this.ASDA = TORA;
-            this.TODA = TORA;
+            this.newTORA = obstacle.getDistanceFromThreshold() + displacedThreshold - temporaryThreshold - stripEnd;
+            this.newASDA = TORA;
+            this.newTODA = TORA;
         }
 
         else if (takeoffAway) {
 
-            this.TORA = TORA - blastProtectionValue - obstacle.getDistanceFromThreshold() - displacedThreshold ;
+            this.newTORA = TORA - blastProtectionValue - obstacle.getDistanceFromThreshold() - displacedThreshold ;
 
         }
 
+    }
+
+
+    private void setDirection () {
+        this.direction = direction;
     }
 
     public String getDirection() {

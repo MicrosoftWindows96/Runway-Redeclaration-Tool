@@ -103,7 +103,8 @@ public class RunwayListScene extends VBox {
     runwaysBox.setSpacing(5);
 
     for (Runway runway : runways) {
-      var name = (" -- " + runway.getName() + " -- ");
+      runway.setLogicalRunways(runway.getName());
+      var name = (" -- " + runway.getLogicalRunway1() +"/" + runway.getLogicalRunway2() + " -- ");
       var runwayButton = new Button(name);
 
       // Button to select the airport

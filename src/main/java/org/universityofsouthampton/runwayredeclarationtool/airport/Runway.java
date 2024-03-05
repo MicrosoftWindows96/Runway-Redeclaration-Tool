@@ -117,17 +117,15 @@ public class Runway {
     }
 
     public boolean isValidName(String name){
-        int value = Integer.parseInt(name);
-        if (value >= 1 && value <= 9 && name.matches("0[1-9]")) {
-            return true;
-        }
-        return (value >= 10 && value <= 36);
+        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])(L|R|C)?$";
+        return name.matches(regex);
     }
-    public void getName(String name) throws Exception{
+    public void setName(String name) throws Exception{
         if(!isValidName(name)){
             throw new Exception("Invalid name");
         }
         else this.name = name;
+        setLogicalRunways(name);
     }
 
     //get logical runways out of one runway name.

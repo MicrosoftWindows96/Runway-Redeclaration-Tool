@@ -19,21 +19,21 @@ public class Runway {
     private int newTODA; // Calculated Take-Off Distance Available
     private int newASDA; // Calculated Accelerate-Stop Distance Available
     private int newLDA; // Calculated Landing Distance Available
-    private int displacedThreshold; // Displaced Threshold
+    private final int displacedThreshold; // Displaced Threshold
 
-    private ArrayList<Obstacle> obstacles;
+    private final ArrayList<Obstacle> obstacles;
 //    private List<Obstacle> obstacles; // List of obstacles
     private int RESA; // Runway End Safety Area
     private int TOCS; // Take-Off Climb Surface
     private int ALS; // Approach Landing Surface
-    private int stripEnd = 60;
+    private final int stripEnd = 60;
     private int blastProtectionValue;
     private boolean landingOver;
     private boolean landingToward;
     private boolean takeoffAway;
     private boolean takeoffToward;
     private String direction;
-    private String degrees;
+    private final String degrees;
 
     public Runway(String degrees, String direction, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
         this.degrees = degrees;

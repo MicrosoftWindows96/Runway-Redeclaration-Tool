@@ -35,7 +35,9 @@ public class Runway {
         this.direction = direction;
         this.name = degrees + direction;
 
-        if(!isValidName(name)|| TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
+        if (!isValidName(name)) {
+            throw new IllegalArgumentException("Invalid degrees/direction");
+        } else if ((TORA < 0) || (TODA < 0) || (ASDA < 0) || (LDA < 0) || (displacedThreshold < 0)) {
             throw new IllegalArgumentException("Invalid runway parameters");
         }
 
@@ -43,13 +45,12 @@ public class Runway {
         this.TODA = TODA;
         this.ASDA = ASDA;
         this.LDA = LDA;
+
         this.displacedThreshold = displacedThreshold;
-
         this.obstacles = new ArrayList<>();
-
     }
 
-    public ArrayList<Obstacle> getObstacles(){
+    public ArrayList<Obstacle> getObstacles() {
         return this.obstacles;
     }
 

@@ -33,6 +33,14 @@
                 <LDA>4</LDA>
                 <dispThresh>5</dispThresh>
             </LogicalRunway>
+            <LogicalRunway degree="10">
+                <direction>C</direction>
+                <TORA>2</TORA>
+                <TODA>1</TODA>
+                <ASDA>3</ASDA>
+                <LDA>4</LDA>
+                <dispThresh>5</dispThresh>
+            </LogicalRunway>
         </Runway>
     </Airport>
 </Models>

@@ -54,6 +54,8 @@ public class RunwayListScene extends VBox {
    */
   private Airport airport;
 
+  private Button currentlySelectedButton;
+
   public RunwayListScene (MainApplication app, Airport airport) {
     this.airport = airport;
     runways = airport.getRunways();
@@ -106,8 +108,19 @@ public class RunwayListScene extends VBox {
       var runwayButton = new Button(name);
       styleButton(runwayButton, MaterialDesign.MDI_ARROW_UP, name);
 
-      runwayButton.setOnMouseClicked(event -> {
+      runwayButton.setOnMouseExited(e -> {
+        if (runwayButton != currentlySelectedButton){
+          runwayButton.setStyle(("-fx-background-color: #333; -fx-text-fill: white;"));
+        }
+      });
+      // Button to select the runway
+      runwayButton.setOnMouseClicked(e -> {
+        if (currentlySelectedButton != null) {
+          currentlySelectedButton.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+        }
+        runwayButton.setStyle(("-fx-background-color: #555; -fx-text-fill: white;"));
         setSelectedRunway(runway);
+        currentlySelectedButton = runwayButton;
         System.out.println("Currently selected: " + getSelectedRunway().getName());
       });
 

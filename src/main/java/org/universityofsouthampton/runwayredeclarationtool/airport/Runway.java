@@ -150,6 +150,7 @@ public class Runway {
     public String getLogicalRunway2() {
         return logicalRunway2;
     }
+
     public void recalculateLDA(Obstacle obstacle) {
         int obstacleHeight = obstacle.getHeight();
         int distanceFromThreshold = obstacle.getDistanceFromThreshold();
@@ -228,6 +229,10 @@ public class Runway {
             this.TORA = TORA - blastProtectionValue - obstacle.getDistanceFromThreshold() - displacedThreshold ;
 
         }
+
+    }
+
+    private void setDirection () {
 
     }
 }

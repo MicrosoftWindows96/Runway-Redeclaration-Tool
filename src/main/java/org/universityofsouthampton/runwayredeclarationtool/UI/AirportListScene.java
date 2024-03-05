@@ -50,6 +50,8 @@ public class AirportListScene extends VBox {
      */
     private Airport selectedAirport;
 
+    private Button currentlySelectedButton;
+
     public AirportListScene(MainApplication app) {
         this.app = app;
 
@@ -103,11 +105,22 @@ public class AirportListScene extends VBox {
             var airportButton = new Button(name);
             extractedStylingMethod(airportButton, MaterialDesign.MDI_AIRPLANE_LANDING, airport.getAirportCode());
 
+            airportButton.setOnMouseExited(e -> {
+                if (airportButton != currentlySelectedButton){
+                    airportButton.setStyle(("-fx-background-color: #333; -fx-text-fill: white;"));
+                }
+            });
             // Button to select the airport
-            airportButton.setOnMouseClicked(event -> {
+            airportButton.setOnMouseClicked(e -> {
+                if (currentlySelectedButton != null) {
+                    currentlySelectedButton.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+                }
+                airportButton.setStyle(("-fx-background-color: #555; -fx-text-fill: white;"));
                 setSelectedAirport(airport);
+                currentlySelectedButton = airportButton;
                 System.out.println("Currently selected: " + getSelectedAirport().getAirportName());
             });
+
 
             airportsBox.getChildren().add(airportButton);
 
@@ -138,6 +151,7 @@ public class AirportListScene extends VBox {
         button.setPrefWidth(120);
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
+        button.setOnMouseClicked(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
 
         FontIcon buttonIcon = new FontIcon(icon);
         buttonIcon.setIconColor(Color.WHITE);

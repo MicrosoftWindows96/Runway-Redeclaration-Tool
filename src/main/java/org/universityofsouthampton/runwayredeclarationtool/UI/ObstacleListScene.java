@@ -94,7 +94,10 @@ public class ObstacleListScene extends VBox {
 
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        backButton.setOnAction(e -> app.displayRunwayConfigScene(airport,runway));
+        backButton.setOnAction(e -> {
+            app.displayRunwayConfigScene(airport,runway);
+            app.updateXMLs();
+        });
 
 
 
@@ -152,27 +155,7 @@ public class ObstacleListScene extends VBox {
 
 
     private void styleButton(Button button, MaterialDesign icon, String text) {
-        button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
-        button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-        button.setPrefWidth(120);
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
-
-        FontIcon buttonIcon = new FontIcon(icon);
-        buttonIcon.setIconColor(Color.WHITE);
-        button.setGraphic(buttonIcon);
-        button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Only display the icon
-
-        Label label = new Label(text);
-        label.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-        label.setTextFill(Color.WHITE);
-        label.setAlignment(Pos.CENTER);
-
-        HBox hbox = new HBox(buttonIcon, label);
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        hbox.setSpacing(10);
-
-        button.setGraphic(hbox);
+        AirportListScene.extractedStylingMethod(button, icon, text);
     }
 
     private void updateRunwayData(){
@@ -190,6 +173,7 @@ public class ObstacleListScene extends VBox {
         for (Obstacle obstacle : this.currentObstacles) {
             var name = (" -- " + obstacle.getName() + " -- ");
             var obstacleButton = new Button(name);
+            styleButton(obstacleButton, MaterialDesign.MDI_ARROW_UP, name);
 
             // Button to select the airport
             obstacleButton.setOnMouseClicked(event -> {
@@ -207,6 +191,7 @@ public class ObstacleListScene extends VBox {
         for (Obstacle obstacle : this.otherObstacles) {
             var name = (" -- " + obstacle.getName() + " -- ");
             var obstacleButton = new Button(name);
+            styleButton(obstacleButton, MaterialDesign.MDI_ARROW_UP, name);
 
             // Button to select the airport
             obstacleButton.setOnMouseClicked(event -> {

@@ -20,7 +20,7 @@ public class MenuScene extends VBox {
   public MenuScene(MainApplication app) {
     this.setAlignment(Pos.TOP_CENTER);
 
-    var title = new Text("King Zagrosi's Runway Re-declaration Tool");
+    var title = new Text("Runway Re-declaration Tool");
     title.setFont(Font.font("Arial", 24));
     title.setStyle("-fx-fill: #333;");
     VBox.setMargin(title, new Insets(10, 0, 10, 0));
@@ -48,26 +48,6 @@ public class MenuScene extends VBox {
   }
 
   private void styleButton(Button button, MaterialDesign icon, String text) {
-    button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
-    button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-    button.setPrefWidth(120);
-    button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
-    button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
-
-    FontIcon buttonIcon = new FontIcon(icon);
-    buttonIcon.setIconColor(Color.WHITE);
-    button.setGraphic(buttonIcon);
-    button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Only display the icon
-
-    Label label = new Label(text);
-    label.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-    label.setTextFill(Color.WHITE);
-    label.setAlignment(Pos.CENTER);
-
-    HBox hbox = new HBox(buttonIcon, label);
-    hbox.setAlignment(Pos.CENTER_LEFT);
-    hbox.setSpacing(10);
-
-    button.setGraphic(hbox);
+      AirportListScene.extractedStylingMethod(button, icon, text);
   }
 }

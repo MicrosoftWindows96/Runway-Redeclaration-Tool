@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * This class deals with parsing the XML files to convert into arrayLists of airports
+ * This class deals with parsing the XML files to convert into arrayLists of airports and obstacles
  */
 public class importXML {
 
@@ -75,13 +75,14 @@ public class importXML {
                     // Get Object Parameters
                     String degree = logicalRunwayElement.getAttribute("degree");
                     String direction = logicalRunwayElement.getElementsByTagName("direction").item(0).getTextContent();
+                    String name = degree + direction;
                     int TORA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TORA").item(0).getTextContent());
                     int TODA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TODA").item(0).getTextContent());
                     int ASDA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("ASDA").item(0).getTextContent());
                     int LDA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("LDA").item(0).getTextContent());
                     int dispThresh = Integer.parseInt(logicalRunwayElement.getElementsByTagName("dispThresh").item(0).getTextContent());
 
-                    Runway runway = new Runway(degree,TORA,TODA,ASDA,LDA,dispThresh);
+                    Runway runway = new Runway(name,TORA,TODA,ASDA,LDA,dispThresh);
 
                     // Get the "Obstacles" Element
                     Element obstaclesElement = (Element) logicalRunwayElement.getElementsByTagName("Obstacles").item(0);

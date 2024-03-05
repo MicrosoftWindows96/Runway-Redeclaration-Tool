@@ -9,7 +9,7 @@ import java.util.List;
 public class Runway {
 
     private String name; // Runway name
-    String logicalRunway1, getLogicalRunway2;
+    String logicalRunway1, logicalRunway2;
     private String logicalRunway; //runway name if used from the other side. 09L -> 27R
     private int TORA; // Take-Off Run Available
     private int TODA; // Take-Off Distance Available
@@ -22,9 +22,15 @@ public class Runway {
     private int RESA; // Runway End Safety Area
     private int TOCS; // Take-Off Climb Surface
     private int ALS; // Approach Landing Surface
+    private int stripEnd = 60;
+    private int blastProtectionValue;
+    private boolean landingOver;
+    private boolean landingToward;
+    private boolean takeoffAway;
+    private boolean takeoffToward;
 
     public Runway(String name, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
-        if(!isValidName(name) || name == null || TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
+        if(!isValidName(name) || TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
             throw new IllegalArgumentException("Invalid runway parameters");
         }
         this.name = name;
@@ -111,30 +117,39 @@ public class Runway {
     }
 
     public boolean isValidName(String name){
-        int value = Integer.parseInt(name);
-        if (value >= 1 && value <= 9 && name.matches("0[1-9]")) {
-            return true;
-        }
-        return (value >= 10 && value <= 36);
+        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])(L|R|C)?$";
+        return name.matches(regex);
     }
-    public void getName(String name) throws Exception{
+    public void setName(String name) throws Exception{
         if(!isValidName(name)){
             throw new Exception("Invalid name");
         }
         else this.name = name;
+        setLogicalRunways(name);
     }
 
-    public String getVerticalOpposite(String number) {
-        try {
-            int num = Integer.parseInt(number); // Convert string to integer
-            int opposite = num + 18; // Add 18 to get the opposite
-            if (opposite > 36) opposite -= 36; // Wrap around if necessary
-            return String.format("%02d", opposite);
-        } catch (NumberFormatException e) {
-            return "Invalid input";
+    //get logical runways out of one runway name.
+    public void setLogicalRunways(String runwayName) {
+        int runwayNumber = Integer.parseInt(runwayName);
+
+        int oppositeRunwayNumber = runwayNumber + 18;
+        if (oppositeRunwayNumber > 36) {
+            oppositeRunwayNumber -= 36;
         }
+
+        // Convert back to strings, ensuring they are formatted with leading zeros if necessary
+        logicalRunway1 = String.format("%02d", runwayNumber);
+        logicalRunway2 = String.format("%02d", oppositeRunwayNumber);
     }
 
+    // Getters for the logical runways
+    public String getLogicalRunway1() {
+        return logicalRunway1;
+    }
+
+    public String getLogicalRunway2() {
+        return logicalRunway2;
+    }
     public void recalculateLDA(Obstacle obstacle) {
         int obstacleHeight = obstacle.getHeight();
         int distanceFromThreshold = obstacle.getDistanceFromThreshold();
@@ -161,5 +176,58 @@ public class Runway {
             // Subtract total distance to clear the obstacle from LDA
             this.LDA = Math.max(this.LDA - totalDistanceToSubtract, 0);
         }
+    }
+
+    private void calculateLDA(Obstacle obstacle) {
+
+        if (landingOver) {
+            int temporaryThreshold;
+            int obstacleHeight = obstacle.getHeight();
+
+
+            if (obstacleHeight * ALS >= RESA) {
+                temporaryThreshold = obstacleHeight * ALS;
+            } else {
+                temporaryThreshold = RESA;
+            }
+
+            if ((temporaryThreshold + stripEnd) >= blastProtectionValue) {
+                this.LDA = LDA - obstacle.getDistanceFromThreshold() - temporaryThreshold - stripEnd;
+            } else {
+                this.LDA =  LDA - obstacle.getDistanceFromThreshold() - blastProtectionValue;
+            }
+
+
+        }
+        else if (landingToward) {
+
+            this.LDA = obstacle.getDistanceFromThreshold() - RESA - stripEnd;
+
+        }
+    }
+
+
+    private void calculateTORA_ASDA_TODA(Obstacle obstacle) {
+        if (takeoffToward) {
+            int temporaryThreshold;
+            int obstacleHeight = obstacle.getHeight();
+
+            if (obstacleHeight * TOCS >= RESA) {
+                temporaryThreshold = obstacle.getHeight() * TOCS;
+            } else {
+                temporaryThreshold = RESA;
+            }
+
+            this.TORA = obstacle.getDistanceFromThreshold() + displacedThreshold - temporaryThreshold - stripEnd;
+            this.ASDA = TORA;
+            this.TODA = TORA;
+        }
+
+        else if (takeoffAway) {
+
+            this.TORA = TORA - blastProtectionValue - obstacle.getDistanceFromThreshold() - displacedThreshold ;
+
+        }
+
     }
 }

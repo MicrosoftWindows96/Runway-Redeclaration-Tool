@@ -98,22 +98,20 @@ public class RunwayListScene extends VBox {
 
   private void updateList() {
     runwayObserve.clear();
-
     var runwaysBox = new VBox();
     runwaysBox.setSpacing(5);
 
     for (Runway runway : runways) {
-      var name = (" -- " + runway.getName() + " -- ");
+      var name = runway.getName();
       var runwayButton = new Button(name);
+      styleButton(runwayButton, MaterialDesign.MDI_ARROW_UP, name);
 
-      // Button to select the airport
       runwayButton.setOnMouseClicked(event -> {
         setSelectedRunway(runway);
         System.out.println("Currently selected: " + getSelectedRunway().getName());
       });
 
       runwaysBox.getChildren().add(runwayButton);
-
       runwayObserve.add(runway);
     }
 
@@ -133,9 +131,15 @@ public class RunwayListScene extends VBox {
     form.setAlignment(Pos.CENTER);
     form.setPadding(new Insets(20));
 
-    Label nameLabel = new Label("Runway Name:");
-    TextField nameInput = new TextField();
-    styleTextField(nameInput);
+    Label degreeLabel = new Label("Degree:");
+    TextField degreeInput = new TextField();
+    styleTextField(degreeInput);
+    degreeInput.setPromptText("Degree");
+
+    Label directionLabel = new Label("Direction (L, R, C):");
+    TextField directionInput = new TextField();
+    styleTextField(directionInput);
+    directionInput.setPromptText("Direction (L, R, C)");
 
     Label TORALabel = new Label("TORA:");
     TextField TORAInput = new TextField();
@@ -159,7 +163,6 @@ public class RunwayListScene extends VBox {
 
     Button submitButton = new Button();
     styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
-    // Add airport
 
     Button cancelButton = new Button();
     styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
@@ -169,16 +172,13 @@ public class RunwayListScene extends VBox {
     });
 
     submitButton.setOnAction(e -> {
-      String name = nameInput.getText();
-      String TORAname = TORAInput.getText();
-      String TODAname = TODAInput.getText();
-      String ASDAname = ASDAInput.getText();
-      String LDAname = LDAInput.getText();
-      String DisThreshname = DisThreshInput.getText();
+      String degree = degreeInput.getText().trim();
+      String direction = directionInput.getText().trim();
+      String name = degree + direction;
 
-      // Validate
-      if (name.isEmpty() || TODAname.isEmpty() || TORAname.isEmpty() || ASDAname.isEmpty() || LDAname.isEmpty() || DisThreshname.isEmpty()) {
-        showErrorDialog("All fields are required. Please fill in all fields.");
+
+      if (!name.matches("\\d{2}[LCR]")) {
+        showErrorDialog("Invalid runway name. The name must consist of two digits followed by L, C, or R.");
       } else {
         try {
           int TORA = Integer.parseInt(TORAInput.getText());
@@ -190,14 +190,10 @@ public class RunwayListScene extends VBox {
           if (TODA <= 0 || TORA <= 0 || ASDA <= 0 || LDA <= 0 || DisThresh < 0) {
             throw new IllegalArgumentException("Invalid measurements for runway.");
           }
-          // Data valid, add runway
-          // For now, just close the form
+
           Stage stage = (Stage) form.getScene().getWindow();
-
-          // add the Runway into the list
-          runways.add(new Runway(name,TODA,TORA,ASDA,LDA,DisThresh));
+          runways.add(new Runway(name, TODA, TORA, ASDA, LDA, DisThresh));
           updateList();
-
           stage.close();
 
         } catch (NumberFormatException ex) {
@@ -208,19 +204,14 @@ public class RunwayListScene extends VBox {
       }
     });
 
-    form.getChildren().addAll(nameLabel, nameInput, TORALabel, TORAInput, TODALabel, TODAInput,
-        ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
+    form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput,
+            ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput,
+            submitButton, cancelButton);
 
     Stage dialogStage = new Stage();
     dialogStage.initModality(Modality.APPLICATION_MODAL);
     dialogStage.setTitle("Add Runway");
-    dialogStage.setScene(new Scene(form));
-
-    double centerX = Screen.getPrimary().getVisualBounds().getWidth() / 2;
-    double centerY = Screen.getPrimary().getVisualBounds().getHeight() / 2;
-    dialogStage.setX(centerX - 150);
-    dialogStage.setY(centerY - 100);
-    dialogStage.showAndWait();
+    AirportScene.extractedDialogStageMethod(form, dialogStage);
   }
 
   private void styleTextField(TextField textField) {
@@ -229,27 +220,7 @@ public class RunwayListScene extends VBox {
   }
 
   private void styleButton(Button button, MaterialDesign icon, String text) {
-    button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
-    button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-    button.setPrefWidth(120);
-    button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
-    button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
-
-    FontIcon buttonIcon = new FontIcon(icon);
-    buttonIcon.setIconColor(Color.WHITE);
-    button.setGraphic(buttonIcon);
-    button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Only display the icon
-
-    Label label = new Label(text);
-    label.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-    label.setTextFill(Color.WHITE);
-    label.setAlignment(Pos.CENTER);
-
-    HBox hbox = new HBox(buttonIcon, label);
-    hbox.setAlignment(Pos.CENTER_LEFT);
-    hbox.setSpacing(10);
-
-    button.setGraphic(hbox);
+      AirportListScene.extractedStylingMethod(button, icon, text);
   }
 
   private void showErrorDialog(String message) {

@@ -20,6 +20,11 @@ import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import javafx.stage.Stage;
 import javafx.stage.Screen;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+
+import java.util.Optional;
+
+import static javafx.stage.Modality.APPLICATION_MODAL;
 
 public class AirportScene extends VBox {
 
@@ -53,27 +58,7 @@ public class AirportScene extends VBox {
   }
 
   private void styleButton(Button button, MaterialDesign icon, String text) {
-    button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
-    button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-    button.setPrefWidth(120);
-    button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
-    button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
-
-    FontIcon buttonIcon = new FontIcon(icon);
-    buttonIcon.setIconColor(Color.WHITE);
-    button.setGraphic(buttonIcon);
-    button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Only display the icon
-
-    Label label = new Label(text);
-    label.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-    label.setTextFill(Color.WHITE);
-    label.setAlignment(Pos.CENTER);
-
-    HBox hbox = new HBox(buttonIcon, label);
-    hbox.setAlignment(Pos.CENTER_LEFT);
-    hbox.setSpacing(10);
-
-    button.setGraphic(hbox);
+      AirportListScene.extractedStylingMethod(button, icon, text);
   }
 
   private void promptAddAirportForm(MainApplication app) {
@@ -89,54 +74,39 @@ public class AirportScene extends VBox {
     TextField codeInput = new TextField();
     styleTextField(codeInput);
 
-    Label runwayLabel = new Label("Number of Runways:");
-    TextField runwayInput = new TextField();
-    styleTextField(runwayInput);
-
-    Button submitButton = new Button();
+    Button submitButton = new Button("Add Airport");
     styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
-    // Add airport
 
-    Button cancelButton = new Button();
+    Button cancelButton = new Button("Cancel");
     styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-    cancelButton.setOnAction(e -> {
-      Stage stage = (Stage) form.getScene().getWindow();
-      stage.close();
-    });
+    cancelButton.setOnAction(e -> ((Stage) form.getScene().getWindow()).close());
+
+    form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, submitButton, cancelButton);
 
     submitButton.setOnAction(e -> {
       String airportName = nameInput.getText();
       String airportCode = codeInput.getText();
-      String runwayText = runwayInput.getText();
 
-      // Validate
-      if (airportName.isEmpty() || airportCode.isEmpty() || runwayText.isEmpty()) {
-        showErrorDialog("All fields are required. Please fill in all fields.");
-      } else {
-        try {
-          int runways = Integer.parseInt(runwayText);
-          if (runways <= 0) {
-            throw new IllegalArgumentException("Number of runways must be a positive integer.");
-          }
-          // Data valid, add airport
-          // For now, just close the form
-          Stage stage = (Stage) form.getScene().getWindow();
-          app.addAirport(new Airport(airportName,airportCode)); // add the Airport into the list
-          stage.close();
-
-        } catch (NumberFormatException ex) {
-          showErrorDialog("Invalid input for number of runways. Please enter a valid integer.");
-        } catch (IllegalArgumentException ex) {
-          showErrorDialog(ex.getMessage());
-        }
+      if (airportName.isEmpty() || airportCode.isEmpty()) {
+        showErrorDialog("Please fill in all fields.");
+        return;
       }
+
+      Airport newAirport = new Airport(airportName, airportCode);
+      app.addAirport(newAirport);
+      app.updateAirportsXML();
+      ((Stage) form.getScene().getWindow()).close();
     });
 
-    form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, runwayLabel, runwayInput, submitButton, cancelButton);
 
-    Stage dialogStage = new Stage();
-    dialogStage.initModality(Modality.APPLICATION_MODAL);
-    dialogStage.setTitle("Add Airport");
+    Stage stage = new Stage();
+    stage.initModality(Modality.APPLICATION_MODAL);
+    stage.setTitle("Add Airport");
+    stage.setScene(new Scene(form));
+    stage.showAndWait();
+  }
+
+  static void extractedDialogStageMethod(VBox form, Stage dialogStage) {
     dialogStage.setScene(new Scene(form));
 
     double centerX = Screen.getPrimary().getVisualBounds().getWidth() / 2;
@@ -152,8 +122,9 @@ public class AirportScene extends VBox {
   }
 
   private void showErrorDialog(String message) {
-    Stage dialog = new Stage();
-    dialog.initModality(Modality.APPLICATION_MODAL);
+    Stage dialog;
+      dialog = new Stage();
+      dialog.initModality(APPLICATION_MODAL);
 
     VBox dialogVbox = new VBox(20);
 

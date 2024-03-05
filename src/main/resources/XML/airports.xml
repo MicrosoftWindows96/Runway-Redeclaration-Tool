@@ -57,4 +57,10 @@
             </LogicalRunway>
         </Runway>
     </Airport>
+    <Airport code="KUR" name="Kurdistan">
+        <Runway/>
+    </Airport>
+    <Airport code="ZAG" name="Zagrosi">
+        <Runway/>
+    </Airport>
 </Models>

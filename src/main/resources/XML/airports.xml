@@ -15,12 +15,23 @@
                         <DistThreshold>1</DistThreshold>
                         <DistCent>1</DistCent>
                     </Obstacle>
-                    <Obstacle name="Car">
-                        <Height>2</Height>
-                        <DistThreshold>35</DistThreshold>
-                        <DistCent>20</DistCent>
-                    </Obstacle>
                 </Obstacles>
+            </LogicalRunway>
+            <LogicalRunway degree="30">
+                <direction>L</direction>
+                <TORA>2</TORA>
+                <TODA>1</TODA>
+                <ASDA>3</ASDA>
+                <LDA>4</LDA>
+                <dispThresh>5</dispThresh>
+            </LogicalRunway>
+            <LogicalRunway degree="20">
+                <direction>R</direction>
+                <TORA>2</TORA>
+                <TODA>1</TODA>
+                <ASDA>3</ASDA>
+                <LDA>4</LDA>
+                <dispThresh>5</dispThresh>
             </LogicalRunway>
         </Runway>
     </Airport>

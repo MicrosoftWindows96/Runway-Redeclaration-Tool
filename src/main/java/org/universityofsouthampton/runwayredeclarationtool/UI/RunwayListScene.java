@@ -113,6 +113,7 @@ public class RunwayListScene extends VBox {
           runwayButton.setStyle(("-fx-background-color: #333; -fx-text-fill: white;"));
         }
       });
+
       // Button to select the runway
       runwayButton.setOnMouseClicked(e -> {
         if (currentlySelectedButton != null) {
@@ -206,6 +207,7 @@ public class RunwayListScene extends VBox {
 
           Stage stage = (Stage) form.getScene().getWindow();
           runways.add(new Runway(degree, direction, TODA, TORA, ASDA, LDA, DisThresh));
+          app.updateAirportsXML();
           updateList();
           stage.close();
 

@@ -66,46 +66,49 @@ public class importXML {
                 // Get the "Runway" element
                 Element runwayElement = (Element) airportElement.getElementsByTagName("Runway").item(0);
 
-                // Collect Logical Runway nodes
-                NodeList logicalRunwayNodes = runwayElement.getElementsByTagName("LogicalRunway");
+                if (runwayElement != null) {
 
-                for (int j = 0; j < logicalRunwayNodes.getLength(); j++ ) {
-                    Element logicalRunwayElement = (Element) logicalRunwayNodes.item(j);
+                    // Collect Logical Runway nodes
+                    NodeList logicalRunwayNodes = runwayElement.getElementsByTagName("LogicalRunway");
 
-                    // Get Object Parameters
-                    String degree = logicalRunwayElement.getAttribute("degree");
-                    String direction = logicalRunwayElement.getElementsByTagName("direction").item(0).getTextContent();
-                    String name = degree + direction;
-                    int TORA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TORA").item(0).getTextContent());
-                    int TODA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TODA").item(0).getTextContent());
-                    int ASDA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("ASDA").item(0).getTextContent());
-                    int LDA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("LDA").item(0).getTextContent());
-                    int dispThresh = Integer.parseInt(logicalRunwayElement.getElementsByTagName("dispThresh").item(0).getTextContent());
+                    for (int j = 0; j < logicalRunwayNodes.getLength(); j++ ) {
+                        Element logicalRunwayElement = (Element) logicalRunwayNodes.item(j);
 
-                    Runway runway = new Runway(degree, direction, TORA,TODA,ASDA,LDA,dispThresh);
+                        // Get Object Parameters
+                        String degree = logicalRunwayElement.getAttribute("degree");
+                        String direction = logicalRunwayElement.getElementsByTagName("direction").item(0).getTextContent();
+                        String name = degree + direction;
+                        int TORA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TORA").item(0).getTextContent());
+                        int TODA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TODA").item(0).getTextContent());
+                        int ASDA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("ASDA").item(0).getTextContent());
+                        int LDA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("LDA").item(0).getTextContent());
+                        int dispThresh = Integer.parseInt(logicalRunwayElement.getElementsByTagName("dispThresh").item(0).getTextContent());
 
-                    // Get the "Obstacles" Element
-                    Element obstaclesElement = (Element) logicalRunwayElement.getElementsByTagName("Obstacles").item(0);
+                        Runway runway = new Runway(degree, direction, TORA,TODA,ASDA,LDA,dispThresh);
 
-                    if (obstaclesElement != null) {
-                        // Collect all "Obstacle" Element is not null
-                        NodeList obstacleNodes = obstaclesElement.getElementsByTagName("Obstacle");
+                        // Get the "Obstacles" Element
+                        Element obstaclesElement = (Element) logicalRunwayElement.getElementsByTagName("Obstacles").item(0);
 
-                        for (int k = 0; k < obstacleNodes.getLength(); k ++) {
-                            Element obstacleElement = (Element) obstacleNodes.item(k);
+                        if (obstaclesElement != null) {
+                            // Collect all "Obstacle" Element is not null
+                            NodeList obstacleNodes = obstaclesElement.getElementsByTagName("Obstacle");
 
-                            // Get Obstacle Object parameters
-                            String obstacleName = obstacleElement.getAttribute("name");
-                            int height = Integer.parseInt(logicalRunwayElement.getElementsByTagName("Height").item(0).getTextContent());
-                            int distThreshold = Integer.parseInt(logicalRunwayElement.getElementsByTagName("DistThreshold").item(0).getTextContent());
-                            int distCent = Integer.parseInt(logicalRunwayElement.getElementsByTagName("DistCent").item(0).getTextContent());
+                            for (int k = 0; k < obstacleNodes.getLength(); k ++) {
+                                Element obstacleElement = (Element) obstacleNodes.item(k);
 
-                            Obstacle obstacle = new Obstacle(obstacleName,height,distThreshold,distCent);
-                            runway.addObstacle(obstacle);
+                                // Get Obstacle Object parameters
+                                String obstacleName = obstacleElement.getAttribute("name");
+                                int height = Integer.parseInt(logicalRunwayElement.getElementsByTagName("Height").item(0).getTextContent());
+                                int distThreshold = Integer.parseInt(logicalRunwayElement.getElementsByTagName("DistThreshold").item(0).getTextContent());
+                                int distCent = Integer.parseInt(logicalRunwayElement.getElementsByTagName("DistCent").item(0).getTextContent());
 
+                                Obstacle obstacle = new Obstacle(obstacleName,height,distThreshold,distCent);
+                                runway.addObstacle(obstacle);
+
+                            }
                         }
+                        airport.addRunway(runway);
                     }
-                    airport.addRunway(runway);
                 }
                 // Add newly constructed airport object to arrayList
                 importedAirports.add(airport);

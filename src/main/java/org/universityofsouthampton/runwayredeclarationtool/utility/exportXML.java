@@ -57,18 +57,21 @@ public class exportXML {
     // Create the Airport elements from the objects:
     for (Airport airport : exportedAirports) {
       Element airportElement = createAirportElement(document,airport.getAirportName(),airport.getAirportCode());
-      // Create the Runway element
+
+      // Create the Runway element if the arrayList isn't empty
+      if (!airport.getRunways().isEmpty()) {
       Element runwayElement = document.createElement("Runway");
       airportElement.appendChild(runwayElement);
 
-      for (Runway runway : airport.getRunways()) {
-        createRunwayElement(document,runwayElement, runway.getDegrees(), runway.getDirection(),
-            String.valueOf(runway.getTORA()),
-            String.valueOf(runway.getTODA()),
-            String.valueOf(runway.getASDA()),
-            String.valueOf(runway.getLDA()),
-            String.valueOf(runway.getDisplacedThreshold()),
-            runway.getObstacles());
+        for (Runway runway : airport.getRunways()) {
+          createRunwayElement(document,runwayElement, runway.getDegrees(), runway.getDirection(),
+              String.valueOf(runway.getTORA()),
+              String.valueOf(runway.getTODA()),
+              String.valueOf(runway.getASDA()),
+              String.valueOf(runway.getLDA()),
+              String.valueOf(runway.getDisplacedThreshold()),
+              runway.getObstacles());
+        }
       }
       modelsElement.appendChild(airportElement);
       modelsElement.normalize();

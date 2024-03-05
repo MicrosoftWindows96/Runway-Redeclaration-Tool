@@ -79,7 +79,10 @@ public class RunwayListScene extends VBox {
 
     Button backButton = new Button();
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-    backButton.setOnAction(e -> app.displayAirportListScene());
+    backButton.setOnAction(e -> {
+      app.updateXMLs();
+      app.displayAirportListScene();
+    });
 
     HBox buttonBox = new HBox(10);
     buttonBox.getChildren().addAll(addRunway,selectButton, backButton);

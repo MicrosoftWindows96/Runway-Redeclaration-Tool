@@ -1,5 +1,6 @@
 package org.universityofsouthampton.runwayredeclarationtool;
 
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -8,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.universityofsouthampton.runwayredeclarationtool.UI.*;
@@ -30,8 +32,8 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         root = new StackPane();
-
         background = AnimatedPatternBackground.getInstance();
+
         root.getChildren().add(background);
 
         importXML airportXML = new importXML(new File("src/main/resources/XML/airports.xml"));
@@ -113,6 +115,41 @@ public class MainApplication extends Application {
     }
 
 
+    /**
+     * This method collects the created / creates the airport objects from the XML file
+     * (Objects are manually made for now!)
+     */
+//    private void initialiseAirportsXML () {
+//        airports = new ArrayList<>();
+//
+//        Runway runway1LHR = new Runway("09",3902,3902,3902,3595,306);
+//        Airport heathrow = new Airport("Heathrow", "LHR");
+//        heathrow.addRunway(runway1LHR);
+//        Obstacle obstacle1 = new Obstacle("Obstacle1",25,306,241);
+//        Obstacle obstacle2 = new Obstacle("Obstacle2",40,320,250);
+//        runway1LHR.addObstacle(obstacle1);
+//        runway1LHR.addObstacle(obstacle2);
+//
+//        Runway runway1SOU = new Runway("09",3902,3902,3902,3595,306);
+//        Runway runway2SOU = new Runway("27",3884,3962,3884,4884,0);
+//        Airport southampton = new Airport("Southampton", "SOU");
+//        southampton.addRunway(runway1SOU);
+//        southampton.addRunway(runway2SOU);
+//
+//        airports.add(heathrow);
+//        airports.add(southampton);
+//
+//    }
+
+//    private void initialiseObstaclesXML () {
+//        obstacles = new ArrayList<>();
+//
+//        obstacles.add(obstacle1);
+//        obstacles.add(obstacle2);
+//
+//
+//    }
+
     public ArrayList<Airport> getAirports () {
         return airports;
     }
@@ -123,6 +160,10 @@ public class MainApplication extends Application {
 
     public ArrayList<Obstacle> getObstacles() {
         return obstacles;
+    }
+
+    public void addObstacle(Obstacle obstacle) {
+        obstacles.add(obstacle);
     }
 
     public void updateXMLs() {
@@ -148,4 +189,5 @@ public class MainApplication extends Application {
         exportXML airportXML = new exportXML(airports, new ArrayList<>(), new File(AIRPORTS_XML_PATH));
         airportXML.buildAirportsXML();
     }
+
 }

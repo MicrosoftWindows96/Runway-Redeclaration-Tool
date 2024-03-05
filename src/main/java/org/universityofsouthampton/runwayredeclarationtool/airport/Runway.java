@@ -39,6 +39,20 @@ public class Runway {
             throw new IllegalArgumentException("Invalid runway parameters");
         }
 
+        if (obstacles.getFirst().getDistanceFromThreshold() <= 1000){
+            this.takeoffAway = true;
+            this.landingOver = true;
+            this.landingToward = false;
+            this.takeoffToward = false;
+        }
+        else {
+            this.landingToward = true;
+            this.takeoffToward = true;
+            this.takeoffAway = false;
+            this.landingOver = false;
+        }
+
+
         this.TORA = TORA;
         this.TODA = TODA;
         this.ASDA = ASDA;
@@ -47,6 +61,8 @@ public class Runway {
 
         this.obstacles = new ArrayList<>();
 
+        this.calculateLDA();
+        this.calculateTORA_ASDA_TODA();
     }
 
     public ArrayList<Obstacle> getObstacles(){
@@ -184,7 +200,9 @@ public class Runway {
         }
     }
 
-    private void calculateLDA(Obstacle obstacle) {
+    private void calculateLDA() {
+
+        Obstacle obstacle = obstacles.getFirst();
 
         if (landingOver) {
             int temporaryThreshold;
@@ -213,7 +231,10 @@ public class Runway {
     }
 
 
-    private void calculateTORA_ASDA_TODA(Obstacle obstacle) {
+    private void calculateTORA_ASDA_TODA() {
+
+        Obstacle obstacle = obstacles.getFirst();
+
         if (takeoffToward) {
             int temporaryThreshold;
             int obstacleHeight = obstacle.getHeight();
@@ -236,6 +257,7 @@ public class Runway {
         }
 
     }
+
 
     private void setDirection () {
         this.direction = direction;

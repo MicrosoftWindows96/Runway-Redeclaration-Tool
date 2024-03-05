@@ -31,7 +31,7 @@ public class MainApplication extends Application {
 
         root.getChildren().add(background);
 
-        importXML airportXML = new importXML(new File("src/main/resources/XML/testAirports.xml"));
+        importXML airportXML = new importXML(new File("src/main/resources/XML/airports.xml"));
         airports = airportXML.makeAirportsXML();
 
         importXML obstacleXML = new importXML(new File("src/main/resources/XML/testObstacles.xml"));
@@ -128,7 +128,7 @@ public class MainApplication extends Application {
     }
 
     public void updateXMLs() {
-        exportXML airportXML = new exportXML(airports,obstacles,new File("src/main/resources/XML/testAirports.xml"));
+        exportXML airportXML = new exportXML(airports,obstacles,new File("src/main/resources/XML/airports.xml"));
         airportXML.buildAirportsXML();
 
         exportXML obstacleXML = new exportXML(airports,obstacles,new File("src/main/resources/XML/testObstacles.xml"));

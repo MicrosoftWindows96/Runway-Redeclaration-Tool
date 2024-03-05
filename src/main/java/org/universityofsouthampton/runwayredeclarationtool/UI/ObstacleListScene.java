@@ -173,6 +173,7 @@ public class ObstacleListScene extends VBox {
         for (Obstacle obstacle : this.currentObstacles) {
             var name = (" -- " + obstacle.getName() + " -- ");
             var obstacleButton = new Button(name);
+            styleButton(obstacleButton, MaterialDesign.MDI_ARROW_UP, name);
 
             // Button to select the airport
             obstacleButton.setOnMouseClicked(event -> {
@@ -190,6 +191,7 @@ public class ObstacleListScene extends VBox {
         for (Obstacle obstacle : this.otherObstacles) {
             var name = (" -- " + obstacle.getName() + " -- ");
             var obstacleButton = new Button(name);
+            styleButton(obstacleButton, MaterialDesign.MDI_ARROW_UP, name);
 
             // Button to select the airport
             obstacleButton.setOnMouseClicked(event -> {

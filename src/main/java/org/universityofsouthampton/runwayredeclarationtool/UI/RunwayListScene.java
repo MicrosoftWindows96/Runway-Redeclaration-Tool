@@ -98,23 +98,21 @@ public class RunwayListScene extends VBox {
 
   private void updateList() {
     runwayObserve.clear();
-
     var runwaysBox = new VBox();
     runwaysBox.setSpacing(5);
 
     for (Runway runway : runways) {
-      runway.setLogicalRunways(runway.getName());
-      var name = (" -- " + runway.getLogicalRunway1() +"/" + runway.getLogicalRunway2() + " -- ");
+      // Use the full runway name directly
+      var name = runway.getName(); // Directly use the runway's name, assuming it includes direction
       var runwayButton = new Button(name);
+      styleButton(runwayButton, MaterialDesign.MDI_ARROW_UP, name);
 
-      // Button to select the airport
       runwayButton.setOnMouseClicked(event -> {
         setSelectedRunway(runway);
         System.out.println("Currently selected: " + getSelectedRunway().getName());
       });
 
       runwaysBox.getChildren().add(runwayButton);
-
       runwayObserve.add(runway);
     }
 

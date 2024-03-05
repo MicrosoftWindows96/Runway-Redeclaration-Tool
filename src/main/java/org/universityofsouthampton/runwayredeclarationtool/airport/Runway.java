@@ -74,6 +74,10 @@ public class Runway {
             this.takeoffAway = false;
             this.landingOver = false;
         }
+        runCalculations();
+    }
+
+    public void runCalculations() {
         this.calculateLDA();
         this.calculateTORA_ASDA_TODA();
     }
@@ -120,6 +124,22 @@ public class Runway {
         this.ASDA = ASDA;
     }
 
+    public void setRESA(int RESA) {
+        this.RESA = RESA;
+    }
+
+    public void setTOCS(int TOCS) {
+        this.TOCS = TOCS;
+    }
+
+    public void setALS(int ALS) {
+        this.ALS = ALS;
+    }
+
+    public void setBlastProtectionValue(int BPV) {
+        blastProtectionValue = BPV;
+    }
+
     public void setLDA(int LDA) {
         this.LDA = LDA;
     }
@@ -142,6 +162,22 @@ public class Runway {
 
     public int getDisplacedThreshold() {
         return displacedThreshold;
+    }
+
+    public int getNewTORA() {
+        return newTORA;
+    }
+
+    public int getNewTODA() {
+        return newTODA;
+    }
+
+    public int getNewASDA() {
+        return newASDA;
+    }
+
+    public int getNewLDA() {
+        return newLDA;
     }
 
     public boolean isValidName(String name){
@@ -253,14 +289,15 @@ public class Runway {
             }
 
             this.newTORA = obstacle.getDistanceFromThreshold() + displacedThreshold - temporaryThreshold - stripEnd;
-            this.newASDA = TORA;
-            this.newTODA = TORA;
+            this.newASDA = newTORA;
+            this.newTODA = newTORA;
         }
 
         else if (takeoffAway) {
 
             this.newTORA = TORA - blastProtectionValue - obstacle.getDistanceFromThreshold() - displacedThreshold ;
-
+            this.newASDA = newTORA;
+            this.newTODA = newTORA;
         }
 
     }

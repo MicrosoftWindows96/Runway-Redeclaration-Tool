@@ -103,23 +103,25 @@ public class exportXML {
           obstaclesElement.setAttribute("xsi:noNamespaceSchemaLocation", "obstacle.xsd");
           document.appendChild(obstaclesElement);
 
-          for (Obstacle obstacle : exportedObstacles) {
-            Element obstacleElement = document.createElement("Obstacle");
-            obstacleElement.setAttribute("name", obstacle.getName());
+          if (!exportedObstacles.isEmpty()) {
+            for (Obstacle obstacle : exportedObstacles) {
+              Element obstacleElement = document.createElement("Obstacle");
+              obstacleElement.setAttribute("name", obstacle.getName());
 
-            Element heightElement = document.createElement("Height");
-            heightElement.setTextContent(Integer.toString(obstacle.getHeight()));
-            obstacleElement.appendChild(heightElement);
+              Element heightElement = document.createElement("Height");
+              heightElement.setTextContent(Integer.toString(obstacle.getHeight()));
+              obstacleElement.appendChild(heightElement);
 
-            Element distThresholdElement = document.createElement("DistThreshold");
-            distThresholdElement.setTextContent(Integer.toString(obstacle.getDistanceFromThreshold()));
-            obstacleElement.appendChild(distThresholdElement);
+              Element distThresholdElement = document.createElement("DistThreshold");
+              distThresholdElement.setTextContent(Integer.toString(obstacle.getDistanceFromThreshold()));
+              obstacleElement.appendChild(distThresholdElement);
 
-            Element distCentElement = document.createElement("DistCent");
-            distCentElement.setTextContent(Integer.toString(obstacle.getDistanceFromCentreline()));
-            obstacleElement.appendChild(distCentElement);
+              Element distCentElement = document.createElement("DistCent");
+              distCentElement.setTextContent(Integer.toString(obstacle.getDistanceFromCentreline()));
+              obstacleElement.appendChild(distCentElement);
 
-            obstaclesElement.appendChild(obstacleElement);
+              obstaclesElement.appendChild(obstacleElement);
+            }
           }
 
           obstaclesElement.normalize();

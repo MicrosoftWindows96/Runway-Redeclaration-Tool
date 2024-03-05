@@ -1,6 +1,7 @@
 package org.universityofsouthampton.runwayredeclarationtool.airport;
 
 import java.util.ArrayList;
+import javax.print.attribute.standard.RequestingUserName;
 
 public class Airport {
     private String airportName;
@@ -13,6 +14,9 @@ public class Airport {
     }
     public void addRunway (Runway runway){
         this.runways.add(runway);
+    }
+    public void removeRunway (Runway deleteRunway) {
+        runways.remove(deleteRunway);
     }
 
     public ArrayList<Runway> getRunways(){

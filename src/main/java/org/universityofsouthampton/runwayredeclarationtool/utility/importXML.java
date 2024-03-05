@@ -124,17 +124,19 @@ public class importXML {
             // Iterate over the Obstacle nodes
             NodeList obstacleList = root.getElementsByTagName("Obstacle");
 
-            for (int i = 0; i < obstacleList.getLength(); i++) {
-                // New Obstacle object to be added to the arraylist
-                Element obstacleElement = (Element) obstacleList.item(i);
+            if (obstacleList.getLength() > 0 ) {
+                for (int i = 0; i < obstacleList.getLength(); i++) {
+                    // New Obstacle object to be added to the arraylist
+                    Element obstacleElement = (Element) obstacleList.item(i);
 
-                String name = obstacleElement.getAttribute("name");
-                int height = Integer.parseInt(obstacleElement.getElementsByTagName("Height").item(0).getTextContent());
-                int disThreshold = Integer.parseInt(obstacleElement.getElementsByTagName("DistThreshold").item(0).getTextContent());
-                int distCent = Integer.parseInt(obstacleElement.getElementsByTagName("DistCent").item(0).getTextContent());
+                    String name = obstacleElement.getAttribute("name");
+                    int height = Integer.parseInt(obstacleElement.getElementsByTagName("Height").item(0).getTextContent());
+                    int disThreshold = Integer.parseInt(obstacleElement.getElementsByTagName("DistThreshold").item(0).getTextContent());
+                    int distCent = Integer.parseInt(obstacleElement.getElementsByTagName("DistCent").item(0).getTextContent());
 
-                Obstacle obstacle = new Obstacle(name,height,disThreshold,distCent);
-                importedObstacles.add(obstacle);
+                    Obstacle obstacle = new Obstacle(name,height,disThreshold,distCent);
+                    importedObstacles.add(obstacle);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -55,13 +55,14 @@ public class ObstacleListScene extends VBox {
      */
     private ArrayList<Obstacle> otherObstacles;
 
-
-    /**
-     *
-     */
+    private final Airport airport;
+    private final Runway runway;
     private Obstacle selectedObstacle;
 
     public ObstacleListScene(MainApplication app, Airport airport, Runway runway) {
+        this.airport = airport;
+        this.runway = runway;
+
         setAlignment(Pos.TOP_CENTER);
 
         currentObstacles = runway.getObstacles();
@@ -84,8 +85,12 @@ public class ObstacleListScene extends VBox {
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
         backButton.setOnAction(e -> {
-            app.displayRunwayConfigScene(airport,runway);
-            app.updateXMLs();
+            if (otherObstacles.isEmpty()) {
+                promptAddCalcParameters(app);
+            } else {
+                app.updateXMLs();
+                app.displayRunwayConfigScene(airport,runway);
+            }
         });
 
         Button createButton = new Button();
@@ -133,6 +138,56 @@ public class ObstacleListScene extends VBox {
         buttonBox.getChildren().addAll(backButton,addButton,removeButton,createButton);
 
         this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox);
+    }
+
+    private void promptAddCalcParameters(MainApplication app) {
+        VBox form = new VBox(10);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(20));
+
+        Label BPVLabel = new Label("Blast Protection Value:");
+        TextField BPVInput = new TextField();
+        styleTextField(BPVInput);
+        BPVInput.setPromptText("Blast Protection Value");
+
+        Button submitButton = new Button();
+        styleButton(submitButton, MaterialDesign.MDI_CHECK,"Submit");
+
+        Button cancelButton = new Button();
+        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN,"Return");
+        cancelButton.setOnAction(e -> {
+            Stage stage = (Stage) form.getScene().getWindow();
+            stage.close();
+        });
+
+        submitButton.setOnAction(e -> {
+
+        try {
+            int BPV = Integer.parseInt(BPVInput.getText());
+
+            if (BPV <= 0) {
+                throw new IllegalArgumentException("Invalid measurements for calculations.");
+            }
+
+            Stage stage = (Stage) form.getScene().getWindow();
+
+            runway.setBlastProtectionValue(BPV);
+
+            app.updateXMLs();
+            app.displayRunwayConfigScene(airport,runway);
+            stage.close();
+
+        } catch (IllegalArgumentException ex) {
+            showErrorDialog(ex.getMessage());
+        }
+        });
+
+        form.getChildren().addAll(BPVLabel,BPVInput, submitButton, cancelButton);
+
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Edit Runway");
+        AirportScene.extractedDialogStageMethod(form, dialogStage);
     }
 
     private void styleButton(Button button, MaterialDesign icon, String text) {

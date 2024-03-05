@@ -99,6 +99,12 @@ public class ObstacleListScene extends VBox {
             app.updateXMLs();
         });
 
+        Button createButton = new Button();
+        styleButton(createButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Create");
+        createButton.setOnAction(e -> {
+            promptCreateObstacleForm(app);
+        });
+
 
 
 
@@ -144,7 +150,7 @@ public class ObstacleListScene extends VBox {
             }});
 
         HBox buttonBox = new HBox(10);
-        buttonBox.getChildren().addAll(backButton,addButton,removeButton);
+        buttonBox.getChildren().addAll(backButton,addButton,removeButton,createButton);
 
         this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox);
     }
@@ -155,11 +161,114 @@ public class ObstacleListScene extends VBox {
 
 
     private void styleButton(Button button, MaterialDesign icon, String text) {
-        AirportListScene.extractedStylingMethod(button, icon, text);
+        button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+        button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+        button.setPrefWidth(120);
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
+
+        FontIcon buttonIcon = new FontIcon(icon);
+        buttonIcon.setIconColor(Color.WHITE);
+        button.setGraphic(buttonIcon);
+        button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Only display the icon
+
+        Label label = new Label(text);
+        label.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+        label.setTextFill(Color.WHITE);
+        label.setAlignment(Pos.CENTER);
+
+        HBox hbox = new HBox(buttonIcon, label);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        hbox.setSpacing(10);
+
+        button.setGraphic(hbox);
     }
 
-    private void updateRunwayData(){
+//    private void updateRunwayData(){
+//
+//    }
 
+    private void promptCreateObstacleForm(MainApplication app) {
+        VBox form = new VBox(10);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(20));
+
+        Label nameLabel = new Label("Name:");
+        TextField nameInput = new TextField();
+        styleTextField(nameInput);
+
+        Label heightLabel = new Label("Height:");
+        TextField heightInput = new TextField();
+        styleTextField(heightInput);
+
+        Label distFromThreLabel = new Label("Distance From Threshold:");
+        TextField distFromThreInput = new TextField();
+        styleTextField(distFromThreInput);
+
+        Label distFromCentLabel= new Label("Distance From Centreline:");
+        TextField distFromCentInput = new TextField();
+        styleTextField(distFromCentInput);
+
+
+        Button submitButton = new Button();
+        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
+        // Add airport
+
+        Button cancelButton = new Button();
+        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
+        cancelButton.setOnAction(e -> {
+            Stage stage = (Stage) form.getScene().getWindow();
+            stage.close();
+        });
+
+        submitButton.setOnAction(e -> {
+            String name = nameInput.getText();
+            String heightName = heightInput.getText();
+            String distFromThreName = distFromThreInput.getText();
+            String distFromCentname = distFromCentInput.getText();
+
+
+            // Validate
+            if (name.isEmpty() || heightName.isEmpty() || distFromThreName.isEmpty() || distFromCentname.isEmpty()) {
+                showErrorDialog("All fields are required. Please fill in all fields.");
+            } else {
+                try {
+                    int height = Integer.parseInt(heightInput.getText());
+                    int distFromThre = Integer.parseInt(distFromThreInput.getText());
+                    int distFromCent = Integer.parseInt(distFromCentInput.getText());
+                    if (height <= 0 || distFromThre <= 0 || distFromCent <= 0) {
+                        throw new IllegalArgumentException("Invalid measurements for obstacle");
+                    }
+                    // Data valid, add runway
+                    // For now, just close the form
+                    Stage stage = (Stage) form.getScene().getWindow();
+
+                    // add the Runway into the list
+                    otherObstacles.add(new Obstacle(name,height,distFromThre,distFromCent));
+                    updateObstaclesList();
+
+                    stage.close();
+
+                } catch (NumberFormatException ex) {
+                    showErrorDialog("Invalid input for number of obstacles. Please enter a valid integer.");
+                } catch (IllegalArgumentException ex) {
+                    showErrorDialog(ex.getMessage());
+                }
+            }
+        });
+
+        form.getChildren().addAll(nameLabel, nameInput, heightLabel, heightInput, distFromThreLabel, distFromThreInput, distFromCentLabel, distFromCentInput, submitButton, cancelButton);
+
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Create Obstacle");
+        dialogStage.setScene(new Scene(form));
+
+        double centerX = Screen.getPrimary().getVisualBounds().getWidth() / 2;
+        double centerY = Screen.getPrimary().getVisualBounds().getHeight() / 2;
+        dialogStage.setX(centerX - 150);
+        dialogStage.setY(centerY - 100);
+        dialogStage.showAndWait();
     }
     private void updateObstaclesList() {
 
@@ -173,7 +282,6 @@ public class ObstacleListScene extends VBox {
         for (Obstacle obstacle : this.currentObstacles) {
             var name = (" -- " + obstacle.getName() + " -- ");
             var obstacleButton = new Button(name);
-            styleButton(obstacleButton, MaterialDesign.MDI_ARROW_UP, name);
 
             // Button to select the airport
             obstacleButton.setOnMouseClicked(event -> {
@@ -191,7 +299,6 @@ public class ObstacleListScene extends VBox {
         for (Obstacle obstacle : this.otherObstacles) {
             var name = (" -- " + obstacle.getName() + " -- ");
             var obstacleButton = new Button(name);
-            styleButton(obstacleButton, MaterialDesign.MDI_ARROW_UP, name);
 
             // Button to select the airport
             obstacleButton.setOnMouseClicked(event -> {

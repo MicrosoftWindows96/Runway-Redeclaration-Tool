@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -73,19 +74,23 @@ public class exportXML {
       modelsElement.normalize();
     }
       // Write the DOM document to an XMl file
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      Transformer transformer = transformerFactory.newTransformer();
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); // 4 spaces for indentation
-      DOMSource domSource = new DOMSource(document);
-      StreamResult streamResult = new StreamResult(filePath);
-      transformer.transform(domSource, streamResult);
+      extractedTransformerFactoryMethod();
 
       System.out.println("XML file successfully made!");
 
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  private void extractedTransformerFactoryMethod() throws TransformerException {
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer();
+    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); // 4 spaces for indentation
+    DOMSource domSource = new DOMSource(document);
+    StreamResult streamResult = new StreamResult(filePath);
+    transformer.transform(domSource, streamResult);
   }
 
   public void buildObstaclesXML() {
@@ -117,15 +122,9 @@ public class exportXML {
           obstaclesElement.normalize();
 
           // Write the DOM document to an XML file
-          TransformerFactory transformerFactory = TransformerFactory.newInstance();
-          Transformer transformer = transformerFactory.newTransformer();
-          transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-          transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-          DOMSource domSource = new DOMSource(document);
-          StreamResult streamResult = new StreamResult(filePath);
-          transformer.transform(domSource, streamResult);
+        extractedTransformerFactoryMethod();
 
-          System.out.println("XML file created successfully!");
+        System.out.println("XML file created successfully!");
       } catch (Exception e) {
         e.printStackTrace();
       }

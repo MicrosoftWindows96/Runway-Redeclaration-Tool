@@ -111,10 +111,6 @@ public class MainApplication extends Application {
 //
 //    }
 
-    public void addAirport(Airport airport) {
-        airports.add(airport);
-    }
-
     public ArrayList<Airport> getAirports () {
         return airports;
     }
@@ -141,6 +137,18 @@ public class MainApplication extends Application {
 
     public void setAirports(ArrayList<Airport> airports) {
         this.airports = airports;
+    }
+
+    private static final String AIRPORTS_XML_PATH = "src/main/resources/XML/airports.xml";
+
+    public void addAirport(Airport airport) {
+        airports.add(airport);
+        updateAirportsXML(); // Call this method every time the list changes
+    }
+
+    public void updateAirportsXML() {
+        exportXML airportXML = new exportXML(airports, new ArrayList<>(), new File(AIRPORTS_XML_PATH));
+        airportXML.buildAirportsXML();
     }
 
 }

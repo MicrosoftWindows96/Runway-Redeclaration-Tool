@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Models xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="airport.xsd">
+    <Airport code="LHR" name="Heathrow">
+        <Runway>
+            <LogicalRunway degree="09">
+                <direction>R</direction>
+                <TORA>3902</TORA>
+                <TODA>3902</TODA>
+                <ASDA>3902</ASDA>
+                <LDA>3595</LDA>
+                <dispThresh>306</dispThresh>
+                <Obstacles>
+                    <Obstacle name="Tree">
+                        <Height>3</Height>
+                        <DistThreshold>5</DistThreshold>
+                        <DistCent>1</DistCent>
+                    </Obstacle>
+                    <Obstacle name="Tower">
+                        <Height>3</Height>
+                        <DistThreshold>5</DistThreshold>
+                        <DistCent>1</DistCent>
+                    </Obstacle>
+                    <Obstacle name="Bus">
+                        <Height>3</Height>
+                        <DistThreshold>5</DistThreshold>
+                        <DistCent>1</DistCent>
+                    </Obstacle>
+                </Obstacles>
+            </LogicalRunway>
+            <LogicalRunway degree="27">
+                <direction>R</direction>
+                <TORA>3884</TORA>
+                <TODA>3962</TODA>
+                <ASDA>3884</ASDA>
+                <LDA>3884</LDA>
+                <dispThresh>5</dispThresh>
+            </LogicalRunway>
+        </Runway>
+    </Airport>
+    <Airport code="SOU" name="Southampton">
+        <Runway>
+            <LogicalRunway degree="09">
+                <direction>R</direction>
+                <TORA>3902</TORA>
+                <TODA>3902</TODA>
+                <ASDA>3902</ASDA>
+                <LDA>3595</LDA>
+                <dispThresh>306</dispThresh>
+            </LogicalRunway>
+            <LogicalRunway degree="27">
+                <direction>R</direction>
+                <TORA>3884</TORA>
+                <TODA>3962</TODA>
+                <ASDA>3884</ASDA>
+                <LDA>4884</LDA>
+                <dispThresh>0</dispThresh>
+            </LogicalRunway>
+        </Runway>
+    </Airport>
+    <Airport code="KUR" name="Kurdistan">
+        <Runway/>
+    </Airport>
+</Models>

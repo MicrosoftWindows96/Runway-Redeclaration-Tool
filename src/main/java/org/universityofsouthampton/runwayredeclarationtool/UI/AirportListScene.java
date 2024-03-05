@@ -33,17 +33,17 @@ public class AirportListScene extends VBox {
      * Scroll pane to display the airports
      */
     private final ScrollPane scrollPane = new ScrollPane();
-    private MainApplication app;
+    private final MainApplication app;
 
     /**
      * Observable arraylist of airports to be displayed
      */
-    private ObservableList<Airport> airportsObserve = FXCollections.observableArrayList();
+    private final ObservableList<Airport> airportsObserve = FXCollections.observableArrayList();
 
     /**
      * Airports from the XML file
      */
-    private ArrayList<Airport> importedAirports;
+    private final ArrayList<Airport> importedAirports;
 
     /**
      * Variable to store currently selected airport
@@ -101,6 +101,7 @@ public class AirportListScene extends VBox {
         for (Airport airport : importedAirports) {
             var name = (airport.getAirportName() + " -- " + airport.getAirportCode());
             var airportButton = new Button(name);
+            extractedStylingMethod(airportButton, MaterialDesign.MDI_AIRPLANE_LANDING, airport.getAirportCode());
 
             // Button to select the airport
             airportButton.setOnMouseClicked(event -> {
@@ -128,6 +129,10 @@ public class AirportListScene extends VBox {
     }
 
     private void styleButton(Button button, MaterialDesign icon, String text) {
+        extractedStylingMethod(button, icon, text);
+    }
+
+    static void extractedStylingMethod(Button button, MaterialDesign icon, String text) {
         button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
         button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
         button.setPrefWidth(120);
@@ -155,12 +160,12 @@ public class AirportListScene extends VBox {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Airport XML File");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
-        File file = fileChooser.showOpenDialog(null); // Use your stage here if possible
+        File file = fileChooser.showOpenDialog(null);
 
         if (file != null) {
             importXML importer = new importXML(file);
             ArrayList<Airport> airports = importer.makeAirportsXML();
-            app.setAirports(airports); // Ensure you have this method in your MainApplication
+            app.setAirports(airports);
             updateList();
         }
 

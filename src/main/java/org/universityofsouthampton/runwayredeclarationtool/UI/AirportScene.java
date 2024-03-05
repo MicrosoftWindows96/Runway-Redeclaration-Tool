@@ -21,6 +21,8 @@ import javafx.stage.Stage;
 import javafx.stage.Screen;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 
+import static javafx.stage.Modality.APPLICATION_MODAL;
+
 public class AirportScene extends VBox {
 
   public AirportScene (MainApplication app) {
@@ -53,27 +55,7 @@ public class AirportScene extends VBox {
   }
 
   private void styleButton(Button button, MaterialDesign icon, String text) {
-    button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
-    button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-    button.setPrefWidth(120);
-    button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
-    button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
-
-    FontIcon buttonIcon = new FontIcon(icon);
-    buttonIcon.setIconColor(Color.WHITE);
-    button.setGraphic(buttonIcon);
-    button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY); // Only display the icon
-
-    Label label = new Label(text);
-    label.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-    label.setTextFill(Color.WHITE);
-    label.setAlignment(Pos.CENTER);
-
-    HBox hbox = new HBox(buttonIcon, label);
-    hbox.setAlignment(Pos.CENTER_LEFT);
-    hbox.setSpacing(10);
-
-    button.setGraphic(hbox);
+      AirportListScene.extractedStylingMethod(button, icon, text);
   }
 
   private void promptAddAirportForm(MainApplication app) {
@@ -135,8 +117,12 @@ public class AirportScene extends VBox {
     form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, runwayLabel, runwayInput, submitButton, cancelButton);
 
     Stage dialogStage = new Stage();
-    dialogStage.initModality(Modality.APPLICATION_MODAL);
+    dialogStage.initModality(APPLICATION_MODAL);
     dialogStage.setTitle("Add Airport");
+    extractedDialogStageMethod(form, dialogStage);
+  }
+
+  static void extractedDialogStageMethod(VBox form, Stage dialogStage) {
     dialogStage.setScene(new Scene(form));
 
     double centerX = Screen.getPrimary().getVisualBounds().getWidth() / 2;
@@ -152,8 +138,9 @@ public class AirportScene extends VBox {
   }
 
   private void showErrorDialog(String message) {
-    Stage dialog = new Stage();
-    dialog.initModality(Modality.APPLICATION_MODAL);
+    Stage dialog;
+      dialog = new Stage();
+      dialog.initModality(APPLICATION_MODAL);
 
     VBox dialogVbox = new VBox(20);
 

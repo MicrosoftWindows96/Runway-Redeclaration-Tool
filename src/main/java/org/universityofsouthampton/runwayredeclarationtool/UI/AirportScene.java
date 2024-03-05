@@ -20,6 +20,9 @@ import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import javafx.stage.Stage;
 import javafx.stage.Screen;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+
+import java.util.Optional;
 
 import static javafx.stage.Modality.APPLICATION_MODAL;
 
@@ -75,51 +78,65 @@ public class AirportScene extends VBox {
     TextField runwayInput = new TextField();
     styleTextField(runwayInput);
 
-    Button submitButton = new Button();
+    Button submitButton = new Button("Add Airport");
     styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
-    // Add airport
 
-    Button cancelButton = new Button();
+    Button cancelButton = new Button("Cancel");
     styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-    cancelButton.setOnAction(e -> {
-      Stage stage = (Stage) form.getScene().getWindow();
-      stage.close();
-    });
+    cancelButton.setOnAction(e -> ((Stage) form.getScene().getWindow()).close());
+
+    form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, runwayLabel, runwayInput, submitButton, cancelButton);
 
     submitButton.setOnAction(e -> {
       String airportName = nameInput.getText();
       String airportCode = codeInput.getText();
-      String runwayText = runwayInput.getText();
+      String numOfRunwaysText = runwayInput.getText();
 
-      // Validate
-      if (airportName.isEmpty() || airportCode.isEmpty() || runwayText.isEmpty()) {
-        showErrorDialog("All fields are required. Please fill in all fields.");
-      } else {
-        try {
-          int runways = Integer.parseInt(runwayText);
-          if (runways <= 0) {
-            throw new IllegalArgumentException("Number of runways must be a positive integer.");
-          }
-          // Data valid, add airport
-          // For now, just close the form
-          Stage stage = (Stage) form.getScene().getWindow();
-          app.addAirport(new Airport(airportName,airportCode)); // add the Airport into the list
-          stage.close();
+      if (airportName.isEmpty() || airportCode.isEmpty() || numOfRunwaysText.isEmpty()) {
+        showErrorDialog("Please fill in all fields.");
+        return;
+      }
 
-        } catch (NumberFormatException ex) {
-          showErrorDialog("Invalid input for number of runways. Please enter a valid integer.");
-        } catch (IllegalArgumentException ex) {
-          showErrorDialog(ex.getMessage());
+      int numOfRunways;
+      try {
+        numOfRunways = Integer.parseInt(numOfRunwaysText);
+        if (numOfRunways <= 0) {
+          throw new NumberFormatException();
         }
+      } catch (NumberFormatException nfe) {
+        showErrorDialog("Number of runways must be a positive integer.");
+        return;
+      }
+
+      Airport newAirport = new Airport(airportName, airportCode);
+
+      boolean allRunwaysEntered = true;
+      for (int i = 0; i < numOfRunways; i++) {
+        RunwayDetailsDialog runwayDialog = new RunwayDetailsDialog();
+        Optional<Runway> result = runwayDialog.showAndWait();
+        if (result.isPresent()) {
+          newAirport.addRunway(result.get());
+        } else {
+          allRunwaysEntered = false;
+          break;
+        }
+      }
+
+      if (allRunwaysEntered && newAirport.getRunways().size() == numOfRunways) {
+        app.addAirport(newAirport);
+        app.updateAirportsXML();
+        ((Stage) form.getScene().getWindow()).close();
+      } else {
+        showErrorDialog("Runway details must be provided for all runways.");
       }
     });
 
-    form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, runwayLabel, runwayInput, submitButton, cancelButton);
 
-    Stage dialogStage = new Stage();
-    dialogStage.initModality(APPLICATION_MODAL);
-    dialogStage.setTitle("Add Airport");
-    extractedDialogStageMethod(form, dialogStage);
+    Stage stage = new Stage();
+    stage.initModality(Modality.APPLICATION_MODAL);
+    stage.setTitle("Add Airport");
+    stage.setScene(new Scene(form));
+    stage.showAndWait();
   }
 
   static void extractedDialogStageMethod(VBox form, Stage dialogStage) {

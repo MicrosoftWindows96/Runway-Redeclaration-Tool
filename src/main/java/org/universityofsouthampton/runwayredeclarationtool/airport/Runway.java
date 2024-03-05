@@ -30,7 +30,7 @@ public class Runway {
     private boolean takeoffToward;
 
     public Runway(String name, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
-        if(!isValidName(name) || name == null || TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
+        if(!isValidName(name) || TORA < 0 || TODA < 0 || ASDA < 0 || LDA < 0 || displacedThreshold < 0){
             throw new IllegalArgumentException("Invalid runway parameters");
         }
         this.name = name;

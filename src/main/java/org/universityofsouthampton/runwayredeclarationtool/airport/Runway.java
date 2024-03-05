@@ -14,6 +14,11 @@ public class Runway {
     private int TODA; // Take-Off Distance Available
     private int ASDA; // Accelerate-Stop Distance Available
     private int LDA; // Landing Distance Available
+
+    private int newTORA; // Calculated Take-Off Run Available
+    private int newTODA; // Calculated Take-Off Distance Available
+    private int newASDA; // Calculated Accelerate-Stop Distance Available
+    private int newLDA; // Calculated Landing Distance Available
     private int displacedThreshold; // Displaced Threshold
 
     private ArrayList<Obstacle> obstacles;
@@ -39,20 +44,6 @@ public class Runway {
             throw new IllegalArgumentException("Invalid runway parameters");
         }
 
-        if (obstacles.getFirst().getDistanceFromThreshold() <= 1000){
-            this.takeoffAway = true;
-            this.landingOver = true;
-            this.landingToward = false;
-            this.takeoffToward = false;
-        }
-        else {
-            this.landingToward = true;
-            this.takeoffToward = true;
-            this.takeoffAway = false;
-            this.landingOver = false;
-        }
-
-
         this.TORA = TORA;
         this.TODA = TODA;
         this.ASDA = ASDA;
@@ -61,8 +52,6 @@ public class Runway {
 
         this.obstacles = new ArrayList<>();
 
-        this.calculateLDA();
-        this.calculateTORA_ASDA_TODA();
     }
 
     public ArrayList<Obstacle> getObstacles(){
@@ -74,6 +63,19 @@ public class Runway {
             throw new IllegalArgumentException("Invalid obstacle");
         }
         this.obstacles.add(obstacle);
+        if (obstacle.getDistanceFromThreshold() <= 1000) {
+            this.takeoffAway = true;
+            this.landingOver = true;
+            this.landingToward = false;
+            this.takeoffToward = false;
+        } else {
+            this.landingToward = true;
+            this.takeoffToward = true;
+            this.takeoffAway = false;
+            this.landingOver = false;
+        }
+        this.calculateLDA();
+        this.calculateTORA_ASDA_TODA();
     }
 
     public void removeObstacle(Obstacle obstacle) {
@@ -81,6 +83,11 @@ public class Runway {
             throw new IllegalArgumentException("Invalid obstacle");
         }
         this.obstacles.remove(obstacle);
+        this.newASDA = this.ASDA;
+        this.newTODA = this.TODA;
+        this.newTORA = this.TORA;
+        this.newLDA = this.LDA;
+
     }
 
     @Override
@@ -216,16 +223,16 @@ public class Runway {
             }
 
             if ((temporaryThreshold + stripEnd) >= blastProtectionValue) {
-                this.LDA = LDA - obstacle.getDistanceFromThreshold() - temporaryThreshold - stripEnd;
+                this.newLDA = LDA - obstacle.getDistanceFromThreshold() - temporaryThreshold - stripEnd;
             } else {
-                this.LDA =  LDA - obstacle.getDistanceFromThreshold() - blastProtectionValue;
+                this.newLDA =  LDA - obstacle.getDistanceFromThreshold() - blastProtectionValue;
             }
 
 
         }
         else if (landingToward) {
 
-            this.LDA = obstacle.getDistanceFromThreshold() - RESA - stripEnd;
+            this.newLDA = obstacle.getDistanceFromThreshold() - RESA - stripEnd;
 
         }
     }
@@ -245,14 +252,14 @@ public class Runway {
                 temporaryThreshold = RESA;
             }
 
-            this.TORA = obstacle.getDistanceFromThreshold() + displacedThreshold - temporaryThreshold - stripEnd;
-            this.ASDA = TORA;
-            this.TODA = TORA;
+            this.newTORA = obstacle.getDistanceFromThreshold() + displacedThreshold - temporaryThreshold - stripEnd;
+            this.newASDA = TORA;
+            this.newTODA = TORA;
         }
 
         else if (takeoffAway) {
 
-            this.TORA = TORA - blastProtectionValue - obstacle.getDistanceFromThreshold() - displacedThreshold ;
+            this.newTORA = TORA - blastProtectionValue - obstacle.getDistanceFromThreshold() - displacedThreshold ;
 
         }
 

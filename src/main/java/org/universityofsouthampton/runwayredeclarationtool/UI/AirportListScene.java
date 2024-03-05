@@ -1,5 +1,6 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import java.io.File;
 import java.util.ArrayList;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -18,11 +19,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
+import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
 public class AirportListScene extends VBox {
 
@@ -30,6 +33,7 @@ public class AirportListScene extends VBox {
      * Scroll pane to display the airports
      */
     private final ScrollPane scrollPane = new ScrollPane();
+    private MainApplication app;
 
     /**
      * Observable arraylist of airports to be displayed
@@ -47,6 +51,8 @@ public class AirportListScene extends VBox {
     private Airport selectedAirport;
 
     public AirportListScene(MainApplication app) {
+        this.app = app;
+
         setPadding(new Insets(20));
         setSpacing(10);
 
@@ -77,8 +83,12 @@ public class AirportListScene extends VBox {
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
         backButton.setOnAction(e -> app.displayAirportScene());
 
+        Button importXMLButton = new Button("Import XML");
+        styleButton(importXMLButton, MaterialDesign.MDI_DOWNLOAD, "Import");
+        importXMLButton.setOnAction(e -> importAirportsFromXML());
+
         HBox buttonBox = new HBox(10);
-        buttonBox.getChildren().addAll(selectButton, backButton);
+        buttonBox.getChildren().addAll(selectButton, importXMLButton, backButton);
 
         getChildren().addAll(title, scrollPane, buttonBox);
     }
@@ -140,6 +150,22 @@ public class AirportListScene extends VBox {
 
         button.setGraphic(hbox);
     }
+
+    private void importAirportsFromXML() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Airport XML File");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+        File file = fileChooser.showOpenDialog(null); // Use your stage here if possible
+
+        if (file != null) {
+            importXML importer = new importXML(file);
+            ArrayList<Airport> airports = importer.makeAirportsXML();
+            app.setAirports(airports); // Ensure you have this method in your MainApplication
+            updateList();
+        }
+
+    }
+
 
     public Scene createScene(MainApplication app) {
         return new Scene(this, 300, 400);

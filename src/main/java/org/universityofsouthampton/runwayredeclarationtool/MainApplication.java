@@ -138,4 +138,9 @@ public class MainApplication extends Application {
         exportXML obstacleXML = new exportXML(airports,obstacles,new File("src/main/resources/XML/testObstacles.xml"));
         obstacleXML.buildObstaclesXML();
     }
+
+    public void setAirports(ArrayList<Airport> airports) {
+        this.airports = airports;
+    }
+
 }

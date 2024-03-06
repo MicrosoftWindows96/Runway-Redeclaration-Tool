@@ -11,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -133,7 +134,7 @@ public class AirportListScene extends VBox {
         }
     }
 
-    
+
     private void updateAirportInfo(Airport airport) {
         infoBox.getChildren().clear();
         if (airport == null) {
@@ -145,8 +146,6 @@ public class AirportListScene extends VBox {
             airportCode.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
             Text numRunways = new Text("Number of Runways: " + airport.getRunways().size());
             numRunways.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
-            
 
             VBox runwaysInfoBox = new VBox(5);
             runwaysInfoBox.setPadding(new Insets(5, 0, 5, 10));
@@ -176,19 +175,23 @@ public class AirportListScene extends VBox {
 
             ScrollPane runwaysScrollPane = new ScrollPane(runwaysInfoBox);
             runwaysScrollPane.setFitToWidth(true);
-            runwaysScrollPane.setMaxHeight(150);
+            runwaysScrollPane.setMinHeight(150);
 
             VBox detailsBox = new VBox(5, airportName, airportCode, numRunways, runwaysScrollPane, addRunwayButton);
             detailsBox.setPadding(new Insets(10));
             detailsBox.setStyle("-fx-background-color: #eaeaea; -fx-border-color: #c0c0c0; -fx-border-width: 1; -fx-border-radius: 5;");
+
+            VBox.setVgrow(runwaysScrollPane, Priority.ALWAYS);
+
             infoBox.getChildren().add(detailsBox);
         }
     }
 
+
     private void promptAddRunwayForm(MainApplication app) {
-        VBox form = new VBox(10);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Add New Runway");
 
         Label degreeLabel = new Label("Degree:");
         TextField degreeInput = new TextField();
@@ -220,21 +223,17 @@ public class AirportListScene extends VBox {
         TextField DisThreshInput = new TextField();
         styleTextField(DisThreshInput);
 
-        Button submitButton = new Button();
+        Button submitButton = new Button("Add");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
 
-        Button cancelButton = new Button();
-        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        cancelButton.setOnAction(e -> {
-            Stage stage = (Stage) form.getScene().getWindow();
-            stage.close();
-        });
+        Button cancelButton = new Button("Cancel");
+        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Cancel");
+        cancelButton.setOnAction(e -> dialogStage.close());
 
         submitButton.setOnAction(e -> {
             String degree = degreeInput.getText().trim();
             String direction = directionInput.getText().trim();
             String name = degree + direction;
-
 
             if (!name.matches("\\d{2}[LCR]")) {
                 showErrorDialog("Invalid runway name. The name must consist of two digits followed by L, C, or R.");
@@ -250,23 +249,30 @@ public class AirportListScene extends VBox {
                         throw new IllegalArgumentException("Invalid measurements for runway.");
                     }
 
-                    Stage stage = (Stage) form.getScene().getWindow();
-                    ArrayList<Runway> runways = selectedAirport.getRunways();
-                    runways.add(new Runway(degree, direction, TODA, TORA, ASDA, LDA, DisThresh));
+                    Runway newRunway = new Runway(degree, direction, TORA, TODA, ASDA, LDA, DisThresh);
+                    selectedAirport.getRunways().add(newRunway);
                     app.updateAirportsXML();
-                    updateList();
-                    stage.close();
+                    updateAirportInfo(selectedAirport);
+                    dialogStage.close();
 
                 } catch (NumberFormatException ex) {
-                    showErrorDialog("Invalid input for number of runways. Please enter a valid integer.");
+                    showErrorDialog("Invalid input for runway measurements. Please enter valid integers.");
                 } catch (IllegalArgumentException ex) {
                     showErrorDialog(ex.getMessage());
                 }
             }
         });
 
-        groupLabels(form, degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput, ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
+        VBox form = new VBox(10, degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput,
+                ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(20));
+
+        Scene dialogScene = new Scene(form);
+        dialogStage.setScene(dialogScene);
+        dialogStage.showAndWait();
     }
+
 
     static void groupLabels(VBox form, Label degreeLabel, TextField degreeInput, Label directionLabel, TextField directionInput, Label TORALabel, TextField TORAInput, Label TODALabel, TextField TODAInput, Label ASDALabel, TextField ASDAInput, Label LDALabel, TextField LDAInput, Label disThreshLabel, TextField disThreshInput, Button submitButton, Button cancelButton) {
         form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput,

@@ -25,6 +25,22 @@
                 <LDA>100</LDA>
                 <dispThresh>100</dispThresh>
             </LogicalRunway>
+            <LogicalRunway degree="10">
+                <direction>C</direction>
+                <TORA>100</TORA>
+                <TODA>1339</TODA>
+                <ASDA>28137</ASDA>
+                <LDA>21873</LDA>
+                <dispThresh>1287</dispThresh>
+            </LogicalRunway>
+            <LogicalRunway degree="14">
+                <direction>C</direction>
+                <TORA>100</TORA>
+                <TODA>100</TODA>
+                <ASDA>100</ASDA>
+                <LDA>100</LDA>
+                <dispThresh>100</dispThresh>
+            </LogicalRunway>
         </Runway>
     </Airport>
     <Airport code="ISDA" name="Asihads "/>

@@ -211,14 +211,7 @@ public class RunwayListScene extends VBox {
       }
     });
 
-    form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput,
-            ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput,
-            submitButton, cancelButton);
-
-    Stage dialogStage = new Stage();
-    dialogStage.initModality(Modality.APPLICATION_MODAL);
-    dialogStage.setTitle("Add Runway");
-    AirportScene.extractedDialogStageMethod(form, dialogStage);
+    AirportListScene.groupLabels(form, degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput, ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
   }
 
   private void styleTextField(TextField textField) {

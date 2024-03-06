@@ -17,6 +17,46 @@
                     </Obstacle>
                 </Obstacles>
             </LogicalRunway>
+            <LogicalRunway degree="20">
+                <direction>R</direction>
+                <TORA>1001</TORA>
+                <TODA>100</TODA>
+                <ASDA>100</ASDA>
+                <LDA>100</LDA>
+                <dispThresh>100</dispThresh>
+            </LogicalRunway>
+        </Runway>
+    </Airport>
+    <Airport code="ISDA" name="Asihads "/>
+    <Airport code="ANT" name="Anthony">
+        <Runway>
+            <LogicalRunway degree="09">
+                <direction>R</direction>
+                <TORA>6969</TORA>
+                <TODA>6969</TODA>
+                <ASDA>6969</ASDA>
+                <LDA>4200</LDA>
+                <dispThresh>5</dispThresh>
+                <Obstacles>
+                    <Obstacle name="Angelo">
+                        <Height>27</Height>
+                        <DistThreshold>350</DistThreshold>
+                        <DistCent>5</DistCent>
+                    </Obstacle>
+                </Obstacles>
+            </LogicalRunway>
+        </Runway>
+    </Airport>
+    <Airport code="TRI" name="Tricia">
+        <Runway>
+            <LogicalRunway degree="27">
+                <direction>L</direction>
+                <TORA>3660</TORA>
+                <TODA>3660</TODA>
+                <ASDA>3660</ASDA>
+                <LDA>3660</LDA>
+                <dispThresh>50</dispThresh>
+            </LogicalRunway>
         </Runway>
     </Airport>
 </Models>

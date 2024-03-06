@@ -75,8 +75,9 @@ public class AirportScene extends VBox {
     form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, submitButton, cancelButton);
 
     submitButton.setOnAction(e -> {
-      String airportName = nameInput.getText();
-      String airportCode = codeInput.getText();
+      String airportName = capitalize(nameInput.getText());
+
+      String airportCode = codeInput.getText().toUpperCase();
 
       if (airportName.isEmpty() || airportCode.isEmpty()) {
         showErrorDialog();
@@ -95,6 +96,20 @@ public class AirportScene extends VBox {
     stage.setTitle("Add Airport");
     stage.setScene(new Scene(form));
     stage.showAndWait();
+  }
+
+  public static String capitalize(String string) {
+    char[] chars = string.toLowerCase().toCharArray();
+    boolean found = false;
+    for (int i = 0; i < chars.length; i++) {
+      if (!found && Character.isLetter(chars[i])) {
+        chars[i] = Character.toUpperCase(chars[i]);
+        found = true;
+      } else if (Character.isWhitespace(chars[i]) || chars[i]=='.' || chars[i]=='\'') { // You can add other chars here
+        found = false;
+      }
+    }
+    return String.valueOf(chars);
   }
 
   static void extractedDialogStageMethod(VBox form, Stage dialogStage) {

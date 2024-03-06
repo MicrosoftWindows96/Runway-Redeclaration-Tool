@@ -88,7 +88,7 @@ public class RunwayConfigViewScene extends VBox {
 
     Button backButton = new Button();
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-    backButton.setOnAction(e -> app.displayRunwayListScene(airport));
+    backButton.setOnAction(e -> app.displayAirportListScene());
 
     HBox buttonBox = new HBox(10);
     buttonBox.setAlignment(Pos.CENTER);

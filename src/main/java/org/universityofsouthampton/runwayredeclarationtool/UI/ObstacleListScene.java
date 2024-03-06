@@ -34,11 +34,6 @@ public class ObstacleListScene extends VBox {
     private final ScrollPane otherObstaclesScroll = new ScrollPane();
 
     /**
-     * ArrayList of obstacles for selected runway
-     */
-//    private ArrayList<Obstacle> currentObstacles;
-
-    /**
      * ArrayList of obstacles from XML
      */
     private ArrayList<Obstacle> otherObstacles;
@@ -339,7 +334,7 @@ public class ObstacleListScene extends VBox {
         form.setPadding(new Insets(20));
 
         Label BPVLabel = new Label("Blast Protection Value:");
-        TextField BPVInput = new TextField("Blast Protection Value: ");
+        TextField BPVInput = new TextField();
         styleTextField(BPVInput);
 
 

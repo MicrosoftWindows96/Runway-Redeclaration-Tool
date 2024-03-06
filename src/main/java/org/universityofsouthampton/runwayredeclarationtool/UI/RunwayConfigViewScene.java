@@ -79,11 +79,11 @@ public class RunwayConfigViewScene extends VBox {
 
   private HBox createButtonSection(MainApplication app) {
     Button obstacleUpdateButton = new Button();
-    styleButton(obstacleUpdateButton, MaterialDesign.MDI_SETTINGS, "Obstacle");
+    styleButton(obstacleUpdateButton, MaterialDesign.MDI_SETTINGS, "Obstacles");
     obstacleUpdateButton.setOnAction(e -> app.displayObstacleListScene(airport, currentRunway));
 
     Button runwayUpdateButton = new Button();
-    styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Runway");
+    styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
     runwayUpdateButton.setOnAction(e -> promptEditRunwayForm(app));
 
     Button backButton = new Button();
@@ -92,7 +92,7 @@ public class RunwayConfigViewScene extends VBox {
 
     HBox buttonBox = new HBox(10);
     buttonBox.setAlignment(Pos.CENTER);
-    buttonBox.getChildren().addAll(backButton, runwayUpdateButton, obstacleUpdateButton);
+    buttonBox.getChildren().addAll(runwayUpdateButton, obstacleUpdateButton, backButton);
     return buttonBox;
   }
 

@@ -23,6 +23,7 @@ import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
 import java.io.File;
@@ -95,6 +96,7 @@ public class AirportListScene extends VBox {
 
         Button exportXMLButton = new Button("Export");
         styleButton(exportXMLButton, MaterialDesign.MDI_UPLOAD, "Export");
+        exportXMLButton.setOnAction(e -> exportAirportsToXML());
 
         Button modifyButton = new Button("Modify");
         styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
@@ -104,7 +106,7 @@ public class AirportListScene extends VBox {
             }
         });
 
-        HBox buttonBox = new HBox(10, backButton, addAirport, modifyButton, deleteButton, importXMLButton, exportXMLButton);
+        HBox buttonBox = new HBox(10, addAirport, modifyButton, deleteButton, importXMLButton, exportXMLButton, backButton);
         buttonBox.setAlignment(Pos.CENTER);
         return buttonBox;
     }
@@ -338,17 +340,6 @@ public class AirportListScene extends VBox {
     }
 
 
-    static void groupLabels(VBox form, Label degreeLabel, TextField degreeInput, Label directionLabel, TextField directionInput, Label TORALabel, TextField TORAInput, Label TODALabel, TextField TODAInput, Label ASDALabel, TextField ASDAInput, Label LDALabel, TextField LDAInput, Label disThreshLabel, TextField disThreshInput, Button submitButton, Button cancelButton) {
-        form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput,
-                ASDALabel, ASDAInput, LDALabel, LDAInput, disThreshLabel, disThreshInput,
-                submitButton, cancelButton);
-
-        Stage dialogStage = new Stage();
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setTitle("Add Runway");
-        AirportListScene.extractedDialogStageMethod(form, dialogStage);
-    }
-
     private void styleTextField(TextField textField) {
         textField.setStyle("-fx-background-color: white; -fx-text-fill: black;");
         textField.setFont(Font.font("Arial", 16));
@@ -401,6 +392,16 @@ public class AirportListScene extends VBox {
             ArrayList<Airport> airports = importer.makeAirportsXML();
             app.mergeAirport(airports);
             updateList();
+        }
+    }
+
+    private void exportAirportsToXML() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Airport XML File");
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            exportXML exporter = new exportXML(importedAirports, new ArrayList<>(), file);
+            exporter.writeXML();
         }
     }
 

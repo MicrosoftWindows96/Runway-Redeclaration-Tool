@@ -2,30 +2,6 @@
 <Models xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="airport.xsd">
     <Airport code="SOU" name="Southampton">
         <Runway>
-            <LogicalRunway degree="20">
-                <direction>R</direction>
-                <TORA>3666</TORA>
-                <TODA>3666</TODA>
-                <ASDA>3666</ASDA>
-                <LDA>3500</LDA>
-                <dispThresh>5</dispThresh>
-            </LogicalRunway>
-            <LogicalRunway degree="20">
-                <direction>R</direction>
-                <TORA>1001</TORA>
-                <TODA>100</TODA>
-                <ASDA>100</ASDA>
-                <LDA>100</LDA>
-                <dispThresh>100</dispThresh>
-            </LogicalRunway>
-            <LogicalRunway degree="10">
-                <direction>C</direction>
-                <TORA>100</TORA>
-                <TODA>1339</TODA>
-                <ASDA>28137</ASDA>
-                <LDA>21873</LDA>
-                <dispThresh>1287</dispThresh>
-            </LogicalRunway>
             <LogicalRunway degree="14">
                 <direction>C</direction>
                 <TORA>100</TORA>
@@ -33,6 +9,30 @@
                 <ASDA>100</ASDA>
                 <LDA>100</LDA>
                 <dispThresh>100</dispThresh>
+            </LogicalRunway>
+            <LogicalRunway degree="21">
+                <direction>R</direction>
+                <TORA>3666</TORA>
+                <TODA>3666</TODA>
+                <ASDA>3666</ASDA>
+                <LDA>3500</LDA>
+                <dispThresh>5</dispThresh>
+            </LogicalRunway>
+            <LogicalRunway degree="21">
+                <direction>R</direction>
+                <TORA>100</TORA>
+                <TODA>1001</TODA>
+                <ASDA>100</ASDA>
+                <LDA>100</LDA>
+                <dispThresh>100</dispThresh>
+            </LogicalRunway>
+            <LogicalRunway degree="11">
+                <direction>C</direction>
+                <TORA>1339</TORA>
+                <TODA>100</TODA>
+                <ASDA>28137</ASDA>
+                <LDA>21873</LDA>
+                <dispThresh>1287</dispThresh>
             </LogicalRunway>
         </Runway>
     </Airport>

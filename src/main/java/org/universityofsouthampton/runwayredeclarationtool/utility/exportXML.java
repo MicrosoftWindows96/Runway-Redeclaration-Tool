@@ -205,4 +205,12 @@ public class exportXML {
       }
     }
   }
+
+  public void writeXML() {
+    try {
+      extractedTransformerFactoryMethod();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }

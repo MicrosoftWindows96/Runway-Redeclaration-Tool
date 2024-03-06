@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Obstacles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="obstacle.xsd">
-    <Obstacle name="Car">
-        <Height>15</Height>
-        <DistThreshold>100</DistThreshold>
-        <DistCent>5</DistCent>
+    <Obstacle name="Bav">
+        <Height>25</Height>
+        <DistThreshold>45</DistThreshold>
+        <DistCent>58</DistCent>
+    </Obstacle>
+    <Obstacle name="Airplane">
+        <Height>250</Height>
+        <DistThreshold>550</DistThreshold>
+        <DistCent>10</DistCent>
     </Obstacle>
     <Obstacle name="Airplane">
         <Height>400</Height>
         <DistThreshold>550</DistThreshold>
         <DistCent>10</DistCent>
+    </Obstacle>
+    <Obstacle name="Angelo">
+        <Height>27</Height>
+        <DistThreshold>350</DistThreshold>
+        <DistCent>5</DistCent>
     </Obstacle>
 </Obstacles>

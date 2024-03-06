@@ -133,8 +133,10 @@ public class MainApplication extends Application {
         obstacleXML.buildObstaclesXML();
     }
 
-    public void setAirports(ArrayList<Airport> airports) {
-        this.airports = airports;
+    // Merges any given new imported airport lists with the application's arrayList
+    public void mergeAirport(ArrayList<Airport> newAirports) {
+        airports.addAll(newAirports);
+        updateXMLs();
     }
 
     private static final String AIRPORTS_XML_PATH = "src/main/resources/XML/airports.xml";

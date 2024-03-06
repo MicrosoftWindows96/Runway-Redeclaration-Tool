@@ -1,2 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Models xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="airport.xsd"/>
+<Models xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="airport.xsd">
+    <Airport code="SOU" name="Southampton">
+        <Runway>
+            <LogicalRunway degree="20">
+                <direction>R</direction>
+                <TORA>3666</TORA>
+                <TODA>3666</TODA>
+                <ASDA>3666</ASDA>
+                <LDA>3500</LDA>
+                <dispThresh>5</dispThresh>
+                <Obstacles>
+                    <Obstacle name="Bav">
+                        <Height>15</Height>
+                        <DistThreshold>100</DistThreshold>
+                        <DistCent>5</DistCent>
+                    </Obstacle>
+                </Obstacles>
+            </LogicalRunway>
+        </Runway>
+    </Airport>
+</Models>

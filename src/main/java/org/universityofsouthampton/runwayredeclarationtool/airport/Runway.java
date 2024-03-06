@@ -78,6 +78,7 @@ public class Runway {
     }
 
     public void runCalculations() {
+        System.out.println("Added obstacle, running calculations...");
         this.calculateLDA();
         this.calculateTORA_ASDA_TODA();
     }
@@ -91,7 +92,7 @@ public class Runway {
         this.newTODA = this.TODA;
         this.newTORA = this.TORA;
         this.newLDA = this.LDA;
-
+        System.out.println("Removed Obstacle, reverted to original Values!");
     }
 
     @Override
@@ -178,6 +179,10 @@ public class Runway {
 
     public int getNewLDA() {
         return newLDA;
+    }
+
+    public int getBlastPr() {
+        return blastProtectionValue;
     }
 
     public boolean isValidName(String name){
@@ -271,6 +276,7 @@ public class Runway {
             this.newLDA = obstacle.getDistanceFromThreshold() - RESA - stripEnd;
 
         }
+        System.out.println("Successfully calculated LDA");
     }
 
 
@@ -299,7 +305,7 @@ public class Runway {
             this.newASDA = newTORA;
             this.newTODA = newTORA;
         }
-
+        System.out.println("Successfully calculated TORA, TODA and ASDA");
     }
 
 

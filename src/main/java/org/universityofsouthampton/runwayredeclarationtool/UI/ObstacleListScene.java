@@ -36,7 +36,7 @@ public class ObstacleListScene extends VBox {
     /**
      * ArrayList of obstacles for selected runway
      */
-    private ArrayList<Obstacle> currentObstacles;
+//    private ArrayList<Obstacle> currentObstacles;
 
     /**
      * ArrayList of obstacles from XML
@@ -44,15 +44,27 @@ public class ObstacleListScene extends VBox {
     private ArrayList<Obstacle> otherObstacles;
 
     /**
-     *
+     * Obstacle thats currently in the selection box
      */
     private Obstacle selectedObstacle;
+
+    private final MainApplication app;
+    private final Airport currentAirport;
+    private final Runway currentRunway;
 
     public ObstacleListScene(MainApplication app, Airport airport, Runway runway) {
         setAlignment(Pos.TOP_CENTER);
 
-        currentObstacles = runway.getObstacles();
+        this.app = app;
+        currentAirport = airport;
+        currentRunway = runway;
+//        currentObstacles = runway.getObstacles();
         otherObstacles = app.getObstacles();
+
+        // Initalise selectedObstacle if theres a pre-determined obstacle in the runway
+        if (!runway.getObstacles().isEmpty()) {
+            selectedObstacle = runway.getObstacles().getFirst();
+        }
 
         var title = new Text("Obstacle Update");
         title.setFont(Font.font("Arial", 24));
@@ -68,24 +80,41 @@ public class ObstacleListScene extends VBox {
         setPadding(new Insets(20));
         setSpacing(10);
 
+
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
         backButton.setOnAction(e -> {
-            app.displayRunwayConfigScene(airport,runway);
-            app.updateXMLs();
+            // If theres no selected obstacles go back
+            if (currentRunway.getObstacles().isEmpty()) {
+                app.displayRunwayConfigScene(airport,currentRunway);
+                app.updateXMLs();
+            } else {
+                promptAddBPV();
+            }
         });
 
         Button createButton = new Button();
-        styleButton(createButton, MaterialDesign.MDI_CREATION, "Create");
+        styleButton(createButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Create");
         createButton.setOnAction(e -> promptCreateObstacleForm());
 
         this.currentObstacleScroll.setFitToWidth(true);
         this.currentObstacleScroll.setPrefSize(700, 500);
-        this.currentObstacles = runway.getObstacles();
+//        this.currentObstacles = currentRunway.getObstacles();
         this.otherObstaclesScroll.setFitToWidth(true);
         this.otherObstaclesScroll.setPrefSize(700, 500);
         this.otherObstacles = app.getObstacles();
         updateObstaclesList();
+
+        Button editButton = new Button();
+        styleButton(editButton, MaterialDesign.MDI_WRENCH,"Configure");
+        editButton.setOnAction(e -> {
+            if (this.selectedObstacle != null) {
+                promptEDITObstacleForm();
+            } else {
+                System.out.println("Nothing Selected!");
+            }
+
+        });
 
         Button addButton = new Button();
         styleButton(addButton, MaterialDesign.MDI_PLUS_BOX, "Add");
@@ -93,154 +122,40 @@ public class ObstacleListScene extends VBox {
             if (this.selectedObstacle == null) {
                 System.out.println("Nothing Selected!");
             } else {
-                if (!this.currentObstacles.isEmpty()) {
-                    Obstacle existingObstacle = this.currentObstacles.getFirst();
+                if (!this.currentRunway.getObstacles().isEmpty()) {
+                    // Replace the current Obstacle with selected one
+                    Obstacle existingObstacle = this.currentRunway.getObstacles().getFirst();
                     this.otherObstacles.add(existingObstacle);
-                    this.currentObstacles.clear();
+
+                    // update runway object
+                    currentRunway.removeObstacle(existingObstacle);
                 }
-                this.currentObstacles.add(this.selectedObstacle);
+                currentRunway.addObstacle(selectedObstacle);
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
             }
         });
 
-        Button modifyButton = new Button();
-        styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
-        modifyButton.setOnAction(e -> promptModifyObstacleForm());
-
-        Button viewDetailsButton = new Button();
-        styleButton(viewDetailsButton, MaterialDesign.MDI_EYE, "View");
-        viewDetailsButton.setOnAction(e -> {
-            if (selectedObstacle == null) {
-                showErrorDialog("No obstacle selected to view details.");
-            } else {
-                showObstacleDetailsDialog(selectedObstacle);
-            }
-        });
-
         Button removeButton = new Button();
-        styleButton(removeButton, MaterialDesign.MDI_MINUS_BOX, "Remove");
+        styleButton(removeButton, MaterialDesign.MDI_PLUS_BOX, "Remove");
         removeButton.setOnAction(e -> {
-            if (this.selectedObstacle == null || this.currentObstacles.isEmpty() || !this.currentObstacles.contains(this.selectedObstacle)) {
+            if (this.selectedObstacle == null || this.currentRunway.getObstacles().isEmpty() || !this.currentRunway.getObstacles().contains(this.selectedObstacle)) {
                 System.out.println("Nothing Selected or not in current obstacles!");
             } else {
                 this.otherObstacles.add(this.selectedObstacle);
-                this.currentObstacles.remove(this.selectedObstacle);
+                this.currentRunway.removeObstacle(this.selectedObstacle);
+                if (!currentRunway.getObstacles().isEmpty()) {
+                    currentRunway.removeObstacle(selectedObstacle);
+                }
                 updateObstaclesList();
             }
         });
 
         HBox buttonBox = new HBox(10);
-        buttonBox.getChildren().addAll(backButton, addButton, removeButton, createButton, modifyButton, viewDetailsButton);
+        buttonBox.getChildren().addAll(backButton,addButton,removeButton,createButton,editButton);
 
         this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox);
     }
-
-    private void promptModifyObstacleForm() {
-        if (selectedObstacle == null) {
-            showErrorDialog("No obstacle selected for modification.");
-            return;
-        }
-
-        VBox form = new VBox(10);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
-
-        Label nameLabel = new Label("Name:");
-        TextField nameInput = new TextField(selectedObstacle.getName());
-        styleTextField(nameInput);
-
-        Label heightLabel = new Label("Height:");
-        TextField heightInput = new TextField(String.valueOf(selectedObstacle.getHeight()));
-        styleTextField(heightInput);
-
-        Label distFromThreLabel = new Label("Distance From Threshold:");
-        TextField distFromThreInput = new TextField(String.valueOf(selectedObstacle.getDistanceFromThreshold()));
-        styleTextField(distFromThreInput);
-
-        Label distFromCentLabel = new Label("Distance From Centreline:");
-        TextField distFromCentInput = new TextField(String.valueOf(selectedObstacle.getDistanceFromCentreline()));
-        styleTextField(distFromCentInput);
-
-        Button submitButton = new Button("Modify");
-        styleButton(submitButton, MaterialDesign.MDI_CHECK, "Modify");
-
-        submitButton.setOnAction(e -> {
-            String name = nameInput.getText();
-            String heightName = heightInput.getText();
-            String distFromThreName = distFromThreInput.getText();
-            String distFromCentname = distFromCentInput.getText();
-
-            if (name.isEmpty() || heightName.isEmpty() || distFromThreName.isEmpty() || distFromCentname.isEmpty()) {
-                showErrorDialog("All fields are required. Please fill in all fields.");
-            } else {
-                try {
-                    int height = Integer.parseInt(heightInput.getText());
-                    int distFromThre = Integer.parseInt(distFromThreInput.getText());
-                    int distFromCent = Integer.parseInt(distFromCentInput.getText());
-
-                    if (height <= 0 || distFromThre <= 0 || distFromCent <= 0) {
-                        throw new IllegalArgumentException("Invalid measurements for obstacle");
-                    }
-
-                    selectedObstacle.setName(name);
-                    selectedObstacle.setHeight(height);
-                    selectedObstacle.setDistanceFromThreshold(distFromThre);
-                    selectedObstacle.setDistanceFromCentreline(distFromCent);
-                    updateObstaclesList();
-
-                    Stage stage = (Stage) form.getScene().getWindow();
-                    stage.close();
-
-                } catch (NumberFormatException ex) {
-                    showErrorDialog("Invalid input for numbers. Please enter valid integers.");
-                } catch (IllegalArgumentException ex) {
-                    showErrorDialog(ex.getMessage());
-                }
-            }
-        });
-
-        Button cancelButton = new Button("Cancel");
-        styleButton(cancelButton, MaterialDesign.MDI_CLOSE, "Cancel");
-        cancelButton.setOnAction(e -> {
-            Stage stage = (Stage) form.getScene().getWindow();
-            stage.close();
-        });
-
-        form.getChildren().addAll(nameLabel, nameInput, heightLabel, heightInput, distFromThreLabel, distFromThreInput, distFromCentLabel, distFromCentInput, submitButton, cancelButton);
-
-        Stage dialogStage = new Stage();
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setTitle("Modify Obstacle");
-        dialogGenerator(form, dialogStage);
-    }
-
-    private void showObstacleDetailsDialog(Obstacle obstacle) {
-        Stage dialogStage = new Stage();
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setTitle("Obstacle Details");
-
-        VBox dialogVbox = new VBox(20);
-        dialogVbox.setPadding(new Insets(20));
-        dialogVbox.setAlignment(Pos.CENTER);
-
-        Text name = new Text("Name: " + obstacle.getName());
-        Text height = new Text("Height: " + obstacle.getHeight());
-        Text distFromThresh = new Text("Distance From Threshold: " + obstacle.getDistanceFromThreshold());
-        Text distFromCenter = new Text("Distance From Centreline: " + obstacle.getDistanceFromCentreline());
-
-        Button okButton = new Button("OK");
-        styleButton(okButton, MaterialDesign.MDI_CHECK, "OK");
-        okButton.setOnAction(e -> dialogStage.close());
-
-        dialogVbox.getChildren().addAll(name, height, distFromThresh, distFromCenter, okButton);
-
-        Scene dialogScene = new Scene(dialogVbox, 300, 200);
-        dialogStage.setScene(dialogScene);
-        dialogStage.showAndWait();
-    }
-
-
 
     private void styleButton(Button button, MaterialDesign icon, String text) {
         button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
@@ -341,6 +256,141 @@ public class ObstacleListScene extends VBox {
         dialogGenerator(form, dialogStage);
     }
 
+    private void promptEDITObstacleForm() {
+        VBox form = new VBox(10);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(20));
+
+        Label nameLabel = new Label("Name:");
+        TextField nameInput = new TextField(selectedObstacle.getName());
+        styleTextField(nameInput);
+
+        Label heightLabel = new Label("Height:");
+        TextField heightInput = new TextField(Integer.toString(selectedObstacle.getHeight()));
+        styleTextField(heightInput);
+
+        Label distFromThreLabel = new Label("Distance From Threshold:");
+        TextField distFromThreInput = new TextField(Integer.toString(selectedObstacle.getDistanceFromThreshold()));
+        styleTextField(distFromThreInput);
+
+        Label distFromCentLabel= new Label("Distance From Centreline:");
+        TextField distFromCentInput = new TextField(Integer.toString(selectedObstacle.getDistanceFromCentreline()));
+        styleTextField(distFromCentInput);
+
+        Button submitButton = new Button();
+        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Reconfigure");
+
+        Button cancelButton = new Button();
+        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
+        cancelButton.setOnAction(e -> {
+            Stage stage = (Stage) form.getScene().getWindow();
+            stage.close();
+        });
+
+        submitButton.setOnAction(e -> {
+            String name = nameInput.getText();
+            String heightName = heightInput.getText();
+            String distFromThreName = distFromThreInput.getText();
+            String distFromCentname = distFromCentInput.getText();
+
+            if (name.isEmpty() || heightName.isEmpty() || distFromThreName.isEmpty() || distFromCentname.isEmpty()) {
+                showErrorDialog("All fields are required. Please fill in all fields.");
+            } else {
+                try {
+                    int height = Integer.parseInt(heightInput.getText());
+                    int distFromThre = Integer.parseInt(distFromThreInput.getText());
+                    int distFromCent = Integer.parseInt(distFromCentInput.getText());
+
+                    if (height <= 0 || distFromThre <= 0 || distFromCent <= 0) {
+                        throw new IllegalArgumentException("Invalid measurements for obstacle");
+                    }
+
+                    Stage stage = (Stage) form.getScene().getWindow();
+
+                    // replace the obstacle
+                    currentRunway.removeObstacle(selectedObstacle);
+                    selectedObstacle = new Obstacle(name,height,distFromThre,distFromCent);
+                    currentRunway.addObstacle(selectedObstacle);
+
+                    updateObstaclesList();
+
+                    stage.close();
+
+                } catch (NumberFormatException ex) {
+                    showErrorDialog("Invalid input for number of obstacles. Please enter a valid integer.");
+                } catch (IllegalArgumentException ex) {
+                    showErrorDialog(ex.getMessage());
+                }
+            }
+        });
+
+        form.getChildren().addAll(nameLabel, nameInput, heightLabel, heightInput, distFromThreLabel, distFromThreInput, distFromCentLabel, distFromCentInput, submitButton, cancelButton);
+
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Edit Obstacle");
+        dialogGenerator(form, dialogStage);
+    }
+
+    private void promptAddBPV() {
+        VBox form = new VBox(10);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(20));
+
+        Label BPVLabel = new Label("Blast Protection Value:");
+        TextField BPVInput = new TextField("Blast Protection Value: ");
+        styleTextField(BPVInput);
+
+
+        Button submitButton = new Button();
+        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
+
+        Button cancelButton = new Button();
+        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
+        cancelButton.setOnAction(e -> {
+            Stage stage = (Stage) form.getScene().getWindow();
+            stage.close();
+        });
+
+        submitButton.setOnAction(e -> {
+            String BPV = BPVInput.getText();
+
+            if (BPV.isEmpty()) {
+                showErrorDialog("Blast Protection Value Required. Please fill in all fields.");
+            } else {
+                try {
+                    int BPVInt = Integer.parseInt(BPV);
+
+                    if (BPVInt <= 0) {
+                        throw new IllegalArgumentException("Invalid measurements for Blast Protection Value");
+                    }
+
+                    Stage stage = (Stage) form.getScene().getWindow();
+
+                    // update the runway object to run calculations to display in the config runway scene
+                    currentRunway.removeObstacle(selectedObstacle);
+                    currentRunway.addObstacle(selectedObstacle);
+                    app.displayRunwayConfigScene(currentAirport,currentRunway);
+                    app.updateXMLs();
+
+                    stage.close();
+
+                } catch (NumberFormatException ex) {
+                    showErrorDialog("Invalid input for number of BPV. Please enter a valid integer.");
+                } catch (IllegalArgumentException ex) {
+                    showErrorDialog(ex.getMessage());
+                }
+            }
+        });
+
+        form.getChildren().addAll(BPVLabel, BPVInput, submitButton, cancelButton);
+
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("SET Blast Protection Value");
+        dialogGenerator(form, dialogStage);
+    }
+
     static void dialogGenerator(VBox form, Stage dialogStage) {
         dialogStage.setScene(new Scene(form));
 
@@ -358,7 +408,7 @@ public class ObstacleListScene extends VBox {
         currentObstaclesBox.setSpacing(5);
         otherObstaclesBox.setSpacing(5);
 
-        this.currentObstacles.forEach(obstacle -> {
+        this.currentRunway.getObstacles().forEach(obstacle -> {
             var name = obstacle.getName();
             var obstacleButton = new Button(name);
             styleButton(obstacleButton, MaterialDesign.MDI_EYE, name);

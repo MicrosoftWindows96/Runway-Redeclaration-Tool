@@ -354,4 +354,44 @@ public class Runway {
     public String getDegrees() {
         return this.degrees;
     }
+
+    public String getCalculationBreakdown() {
+        StringBuilder breakdown = new StringBuilder();
+
+        if (!obstacles.isEmpty()) {
+            Obstacle obstacle = obstacles.getFirst();
+            breakdown.append("Calculation Breakdown:\n");
+
+            if (landingOver || landingToward) {
+                breakdown.append("Landing Distance Available (LDA) calculation:\n");
+                if (landingOver) {
+                    breakdown.append("Obstacle is overflown. New LDA = Original LDA - (Distance from Threshold to Obstacle + Temporary Threshold + Strip End)\n");
+                    breakdown.append("New LDA = ").append(LDA).append(" - (").append(obstacle.getDistanceFromThreshold()).append(" + ").append(obstacle.getHeight() * ALS).append(" + ").append(stripEnd).append(")\n");
+                } else {
+                    breakdown.append("Landing toward obstacle. New LDA = Distance from Threshold to Obstacle - RESA - Strip End\n");
+                    breakdown.append("New LDA = ").append(obstacle.getDistanceFromThreshold()).append(" - ").append(RESA).append(" - ").append(stripEnd).append("\n");
+                }
+                breakdown.append(String.format("Resulting LDA: %d meters\n", newLDA));
+            }
+
+            if (takeoffAway || takeoffToward) {
+                breakdown.append("\nTake-Off Run Available (TORA), Take-Off Distance Available (TODA), Accelerate-Stop Distance Available (ASDA) calculation:\n");
+                if (takeoffToward) {
+                    breakdown.append("Taking off toward the obstacle.\n");
+                    breakdown.append("New TORA = Distance from Threshold to Obstacle + Displaced Threshold - Temporary Threshold - Strip End\n");
+                    breakdown.append("New TORA = ").append(obstacle.getDistanceFromThreshold()).append(" + ").append(displacedThreshold).append(" - ").append(RESA).append(" - ").append(stripEnd).append("\n");
+                } else {
+                    breakdown.append("Taking off away from the obstacle.\n");
+                    breakdown.append("New TORA = Original TORA - Blast Protection - Distance from Threshold to Obstacle - Displaced Threshold\n");
+                    breakdown.append("New TORA = ").append(TORA).append(" - ").append(blastProtectionValue).append(" - ").append(obstacle.getDistanceFromThreshold()).append(" - ").append(displacedThreshold).append("\n");
+                }
+                breakdown.append(String.format("Resulting TORA: %d meters, TODA: %d meters, ASDA: %d meters\n", newTORA, newTODA, newASDA));
+            }
+        } else {
+            breakdown.append("No obstacles present. Original runway parameters apply.");
+        }
+
+        return breakdown.toString();
+    }
+
 }

@@ -2,11 +2,6 @@
 <Obstacles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="obstacle.xsd">
     <Obstacle name="Bav">
         <Height>25</Height>
-        <DistThreshold>450</DistThreshold>
-        <DistCent>58</DistCent>
-    </Obstacle>
-    <Obstacle name="Bav">
-        <Height>25</Height>
         <DistThreshold>45</DistThreshold>
         <DistCent>58</DistCent>
     </Obstacle>

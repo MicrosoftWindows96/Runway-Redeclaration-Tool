@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -37,7 +38,29 @@ public class RunwayConfigViewScene extends VBox {
     getChildren().add(createParameterSection());
     getChildren().add(drawRunway());
     getChildren().add(calculatedParameterSection());
+    if (!currentRunway.getObstacles().isEmpty()) {
+      getChildren().add(createCalculationBreakdownSection());
+    }
     getChildren().add(createButtonSection(app));
+  }
+
+  private VBox createCalculationBreakdownSection() {
+    VBox breakdownSection = new VBox(10);
+    breakdownSection.setPadding(new Insets(15));
+    breakdownSection.setStyle("-fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: #f9f9f9;");
+
+    ScrollPane scrollPane = new ScrollPane();
+    scrollPane.setFitToWidth(true);
+    VBox contentBox = new VBox(5);
+
+    Text calculationDetails = new Text(currentRunway.getCalculationBreakdown());
+    calculationDetails.setWrappingWidth(1000);
+    contentBox.getChildren().add(calculationDetails);
+
+    scrollPane.setContent(contentBox);
+    breakdownSection.getChildren().addAll(new Text("Calculation Breakdown"), scrollPane);
+
+    return breakdownSection;
   }
 
   private Text createTitleSection(Runway runway) {
@@ -115,7 +138,7 @@ public class RunwayConfigViewScene extends VBox {
     displacedThresholdLabel.setX(450);
     displacedThresholdLabel.setY(130);
 
-    return new Group(toraLabel, todaLabel, asdaLabel, ldaLabel, displacedThresholdLabel); // Add all labels to this group
+    return new Group(toraLabel, todaLabel, asdaLabel, ldaLabel, displacedThresholdLabel);
   }
 
   private VBox calculatedParameterSection() {
@@ -234,7 +257,7 @@ public class RunwayConfigViewScene extends VBox {
           }
           airport.getRunways().add(currentRunway);
           app.updateAirportsXML();
-          if (!currentRunway.getObstacles().isEmpty()) { // If theres still an obstacle inside recalculate values
+          if (!currentRunway.getObstacles().isEmpty()) {
             currentRunway.runCalculations();
           }
           app.displayRunwayConfigScene(airport,currentRunway);

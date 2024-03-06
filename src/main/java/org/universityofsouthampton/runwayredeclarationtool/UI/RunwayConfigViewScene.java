@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 public class RunwayConfigViewScene extends VBox {
@@ -89,16 +90,16 @@ public class RunwayConfigViewScene extends VBox {
     HBox comparison = new HBox();
     comparison.setSpacing(5);
 
-    VBox parameterBox = new VBox();
-    parameterBox.setSpacing(5);
+    VBox newParameterBox = new VBox();
+    newParameterBox.setSpacing(5);
     var TORA = makeDistanceHBox("TORA ", currentRunway.getNewTORA());
     var TODA = makeDistanceHBox("TODA ", currentRunway.getNewTODA());
     var ASDA = makeDistanceHBox("ASDA ", currentRunway.getNewASDA());
     var LDA = makeDistanceHBox("LDA ", currentRunway.getNewLDA());
     var disThres = makeDistanceHBox("Displaced Threshold: ",currentRunway.getDisplacedThreshold());
-    parameterBox.getChildren().addAll(TORA,TODA,ASDA,LDA,disThres);
+    newParameterBox.getChildren().addAll(TORA,TODA,ASDA,LDA,disThres);
 
-    comparison.getChildren().addAll(setUpParameters(),parameterBox); // Puts the results side by side
+    comparison.getChildren().addAll(setUpParameters(),newParameterBox); // Puts the results side by side
 
     calculatedBox.getChildren().addAll(comparison);
 
@@ -173,8 +174,13 @@ public class RunwayConfigViewScene extends VBox {
 
           Stage stage = (Stage) form.getScene().getWindow();
 
+          Runway deletedRunway = currentRunway;
           airport.removeRunway(currentRunway);
           currentRunway = new Runway(degree, direction, TODA, TORA, ASDA, LDA, DisThresh);
+          if (!currentRunway.getObstacles().isEmpty()) {
+            Obstacle movedObstacle = deletedRunway.getObstacles().getFirst();
+            currentRunway.addObstacle(movedObstacle);
+          }
           airport.getRunways().add(currentRunway);
           app.updateAirportsXML();
           if (!currentRunway.getObstacles().isEmpty()) { // If theres still an obstacle inside recalculate values

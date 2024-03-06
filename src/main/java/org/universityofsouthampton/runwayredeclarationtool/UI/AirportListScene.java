@@ -209,7 +209,8 @@ public class AirportListScene extends VBox {
         if (file != null) {
             importXML importer = new importXML(file);
             ArrayList<Airport> airports = importer.makeAirportsXML();
-            app.setAirports(airports);
+            app.mergeAirport(airports);
+            app.displayAirportListScene();
             updateList();
         }
     }

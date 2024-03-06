@@ -51,11 +51,6 @@ public class MainApplication extends Application {
         root.getChildren().setAll(background, menuScene);
     }
 
-    public void displayAirportScene() {
-        AirportScene airportScene = new AirportScene(this);
-        root.getChildren().setAll(background, airportScene);
-    }
-
     public void displayObstacleListScene(Airport airport, Runway runway) {
         ObstacleListScene obstacleListScene = new ObstacleListScene(this, airport, runway);
         root.getChildren().setAll(background, obstacleListScene);
@@ -64,11 +59,6 @@ public class MainApplication extends Application {
     public void displayAirportListScene() {
         AirportListScene airportListScene = new AirportListScene(this);
         root.getChildren().setAll(background, airportListScene);
-    }
-
-    public void displayRunwayListScene(Airport airport) {
-        RunwayListScene runwayListScene = new RunwayListScene(this, airport);
-        root.getChildren().setAll(background, runwayListScene);
     }
 
     public void displayRunwayConfigScene(Airport airport, Runway runway) {
@@ -114,5 +104,4 @@ public class MainApplication extends Application {
         exportXML airportXML = new exportXML(airports, new ArrayList<>(), new File(AIRPORTS_XML_PATH));
         airportXML.buildAirportsXML();
     }
-
 }

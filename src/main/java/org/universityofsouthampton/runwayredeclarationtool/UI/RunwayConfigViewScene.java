@@ -79,7 +79,7 @@ public class RunwayConfigViewScene extends VBox {
 
   private HBox createButtonSection(MainApplication app) {
     Button obstacleUpdateButton = new Button();
-    styleButton(obstacleUpdateButton, MaterialDesign.MDI_LIGHTBULB, "Obstacle");
+    styleButton(obstacleUpdateButton, MaterialDesign.MDI_SETTINGS, "Obstacle");
     obstacleUpdateButton.setOnAction(e -> app.displayObstacleListScene(airport, currentRunway));
 
     Button runwayUpdateButton = new Button();
@@ -278,7 +278,7 @@ public class RunwayConfigViewScene extends VBox {
     Stage dialogStage = new Stage();
     dialogStage.initModality(Modality.APPLICATION_MODAL);
     dialogStage.setTitle("Edit Runway");
-    AirportScene.extractedDialogStageMethod(form, dialogStage);
+    AirportListScene.extractedDialogStageMethod(form, dialogStage);
   }
 
   private void styleTextField(TextField textField) {

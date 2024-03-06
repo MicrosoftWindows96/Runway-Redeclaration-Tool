@@ -68,17 +68,17 @@ public class AirportListScene extends VBox {
     }
 
     private HBox createButtonBox() {
-        Button selectButton = new Button("Select");
-        styleButton(selectButton, MaterialDesign.MDI_PLUS_BOX, "Select");
-        selectButton.setOnAction(e -> {
-            if (this.selectedAirport != null) {
-                app.displayRunwayListScene(selectedAirport);
-            }
+        Button addAirport = new Button();
+        styleButton(addAirport, MaterialDesign.MDI_PLUS_BOX, "Add");
+        addAirport.setOnAction(e -> {
+            promptAddAirportForm(app);
+            updateList();
+            app.updateAirportsXML();
         });
 
-        Button backButton = new Button("Return");
-        styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        backButton.setOnAction(e -> app.displayAirportScene());
+        Button backButton = new Button("Log Out");
+        styleButton(backButton, MaterialDesign.MDI_LOCK, "Log Out");
+        backButton.setOnAction(e -> app.displayMenu());
 
         Button deleteButton = new Button("Delete");
         styleButton(deleteButton, MaterialDesign.MDI_DELETE, "Delete");
@@ -104,7 +104,7 @@ public class AirportListScene extends VBox {
             }
         });
 
-        HBox buttonBox = new HBox(10, backButton, selectButton, modifyButton, deleteButton, importXMLButton, exportXMLButton);
+        HBox buttonBox = new HBox(10, backButton, addAirport, modifyButton, deleteButton, importXMLButton, exportXMLButton);
         buttonBox.setAlignment(Pos.CENTER);
         return buttonBox;
     }
@@ -132,6 +132,70 @@ public class AirportListScene extends VBox {
         if (currentlySelectedButton != null) {
             currentlySelectedButton.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
         }
+    }
+
+    static void extractedDialogStageMethod(VBox form, Stage dialogStage) {
+        ObstacleListScene.dialogGenerator(form, dialogStage);
+    }
+
+    private void promptAddAirportForm(MainApplication app) {
+        VBox form = new VBox(10);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(20));
+
+        Label nameLabel = new Label("Airport Name:");
+        TextField nameInput = new TextField();
+        styleTextField(nameInput);
+
+        Label codeLabel = new Label("Airport Code:");
+        TextField codeInput = new TextField();
+        styleTextField(codeInput);
+
+        Button submitButton = new Button("Add Airport");
+        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
+
+        Button cancelButton = new Button("Cancel");
+        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
+        cancelButton.setOnAction(e -> ((Stage) form.getScene().getWindow()).close());
+
+        form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, submitButton, cancelButton);
+
+        submitButton.setOnAction(e -> {
+            String airportName = capitalize(nameInput.getText());
+
+            String airportCode = codeInput.getText().toUpperCase();
+
+            if (airportName.isEmpty() || airportCode.isEmpty()) {
+                showErrorDialog("Please enter a valid airport name and code.");
+                return;
+            }
+
+            Airport newAirport = new Airport(airportName, airportCode);
+            app.addAirport(newAirport);
+            app.updateAirportsXML();
+            ((Stage) form.getScene().getWindow()).close();
+        });
+
+
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Add Airport");
+        stage.setScene(new Scene(form));
+        stage.showAndWait();
+    }
+
+    public static String capitalize(String string) {
+        char[] chars = string.toLowerCase().toCharArray();
+        boolean found = false;
+        for (int i = 0; i < chars.length; i++) {
+            if (!found && Character.isLetter(chars[i])) {
+                chars[i] = Character.toUpperCase(chars[i]);
+                found = true;
+            } else if (Character.isWhitespace(chars[i]) || chars[i]=='.' || chars[i]=='\'') { // You can add other chars here
+                found = false;
+            }
+        }
+        return String.valueOf(chars);
     }
 
 
@@ -282,7 +346,7 @@ public class AirportListScene extends VBox {
         Stage dialogStage = new Stage();
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         dialogStage.setTitle("Add Runway");
-        AirportScene.extractedDialogStageMethod(form, dialogStage);
+        AirportListScene.extractedDialogStageMethod(form, dialogStage);
     }
 
     private void styleTextField(TextField textField) {
@@ -349,6 +413,7 @@ public class AirportListScene extends VBox {
         TextField codeInput = new TextField(airport.getAirportCode());
 
         Button submitButton = new Button("Save Changes");
+        styleButton(submitButton, MaterialDesign.MDI_CHECK, "Save");
         submitButton.setOnAction(e -> {
             airport.setAirportName(nameInput.getText());
             airport.setAirportCode(codeInput.getText());

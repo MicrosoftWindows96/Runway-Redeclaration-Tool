@@ -31,10 +31,6 @@ public class MenuScene extends VBox {
     styleButton(login, MaterialDesign.MDI_LOGIN, "Login");
     login.setOnAction(e -> promptLogin(app));
 
-    Button airport = new Button();
-    styleButton(airport, MaterialDesign.MDI_DATABASE, "Airports");
-    airport.setOnAction(e -> app.displayAirportScene());
-
     Button quit = new Button();
     styleButton(quit, MaterialDesign.MDI_EXIT_TO_APP, "Quit");
     quit.setOnAction(e -> System.exit(0));
@@ -63,7 +59,7 @@ public class MenuScene extends VBox {
     styleButton(loginButton, MaterialDesign.MDI_KEY, "Login");
     loginButton.setOnAction(e -> {
       if ("".equals(usernameInput.getText()) && "".equals(passwordInput.getText())) {
-        app.displayAirportScene();
+        app.displayAirportListScene();
         loginStage.close();
       } else {
         showAlert();

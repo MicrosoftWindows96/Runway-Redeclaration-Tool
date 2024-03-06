@@ -23,126 +23,140 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 public class RunwayConfigViewScene extends VBox {
 
-  /**
-   * Runway currently selected
-   */
   private Runway currentRunway;
-
-  /**
-   * Airport the runway is in
-   */
   private final Airport airport;
 
-  public RunwayConfigViewScene (MainApplication app, Airport airport, Runway runway) {
+  public RunwayConfigViewScene(MainApplication app, Airport airport, Runway runway) {
     this.airport = airport;
-    currentRunway = runway;
-
+    this.currentRunway = runway;
 
     setPadding(new Insets(20));
     setSpacing(10);
 
+    getChildren().add(createTitleSection(runway));
+    getChildren().add(createParameterSection());
+    getChildren().add(drawRunway());
+    getChildren().add(calculatedParameterSection());
+    getChildren().add(createButtonSection(app));
+  }
+
+  private Text createTitleSection(Runway runway) {
     Text title = new Text("Runway: " + airport.getAirportCode() + " -- " + runway.getName());
     title.setFont(Font.font("Arial", 20));
+    return title;
+  }
 
-    setUpParameters();
+  private VBox createParameterSection() {
+    VBox parameterSection = new VBox(10);
+    parameterSection.setPadding(new Insets(15));
+    parameterSection.setStyle("-fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: #f9f9f9;");
+    parameterSection.getChildren().add(setUpParameters());
+    return parameterSection;
+  }
 
+  private HBox createButtonSection(MainApplication app) {
     Button obstacleUpdateButton = new Button();
-    styleButton(obstacleUpdateButton, "Obstacle");
-    obstacleUpdateButton.setOnAction(e -> app.displayObstacleListScene(airport,runway));
+    styleButton(obstacleUpdateButton, MaterialDesign.MDI_LIGHTBULB, "Obstacle");
+    obstacleUpdateButton.setOnAction(e -> app.displayObstacleListScene(airport, currentRunway));
 
     Button runwayUpdateButton = new Button();
-    styleButton(runwayUpdateButton,"Configure");
+    styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Runway");
     runwayUpdateButton.setOnAction(e -> promptEditRunwayForm(app));
 
     Button backButton = new Button();
-    styleButton(backButton, "Return");
+    styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
     backButton.setOnAction(e -> app.displayRunwayListScene(airport));
 
     HBox buttonBox = new HBox(10);
-    buttonBox.getChildren().addAll(backButton,runwayUpdateButton,obstacleUpdateButton);
-    
-
-
-    this.getChildren().addAll(title,setUpParameters(), drawRunway(),buttonBox);
-
-    if (!currentRunway.getObstacles().isEmpty()) {
-      System.out.println("Obstacles present on runway!");
-      this.getChildren().add(calculatedParameterSection());
-    }
-
+    buttonBox.setAlignment(Pos.CENTER);
+    buttonBox.getChildren().addAll(backButton, runwayUpdateButton, obstacleUpdateButton);
+    return buttonBox;
   }
-  
-  private VBox drawRunway() {
-    Line runwayLine = new Line(50, 150, 750, 150);
-    runwayLine.setStroke(Color.GRAY);
-    runwayLine.setStrokeWidth(10);
 
+  private VBox drawRunway() {
+    Group runwayDiagram = new Group();
+    runwayDiagram.getChildren().addAll(createRunwayLine(), createRunwayLabels());
+    VBox runwaySection = new VBox(runwayDiagram);
+    runwaySection.setPadding(new Insets(10, 0, 10, 0));
+    runwaySection.setAlignment(Pos.CENTER);
+    return runwaySection;
+  }
+
+  private Line createRunwayLine() {
+    return new Line(50, 150, 750, 150) {{
+      setStroke(Color.GRAY);
+      setStrokeWidth(10);
+    }};
+  }
+
+  private Group createRunwayLabels() {
     Text toraLabel = new Text("TORA: " + currentRunway.getTORA());
+    toraLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
     toraLabel.setX(50);
     toraLabel.setY(130);
 
     Text todaLabel = new Text("TODA: " + currentRunway.getTODA());
-    todaLabel.setX(200);
+    todaLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
+    todaLabel.setX(150);
     todaLabel.setY(130);
 
     Text asdaLabel = new Text("ASDA: " + currentRunway.getASDA());
-    asdaLabel.setX(350);
+    asdaLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
+    asdaLabel.setX(250);
     asdaLabel.setY(130);
 
     Text ldaLabel = new Text("LDA: " + currentRunway.getLDA());
-    ldaLabel.setX(500);
+    ldaLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
+    ldaLabel.setX(350);
     ldaLabel.setY(130);
 
     Text displacedThresholdLabel = new Text("Displaced Threshold: " + currentRunway.getDisplacedThreshold());
-    displacedThresholdLabel.setX(650);
+    displacedThresholdLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
+    displacedThresholdLabel.setX(450);
     displacedThresholdLabel.setY(130);
 
-    Group runwayDiagram = new Group();
-    runwayDiagram.getChildren().addAll(runwayLine, toraLabel, todaLabel, asdaLabel, ldaLabel, displacedThresholdLabel);
-
-    runwayDiagram.setLayoutY(600);
-
-    return new VBox(runwayDiagram);
-  }
-
-  private VBox setUpParameters() {
-    VBox parameterBox = new VBox();
-    parameterBox.setSpacing(5);
-
-    var TORA = makeDistanceHBox("TORA ", currentRunway.getTORA());
-    var TODA = makeDistanceHBox("TODA ", currentRunway.getTODA());
-    var ASDA = makeDistanceHBox("ASDA ", currentRunway.getASDA());
-    var LDA = makeDistanceHBox("LDA ", currentRunway.getLDA());
-    var disThres = makeDistanceHBox("Displaced Threshold: ",currentRunway.getDisplacedThreshold());
-    parameterBox.getChildren().addAll(TORA,TODA,ASDA,LDA,disThres);
-
-    return parameterBox;
+    return new Group(toraLabel, todaLabel, asdaLabel, ldaLabel, displacedThresholdLabel); // Add all labels to this group
   }
 
   private VBox calculatedParameterSection() {
-    VBox calculatedBox = new VBox(); // New VBox section to hold calculated results!
-    HBox breakdownBox = new HBox(); // Box to hold calculation steps!
+    VBox calculatedBox = new VBox(10);
+    calculatedBox.setPadding(new Insets(15));
+    calculatedBox.setStyle("-fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: #f9f9f9;");
+    calculatedBox.getChildren().add(new VBox(new Text("Calculated Parameters")));
 
-
-    HBox comparison = new HBox();
-    comparison.setSpacing(5);
-
-    VBox newParameterBox = new VBox();
-    newParameterBox.setSpacing(5);
-    var TORA = makeDistanceHBox("TORA ", currentRunway.getNewTORA());
-    var TODA = makeDistanceHBox("TODA ", currentRunway.getNewTODA());
-    var ASDA = makeDistanceHBox("ASDA ", currentRunway.getNewASDA());
-    var LDA = makeDistanceHBox("LDA ", currentRunway.getNewLDA());
-    var disThres = makeDistanceHBox("Displaced Threshold: ",currentRunway.getDisplacedThreshold());
-    newParameterBox.getChildren().addAll(TORA,TODA,ASDA,LDA,disThres);
-
-    comparison.getChildren().addAll(setUpParameters(),newParameterBox); // Puts the results side by side
-
-    calculatedBox.getChildren().addAll(comparison);
+    if (!currentRunway.getObstacles().isEmpty()) {
+      calculatedBox.getChildren().add(makeDistanceHBox("TORA ", currentRunway.getNewTORA()));
+      calculatedBox.getChildren().add(makeDistanceHBox("TODA ", currentRunway.getNewTODA()));
+      calculatedBox.getChildren().add(makeDistanceHBox("ASDA ", currentRunway.getNewASDA()));
+      calculatedBox.getChildren().add(makeDistanceHBox("LDA ", currentRunway.getNewLDA()));
+    } else {
+      calculatedBox.getChildren().add(new Text("No obstacles present."));
+    }
 
     return calculatedBox;
   }
 
+  private VBox setUpParameters() {
+    VBox parameterBox = new VBox(5);
+    parameterBox.getChildren().addAll(makeDistanceHBox("TORA ", currentRunway.getTORA()),
+            makeDistanceHBox("TODA ", currentRunway.getTODA()),
+            makeDistanceHBox("ASDA ", currentRunway.getASDA()),
+            makeDistanceHBox("LDA ", currentRunway.getLDA()),
+            makeDistanceHBox("Displaced Threshold: ", currentRunway.getDisplacedThreshold()));
+    return parameterBox;
+  }
+
+  private HBox makeDistanceHBox(String name, int value) {
+    Text label = new Text(name + value + " m");
+    label.setFont(Font.font("Arial", Font.getDefault().getSize()));
+    HBox box = new HBox(label);
+    box.setAlignment(Pos.CENTER_LEFT);
+    return box;
+  }
+
+  private void styleButton(Button button, MaterialDesign icon, String text) {
+    AirportListScene.extractedStylingMethod(button, icon, text);
+  }
 
   private void promptEditRunwayForm(MainApplication app) {
     VBox form = new VBox(10);
@@ -180,10 +194,10 @@ public class RunwayConfigViewScene extends VBox {
     styleTextField(DisThreshInput);
 
     Button submitButton = new Button();
-    styleButton(submitButton, "Replace");
+    styleButton(submitButton, MaterialDesign.MDI_CHECK_CIRCLE, "Submit");
 
     Button cancelButton = new Button();
-    styleButton(cancelButton, "Return");
+    styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
     cancelButton.setOnAction(e -> {
       Stage stage = (Stage) form.getScene().getWindow();
       stage.close();
@@ -235,13 +249,18 @@ public class RunwayConfigViewScene extends VBox {
     });
 
     form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput,
-        ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput,
-        submitButton, cancelButton);
+            ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput,
+            submitButton, cancelButton);
 
     Stage dialogStage = new Stage();
     dialogStage.initModality(Modality.APPLICATION_MODAL);
     dialogStage.setTitle("Edit Runway");
     AirportScene.extractedDialogStageMethod(form, dialogStage);
+  }
+
+  private void styleTextField(TextField textField) {
+    textField.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+    textField.setFont(Font.font("Arial", 16));
   }
 
   private void showErrorDialog(String message) {
@@ -252,7 +271,7 @@ public class RunwayConfigViewScene extends VBox {
 
     Text errorMessage = new Text(message);
     Button okButton = new Button();
-    styleButton(okButton, "OK");
+    styleButton(okButton, MaterialDesign.MDI_CHECK, "OK");
 
     okButton.setOnAction(e -> dialog.close());
     dialogVbox.setPadding(new Insets(20));
@@ -265,19 +284,5 @@ public class RunwayConfigViewScene extends VBox {
     dialogVbox.setAlignment(Pos.CENTER);
 
     dialog.showAndWait();
-  }
-
-  private HBox makeDistanceHBox(String name, int value) {
-    var distance = Integer.toString(value);
-    return new HBox(new Text(name + distance + " m"));
-  }
-
-  private void styleTextField(TextField textField) {
-    textField.setStyle("-fx-background-color: white; -fx-text-fill: black;");
-    textField.setFont(Font.font("Arial", 16));
-  }
-
-  private void styleButton(Button button, String text) {
-    AirportListScene.extractedStylingMethod(button, MaterialDesign.MDI_KEYBOARD_RETURN, text);
   }
 }

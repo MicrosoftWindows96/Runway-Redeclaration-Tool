@@ -2,12 +2,15 @@ package org.universityofsouthampton.runwayredeclarationtool.UI;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -57,15 +60,49 @@ public class RunwayConfigViewScene extends VBox {
 
     HBox buttonBox = new HBox(10);
     buttonBox.getChildren().addAll(backButton,runwayUpdateButton,obstacleUpdateButton);
+    
 
 
-    this.getChildren().addAll(title,setUpParameters(),buttonBox);
+    this.getChildren().addAll(title,setUpParameters(), drawRunway(),buttonBox);
 
     if (!currentRunway.getObstacles().isEmpty()) {
       System.out.println("Obstacles present on runway!");
       this.getChildren().add(calculatedParameterSection());
     }
 
+  }
+  
+  private VBox drawRunway() {
+    Line runwayLine = new Line(50, 150, 750, 150);
+    runwayLine.setStroke(Color.GRAY);
+    runwayLine.setStrokeWidth(10);
+
+    Text toraLabel = new Text("TORA: " + currentRunway.getTORA());
+    toraLabel.setX(50);
+    toraLabel.setY(130);
+
+    Text todaLabel = new Text("TODA: " + currentRunway.getTODA());
+    todaLabel.setX(200);
+    todaLabel.setY(130);
+
+    Text asdaLabel = new Text("ASDA: " + currentRunway.getASDA());
+    asdaLabel.setX(350);
+    asdaLabel.setY(130);
+
+    Text ldaLabel = new Text("LDA: " + currentRunway.getLDA());
+    ldaLabel.setX(500);
+    ldaLabel.setY(130);
+
+    Text displacedThresholdLabel = new Text("Displaced Threshold: " + currentRunway.getDisplacedThreshold());
+    displacedThresholdLabel.setX(650);
+    displacedThresholdLabel.setY(130);
+
+    Group runwayDiagram = new Group();
+    runwayDiagram.getChildren().addAll(runwayLine, toraLabel, todaLabel, asdaLabel, ldaLabel, displacedThresholdLabel);
+
+    runwayDiagram.setLayoutY(600);
+
+    return new VBox(runwayDiagram);
   }
 
   private VBox setUpParameters() {

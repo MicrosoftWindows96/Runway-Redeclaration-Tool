@@ -9,13 +9,6 @@
                 <ASDA>3666</ASDA>
                 <LDA>3500</LDA>
                 <dispThresh>5</dispThresh>
-                <Obstacles>
-                    <Obstacle name="Bav">
-                        <Height>25</Height>
-                        <DistThreshold>450</DistThreshold>
-                        <DistCent>58</DistCent>
-                    </Obstacle>
-                </Obstacles>
             </LogicalRunway>
         </Runway>
     </Airport>

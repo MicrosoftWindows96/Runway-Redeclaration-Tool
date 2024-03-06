@@ -1,15 +1,11 @@
 package org.universityofsouthampton.runwayredeclarationtool;
 
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.universityofsouthampton.runwayredeclarationtool.UI.*;
@@ -18,6 +14,9 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Class that handles the scene changes (Controller)
@@ -160,10 +159,6 @@ public class MainApplication extends Application {
 
     public ArrayList<Obstacle> getObstacles() {
         return obstacles;
-    }
-
-    public void addObstacle(Obstacle obstacle) {
-        obstacles.add(obstacle);
     }
 
     public void updateXMLs() {

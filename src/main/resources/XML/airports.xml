@@ -2,15 +2,21 @@
 <Models xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="airport.xsd">
     <Airport code="SOU" name="Southampton">
         <Runway>
-            <LogicalRunway degree="09">
+            <LogicalRunway degree="20">
                 <direction>R</direction>
-                <TORA>3660</TORA>
-                <TODA>3660</TODA>
-                <ASDA>3660</ASDA>
-                <LDA>3553</LDA>
-                <dispThresh>50</dispThresh>
+                <TORA>2</TORA>
+                <TODA>1</TODA>
+                <ASDA>3</ASDA>
+                <LDA>4</LDA>
+                <dispThresh>5</dispThresh>
+                <Obstacles>
+                    <Obstacle name="Bav">
+                        <Height>180</Height>
+                        <DistThreshold>40</DistThreshold>
+                        <DistCent>50</DistCent>
+                    </Obstacle>
+                </Obstacles>
             </LogicalRunway>
         </Runway>
     </Airport>
-    <Airport code="ANT" name="Anthony"/>
 </Models>

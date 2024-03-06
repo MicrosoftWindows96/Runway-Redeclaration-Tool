@@ -1,7 +1,5 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -36,16 +34,6 @@ public class ObstacleListScene extends VBox {
     private final ScrollPane otherObstaclesScroll = new ScrollPane();
 
     /**
-     * Observable arraylist of obstacles to be displayed already in the runway
-     */
-    private final ObservableList<Obstacle> currentObstaclesObserve = FXCollections.observableArrayList();
-
-    /**
-     * Observable arraylist of obstacles to be displayed that are not in runway
-     */
-    private final ObservableList<Obstacle> otherObstaclesObserve = FXCollections.observableArrayList();
-
-    /**
      * ArrayList of obstacles for selected runway
      */
     private ArrayList<Obstacle> currentObstacles;
@@ -55,14 +43,12 @@ public class ObstacleListScene extends VBox {
      */
     private ArrayList<Obstacle> otherObstacles;
 
-    private final Airport airport;
-    private final Runway runway;
+    /**
+     *
+     */
     private Obstacle selectedObstacle;
 
     public ObstacleListScene(MainApplication app, Airport airport, Runway runway) {
-        this.airport = airport;
-        this.runway = runway;
-
         setAlignment(Pos.TOP_CENTER);
 
         currentObstacles = runway.getObstacles();
@@ -85,12 +71,8 @@ public class ObstacleListScene extends VBox {
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
         backButton.setOnAction(e -> {
-            if (otherObstacles.isEmpty()) {
-                promptAddCalcParameters(app);
-            } else {
-                app.updateXMLs();
-                app.displayRunwayConfigScene(airport,runway);
-            }
+            app.displayRunwayConfigScene(airport,runway);
+            app.updateXMLs();
         });
 
         Button createButton = new Button();
@@ -108,25 +90,25 @@ public class ObstacleListScene extends VBox {
         Button addButton = new Button();
         styleButton(addButton, MaterialDesign.MDI_PLUS_BOX, "Add");
         addButton.setOnAction(e -> {
-            // Handle airport selection (we may need to implement database/xml func early)
-            // Selection error handling
             if (this.selectedObstacle == null) {
                 System.out.println("Nothing Selected!");
-            } else if (this.currentObstacles.contains(this.selectedObstacle)) {
-                System.out.println("Already in current obstacles");
             } else {
+                if (!this.currentObstacles.isEmpty()) {
+                    Obstacle existingObstacle = this.currentObstacles.getFirst();
+                    this.otherObstacles.add(existingObstacle);
+                    this.currentObstacles.clear();
+                }
                 this.currentObstacles.add(this.selectedObstacle);
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
-            }});
+            }
+        });
 
         Button removeButton = new Button();
         styleButton(removeButton, MaterialDesign.MDI_PLUS_BOX, "Remove");
         removeButton.setOnAction(e -> {
-            if (this.selectedObstacle == null) {
-                System.out.println("Nothing Selected!");}
-            else if (this.otherObstacles.contains(this.selectedObstacle )) {
-                System.out.println("Already in other obstacles");
+            if (this.selectedObstacle == null || this.currentObstacles.isEmpty() || !this.currentObstacles.contains(this.selectedObstacle)) {
+                System.out.println("Nothing Selected or not in current obstacles!");
             } else {
                 this.otherObstacles.add(this.selectedObstacle);
                 this.currentObstacles.remove(this.selectedObstacle);
@@ -138,56 +120,6 @@ public class ObstacleListScene extends VBox {
         buttonBox.getChildren().addAll(backButton,addButton,removeButton,createButton);
 
         this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox);
-    }
-
-    private void promptAddCalcParameters(MainApplication app) {
-        VBox form = new VBox(10);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
-
-        Label BPVLabel = new Label("Blast Protection Value:");
-        TextField BPVInput = new TextField();
-        styleTextField(BPVInput);
-        BPVInput.setPromptText("Blast Protection Value");
-
-        Button submitButton = new Button();
-        styleButton(submitButton, MaterialDesign.MDI_CHECK,"Submit");
-
-        Button cancelButton = new Button();
-        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN,"Return");
-        cancelButton.setOnAction(e -> {
-            Stage stage = (Stage) form.getScene().getWindow();
-            stage.close();
-        });
-
-        submitButton.setOnAction(e -> {
-
-        try {
-            int BPV = Integer.parseInt(BPVInput.getText());
-
-            if (BPV <= 0) {
-                throw new IllegalArgumentException("Invalid measurements for calculations.");
-            }
-
-            Stage stage = (Stage) form.getScene().getWindow();
-
-            runway.setBlastProtectionValue(BPV);
-
-            app.updateXMLs();
-            app.displayRunwayConfigScene(airport,runway);
-            stage.close();
-
-        } catch (IllegalArgumentException ex) {
-            showErrorDialog(ex.getMessage());
-        }
-        });
-
-        form.getChildren().addAll(BPVLabel,BPVInput, submitButton, cancelButton);
-
-        Stage dialogStage = new Stage();
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setTitle("Edit Runway");
-        AirportScene.extractedDialogStageMethod(form, dialogStage);
     }
 
     private void styleButton(Button button, MaterialDesign icon, String text) {
@@ -306,38 +238,29 @@ public class ObstacleListScene extends VBox {
         currentObstaclesBox.setSpacing(5);
         otherObstaclesBox.setSpacing(5);
 
-        for (Obstacle obstacle : this.currentObstacles) {
-            var name = (obstacle.getName());
+        this.currentObstacles.forEach(obstacle -> {
+            var name = obstacle.getName();
             var obstacleButton = new Button(name);
             styleButton(obstacleButton, MaterialDesign.MDI_EYE, name);
-
             obstacleButton.setOnMouseClicked(event -> {
                 setSelectedObstacle(obstacle);
                 System.out.println("Currently selected: " + getSelectedObstacle().getName());
             });
-
             currentObstaclesBox.getChildren().add(obstacleButton);
-            currentObstaclesObserve.add(obstacle);
-        }
+        });
+        this.currentObstacleScroll.setContent(currentObstaclesBox);
 
-        currentObstacleScroll.setContent(currentObstaclesBox);
-
-        for (Obstacle obstacle : this.otherObstacles) {
-            var name = (obstacle.getName());
+        this.otherObstacles.forEach(obstacle -> {
+            var name = obstacle.getName();
             var obstacleButton = new Button(name);
             styleButton(obstacleButton, MaterialDesign.MDI_EYE, name);
-
             obstacleButton.setOnMouseClicked(event -> {
                 setSelectedObstacle(obstacle);
                 System.out.println("Currently selected: " + getSelectedObstacle().getName());
             });
-
             otherObstaclesBox.getChildren().add(obstacleButton);
-            otherObstaclesObserve.add(obstacle);
-        }
-
-        currentObstacleScroll.setContent(currentObstaclesBox);
-        otherObstaclesScroll.setContent(otherObstaclesBox);
+        });
+        this.otherObstaclesScroll.setContent(otherObstaclesBox);
     }
 
     public void setSelectedObstacle(Obstacle selectedObstacle) {

@@ -309,8 +309,9 @@ public class ObstacleListScene extends VBox {
 
                     // replace the obstacle
                     currentRunway.removeObstacle(selectedObstacle);
-                    selectedObstacle = new Obstacle(name,height,distFromThre,distFromCent);
-                    currentRunway.addObstacle(selectedObstacle);
+                    var newObstacle = new Obstacle(name,height,distFromThre,distFromCent);
+                    selectedObstacle = newObstacle;
+                    currentRunway.addObstacle(newObstacle);
 
                     updateObstaclesList();
 

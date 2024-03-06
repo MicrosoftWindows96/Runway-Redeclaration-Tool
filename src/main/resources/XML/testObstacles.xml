@@ -5,4 +5,9 @@
         <DistThreshold>100</DistThreshold>
         <DistCent>5</DistCent>
     </Obstacle>
+    <Obstacle name="Airplane">
+        <Height>400</Height>
+        <DistThreshold>550</DistThreshold>
+        <DistCent>10</DistCent>
+    </Obstacle>
 </Obstacles>

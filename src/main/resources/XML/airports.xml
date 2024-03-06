@@ -11,9 +11,9 @@
                 <dispThresh>5</dispThresh>
                 <Obstacles>
                     <Obstacle name="Bav">
-                        <Height>15</Height>
-                        <DistThreshold>100</DistThreshold>
-                        <DistCent>5</DistCent>
+                        <Height>25</Height>
+                        <DistThreshold>450</DistThreshold>
+                        <DistCent>58</DistCent>
                     </Obstacle>
                 </Obstacles>
             </LogicalRunway>

@@ -3,14 +3,21 @@ package org.universityofsouthampton.runwayredeclarationtool.UI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
@@ -53,8 +60,6 @@ public class AirportListScene extends VBox {
         Text title = new Text("List of Airports");
         title.setFont(Font.font("Arial", 20));
 
-
-        // Populate list of airports from XML file
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefSize(700,500);
         importedAirports = app.getAirports();
@@ -63,8 +68,6 @@ public class AirportListScene extends VBox {
         Button selectButton = new Button();
         styleButton(selectButton, MaterialDesign.MDI_PLUS_BOX, "Select");
         selectButton.setOnAction(e -> {
-            // Handle airport selection (we may need to implement database/xml func early)
-            // Selection error handling
             if (this.selectedAirport == null) {
                 System.out.println("Nothing Selected!");
             } else {
@@ -77,15 +80,67 @@ public class AirportListScene extends VBox {
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
         backButton.setOnAction(e -> app.displayAirportScene());
 
-        Button importXMLButton = new Button("Import XML");
+        Button deleteButton = new Button();
+        styleButton(deleteButton, MaterialDesign.MDI_DELETE, "Delete");
+        deleteButton.setOnAction(e -> {
+            importedAirports.remove(selectedAirport);
+            updateList();
+            app.updateAirportsXML();
+        });
+
+        Button importXMLButton = new Button();
         styleButton(importXMLButton, MaterialDesign.MDI_DOWNLOAD, "Import");
         importXMLButton.setOnAction(e -> importAirportsFromXML());
 
+        Button exportXMLButton = new Button();
+        styleButton(exportXMLButton, MaterialDesign.MDI_UPLOAD, "Export");
+        //exportXMLButton.setOnAction(e -> exportAirportsToXML());
+
+        Button modifyButton = new Button();
+        styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
+        modifyButton.setOnAction(e -> {
+            showModifyAirportDialog(selectedAirport);
+        });
+
+
         HBox buttonBox = new HBox(10);
-        buttonBox.getChildren().addAll(selectButton, importXMLButton, backButton);
+        buttonBox.getChildren().addAll(backButton, selectButton, modifyButton, deleteButton, importXMLButton, exportXMLButton);
 
         getChildren().addAll(title, scrollPane, buttonBox);
     }
+
+    private void showModifyAirportDialog(Airport airport) {
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Modify Airport");
+
+        TextField nameInput = new TextField(selectedAirport.getAirportName());
+        VBox dialogVBox = getAirportDataForm(selectedAirport, nameInput, dialogStage);
+
+        Scene dialogScene = new Scene(dialogVBox);
+        dialogStage.setScene(dialogScene);
+        dialogStage.showAndWait();
+    }
+
+    @NotNull
+    private VBox getAirportDataForm(Airport airport, TextField nameInput, Stage dialogStage) {
+        TextField codeInput = new TextField(airport.getAirportCode());
+
+        Button submitButton = new Button("Save Changes");
+        submitButton.setOnAction(e -> {
+            airport.setAirportName(nameInput.getText());
+            airport.setAirportCode(codeInput.getText());
+            updateList();
+            app.updateXMLs();
+            dialogStage.close();
+        });
+
+        VBox dialogVBox = new VBox(10, new Label("Airport Name:"), nameInput, new Label("Airport Code:"), codeInput, submitButton);
+        dialogVBox.setAlignment(Pos.CENTER);
+        dialogVBox.setPadding(new Insets(20));
+        return dialogVBox;
+    }
+
 
     private void updateList() {
         airportsObserve.clear();

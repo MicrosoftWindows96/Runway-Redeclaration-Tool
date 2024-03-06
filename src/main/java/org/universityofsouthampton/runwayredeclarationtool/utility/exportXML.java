@@ -54,11 +54,9 @@ public class exportXML {
     modelsElement.setAttribute("xsi:noNamespaceSchemaLocation", "airport.xsd");
     document.appendChild(modelsElement);
 
-    // Create the Airport elements from the objects:
     for (Airport airport : exportedAirports) {
       Element airportElement = createAirportElement(document,airport.getAirportName(),airport.getAirportCode());
 
-      // Create the Runway element if the arrayList isn't empty
       if (!airport.getRunways().isEmpty()) {
       Element runwayElement = document.createElement("Runway");
       airportElement.appendChild(runwayElement);
@@ -76,10 +74,10 @@ public class exportXML {
       modelsElement.appendChild(airportElement);
       modelsElement.normalize();
     }
-      // Write the DOM document to an XMl file
-      extractedTransformerFactoryMethod();
 
-      System.out.println("XML file successfully made!");
+    extractedTransformerFactoryMethod();
+
+    System.out.println("XML file successfully made!");
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -125,9 +123,7 @@ public class exportXML {
           }
 
           obstaclesElement.normalize();
-
-          // Write the DOM document to an XML file
-        extractedTransformerFactoryMethod();
+          extractedTransformerFactoryMethod();
 
         System.out.println("XML file created successfully!");
       } catch (Exception e) {

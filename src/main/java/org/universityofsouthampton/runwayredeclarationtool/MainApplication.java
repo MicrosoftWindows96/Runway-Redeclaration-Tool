@@ -70,7 +70,7 @@ public class MainApplication extends Application {
         root.getChildren().setAll(background, airportListScene);
     }
 
-    public void displayRunwayListScene(Airport airport) { // Airport object needed to be passed to scene
+    public void displayRunwayListScene(Airport airport) {
         RunwayListScene runwayListScene = new RunwayListScene(this, airport);
         root.getChildren().setAll(background, runwayListScene);
     }
@@ -141,7 +141,7 @@ public class MainApplication extends Application {
 
     public void addAirport(Airport airport) {
         airports.add(airport);
-        updateAirportsXML(); // Call this method every time the list changes
+        updateAirportsXML();
     }
 
     public void updateAirportsXML() {

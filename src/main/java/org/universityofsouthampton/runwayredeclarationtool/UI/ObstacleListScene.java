@@ -76,7 +76,7 @@ public class ObstacleListScene extends VBox {
         });
 
         Button createButton = new Button();
-        styleButton(createButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Create");
+        styleButton(createButton, MaterialDesign.MDI_CREATION, "Create");
         createButton.setOnAction(e -> promptCreateObstacleForm());
 
         this.currentObstacleScroll.setFitToWidth(true);
@@ -104,8 +104,22 @@ public class ObstacleListScene extends VBox {
             }
         });
 
+        Button modifyButton = new Button();
+        styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
+        modifyButton.setOnAction(e -> promptModifyObstacleForm());
+
+        Button viewDetailsButton = new Button();
+        styleButton(viewDetailsButton, MaterialDesign.MDI_EYE, "View");
+        viewDetailsButton.setOnAction(e -> {
+            if (selectedObstacle == null) {
+                showErrorDialog("No obstacle selected to view details.");
+            } else {
+                showObstacleDetailsDialog(selectedObstacle);
+            }
+        });
+
         Button removeButton = new Button();
-        styleButton(removeButton, MaterialDesign.MDI_PLUS_BOX, "Remove");
+        styleButton(removeButton, MaterialDesign.MDI_MINUS_BOX, "Remove");
         removeButton.setOnAction(e -> {
             if (this.selectedObstacle == null || this.currentObstacles.isEmpty() || !this.currentObstacles.contains(this.selectedObstacle)) {
                 System.out.println("Nothing Selected or not in current obstacles!");
@@ -117,10 +131,116 @@ public class ObstacleListScene extends VBox {
         });
 
         HBox buttonBox = new HBox(10);
-        buttonBox.getChildren().addAll(backButton,addButton,removeButton,createButton);
+        buttonBox.getChildren().addAll(backButton, addButton, removeButton, createButton, modifyButton, viewDetailsButton);
 
         this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox);
     }
+
+    private void promptModifyObstacleForm() {
+        if (selectedObstacle == null) {
+            showErrorDialog("No obstacle selected for modification.");
+            return;
+        }
+
+        VBox form = new VBox(10);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(20));
+
+        Label nameLabel = new Label("Name:");
+        TextField nameInput = new TextField(selectedObstacle.getName());
+        styleTextField(nameInput);
+
+        Label heightLabel = new Label("Height:");
+        TextField heightInput = new TextField(String.valueOf(selectedObstacle.getHeight()));
+        styleTextField(heightInput);
+
+        Label distFromThreLabel = new Label("Distance From Threshold:");
+        TextField distFromThreInput = new TextField(String.valueOf(selectedObstacle.getDistanceFromThreshold()));
+        styleTextField(distFromThreInput);
+
+        Label distFromCentLabel = new Label("Distance From Centreline:");
+        TextField distFromCentInput = new TextField(String.valueOf(selectedObstacle.getDistanceFromCentreline()));
+        styleTextField(distFromCentInput);
+
+        Button submitButton = new Button("Modify");
+        styleButton(submitButton, MaterialDesign.MDI_CHECK, "Modify");
+
+        submitButton.setOnAction(e -> {
+            String name = nameInput.getText();
+            String heightName = heightInput.getText();
+            String distFromThreName = distFromThreInput.getText();
+            String distFromCentname = distFromCentInput.getText();
+
+            if (name.isEmpty() || heightName.isEmpty() || distFromThreName.isEmpty() || distFromCentname.isEmpty()) {
+                showErrorDialog("All fields are required. Please fill in all fields.");
+            } else {
+                try {
+                    int height = Integer.parseInt(heightInput.getText());
+                    int distFromThre = Integer.parseInt(distFromThreInput.getText());
+                    int distFromCent = Integer.parseInt(distFromCentInput.getText());
+
+                    if (height <= 0 || distFromThre <= 0 || distFromCent <= 0) {
+                        throw new IllegalArgumentException("Invalid measurements for obstacle");
+                    }
+
+                    selectedObstacle.setName(name);
+                    selectedObstacle.setHeight(height);
+                    selectedObstacle.setDistanceFromThreshold(distFromThre);
+                    selectedObstacle.setDistanceFromCentreline(distFromCent);
+                    updateObstaclesList();
+
+                    Stage stage = (Stage) form.getScene().getWindow();
+                    stage.close();
+
+                } catch (NumberFormatException ex) {
+                    showErrorDialog("Invalid input for numbers. Please enter valid integers.");
+                } catch (IllegalArgumentException ex) {
+                    showErrorDialog(ex.getMessage());
+                }
+            }
+        });
+
+        Button cancelButton = new Button("Cancel");
+        styleButton(cancelButton, MaterialDesign.MDI_CLOSE, "Cancel");
+        cancelButton.setOnAction(e -> {
+            Stage stage = (Stage) form.getScene().getWindow();
+            stage.close();
+        });
+
+        form.getChildren().addAll(nameLabel, nameInput, heightLabel, heightInput, distFromThreLabel, distFromThreInput, distFromCentLabel, distFromCentInput, submitButton, cancelButton);
+
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Modify Obstacle");
+        dialogGenerator(form, dialogStage);
+    }
+
+    private void showObstacleDetailsDialog(Obstacle obstacle) {
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Obstacle Details");
+
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.setPadding(new Insets(20));
+        dialogVbox.setAlignment(Pos.CENTER);
+
+        Text name = new Text("Name: " + obstacle.getName());
+        Text height = new Text("Height: " + obstacle.getHeight());
+        Text distFromThresh = new Text("Distance From Threshold: " + obstacle.getDistanceFromThreshold());
+        Text distFromCenter = new Text("Distance From Centreline: " + obstacle.getDistanceFromCentreline());
+
+        Button okButton = new Button("OK");
+        styleButton(okButton, MaterialDesign.MDI_CHECK, "OK");
+        okButton.setOnAction(e -> dialogStage.close());
+
+        dialogVbox.getChildren().addAll(name, height, distFromThresh, distFromCenter, okButton);
+
+        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialogStage.setScene(dialogScene);
+        dialogStage.showAndWait();
+    }
+
+
 
     private void styleButton(Button button, MaterialDesign icon, String text) {
         button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");

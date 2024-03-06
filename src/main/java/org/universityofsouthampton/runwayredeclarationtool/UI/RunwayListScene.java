@@ -85,7 +85,7 @@ public class RunwayListScene extends VBox {
     });
 
     HBox buttonBox = new HBox(10);
-    buttonBox.getChildren().addAll(addRunway,selectButton, backButton);
+    buttonBox.getChildren().addAll(backButton, selectButton, addRunway);
 
     this.getChildren().addAll(title,scrollPane,buttonBox);
   }

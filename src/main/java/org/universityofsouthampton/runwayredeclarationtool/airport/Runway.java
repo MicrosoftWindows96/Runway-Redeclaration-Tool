@@ -7,10 +7,13 @@ import java.util.ArrayList;
  */
 public class Runway {
 
+    private String degrees;
+    private String direction;
     private String name; // Runway name
+    private int runwayLength;
     String logicalRunway1, logicalRunway2;
     private String logicalRunway; //runway name if used from the other side. 09L -> 27R
-    private int TORA; // Take-Off Run Available
+    private int TORA; // Take-Off Run Available (same as length of runway)
     private int TODA; // Take-Off Distance Available
     private int ASDA; // Accelerate-Stop Distance Available
     private int LDA; // Landing Distance Available
@@ -32,8 +35,9 @@ public class Runway {
     private boolean landingToward;
     private boolean takeoffAway;
     private boolean takeoffToward;
-    private String direction;
-    private final String degrees;
+    //private String direction;
+    private int stopway;
+    private int clearway;
 
     public Runway(String degrees, String direction, int TORA, int TODA, int ASDA, int LDA, int displacedThreshold) {
         this.degrees = degrees;
@@ -51,7 +55,25 @@ public class Runway {
         this.displacedThreshold = displacedThreshold;
 
         this.obstacles = new ArrayList<>();
-
+    }
+    public Runway(String name, int stopway, int clearway, int TORA, int displacedThreshold){
+        this.name = name;
+        this.stopway = stopway;
+        this.clearway = clearway;
+        this.TORA = TORA;
+        this.displacedThreshold = displacedThreshold;
+        this.obstacles = new ArrayList<>();
+        this.TODA = TORA + clearway;
+        this.ASDA = TORA + stopway;
+        if(!isValidName(name) && checkValidParameters()){
+            throw new IllegalArgumentException("Invalid runway parameters");
+        }
+    }
+    public boolean checkValidParameters(){
+        boolean greaterThanZero = (TORA<0 || TODA <0 || ASDA <0 || LDA<0 || displacedThreshold <=0 || stopway <0 || clearway<0);
+        boolean checkTODA = (TODA == TORA + clearway && TODA > TORA);
+        boolean checkASDA = (ASDA == TORA + stopway || ASDA == LDA + stopway);
+        return (greaterThanZero && checkTODA && checkASDA);
     }
 
     public ArrayList<Obstacle> getObstacles(){
@@ -144,10 +166,22 @@ public class Runway {
         this.LDA = LDA;
     }
 
+    //getter and setter functions for stopway and clearway
+    public void setStopway(int stopway){
+        this.stopway = stopway;
+    }
+    public void setClearway(int clearway){
+        this.clearway = clearway;
+    }
+    public int getStopway(){
+        return stopway;
+    }
+    public int getClearway(){
+        return clearway;
+    }
     public int getTORA() {
         return TORA;
     }
-
     public int getTODA() {
         return TODA;
     }

@@ -15,6 +15,7 @@ import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 public class MenuScene extends VBox {
 
   public MenuScene(MainApplication app) {
+
     this.setAlignment(Pos.TOP_CENTER);
 
     var title = new Text("Runway Re-declaration Tool");

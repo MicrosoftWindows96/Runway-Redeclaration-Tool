@@ -9,10 +9,10 @@
                 <TORA>3660</TORA>
                 <dispThresh>307</dispThresh>
                 <Obstacles>
-                    <Obstacle name="27L-S2">
-                        <Height>25</Height>
-                        <DistThreshold>500</DistThreshold>
-                        <DistCent>1</DistCent>
+                    <Obstacle name="09R-S3">
+                        <Height>15</Height>
+                        <DistThreshold>150</DistThreshold>
+                        <DistCent>5</DistCent>
                     </Obstacle>
                 </Obstacles>
             </LogicalRunway>
@@ -22,13 +22,6 @@
                 <clearway>0</clearway>
                 <TORA>3660</TORA>
                 <dispThresh>0</dispThresh>
-                <Obstacles>
-                    <Obstacle name="27L-S3">
-                        <Height>15</Height>
-                        <DistThreshold>3203</DistThreshold>
-                        <DistCent>5</DistCent>
-                    </Obstacle>
-                </Obstacles>
             </LogicalRunway>
             <LogicalRunway degree="27">
                 <direction>R</direction>
@@ -36,6 +29,13 @@
                 <clearway>78</clearway>
                 <TORA>3884</TORA>
                 <dispThresh>0</dispThresh>
+                <Obstacles>
+                    <Obstacle name="27R-S1">
+                        <Height>12</Height>
+                        <DistThreshold>3646</DistThreshold>
+                        <DistCent>5</DistCent>
+                    </Obstacle>
+                </Obstacles>
             </LogicalRunway>
             <LogicalRunway degree="09">
                 <direction>L</direction>

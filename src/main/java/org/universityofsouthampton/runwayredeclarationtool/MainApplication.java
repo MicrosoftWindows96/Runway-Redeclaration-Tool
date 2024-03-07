@@ -7,6 +7,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import org.kordamp.ikonli.javafx.IkonResolver;
+import org.kordamp.ikonli.materialdesign.MaterialDesignIkonHandler;
 import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
@@ -29,6 +31,9 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        // Registering Material Design icon pack with the IkonResolver
+        IkonResolver.getInstance().registerHandler(new MaterialDesignIkonHandler());
+
         root = new StackPane();
         background = AnimatedPatternBackground.getInstance();
 

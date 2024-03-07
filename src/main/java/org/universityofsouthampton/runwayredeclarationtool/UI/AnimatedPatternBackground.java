@@ -1,15 +1,16 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import java.util.LinkedList;
+import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.javafx.IkonResolver;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
-import javafx.scene.shape.Rectangle;
-import java.util.LinkedList;
-import java.util.Random;
 
 public class AnimatedPatternBackground extends Pane {
   private final Random random = new Random();

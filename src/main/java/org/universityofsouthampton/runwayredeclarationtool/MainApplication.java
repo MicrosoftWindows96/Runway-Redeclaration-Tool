@@ -89,16 +89,14 @@ public class MainApplication extends Application {
         exportXML obstacleXML = new exportXML(airports, obstacles, new File("src/main/resources/XML/testObstacles.xml"));
         obstacleXML.buildObstaclesXML();
 
-        showNotification("Airports and obstacles have been updated.");
+        showNotification("System", "Airports and obstacles updated");
         System.out.println("XML files successfully updated!");
-        System.out.println("Airports: " + airports);
-        System.out.println("Obstacles: " + obstacles);
     }
 
-    private void showNotification(String text) {
+    public void showNotification(String text, String text2) {
         Notifications.create()
-                .title("ATTENTION")
-                .text(text)
+                .title(text)
+                .text(text2)
                 .hideAfter(Duration.seconds(5))
                 .position(Pos.TOP_RIGHT)
                 .owner(null)
@@ -108,6 +106,7 @@ public class MainApplication extends Application {
 
     public void mergeAirport(ArrayList<Airport> newAirports) {
         airports.addAll(newAirports);
+        showNotification("System", "Airports merged");
         updateXMLs();
     }
 
@@ -115,6 +114,7 @@ public class MainApplication extends Application {
 
     public void addAirport(Airport airport) {
         airports.add(airport);
+        showNotification("System", "Airport added");
         updateAirportsXML();
     }
 

@@ -247,6 +247,7 @@ public class ObstacleListScene extends VBox {
                     Stage stage = (Stage) form.getScene().getWindow();
 
                     otherObstacles.add(new Obstacle(name,height,distFromThre,distFromCent));
+                    app.showNotification("Obstacle Warning", "Obstacle " + name + " created for " + currentAirport.getAirportCode() + " runway " + currentRunway.getName() + currentRunway.getDirection());
                     updateObstaclesList();
 
                     stage.close();
@@ -323,9 +324,11 @@ public class ObstacleListScene extends VBox {
                     if (otherObstacles.contains(selectedObstacle)) {
                         otherObstacles.remove(selectedObstacle);
                         otherObstacles.add(newObstacle);
+                        app.showNotification("Obstacle Warning", "Obstacle " + name + " reconfigured for " + currentAirport.getAirportCode() + " runway " + currentRunway.getName() + currentRunway.getDirection());
                     } else if (currentRunway.getObstacles().contains(selectedObstacle)) {
                         currentRunway.removeObstacle(selectedObstacle);
                         currentRunway.addObstacle(newObstacle);
+                        app.showNotification("Obstacle Warning", "Obstacle " + name + " reconfigured for " + currentAirport.getAirportCode() + " runway " + currentRunway.getName() + currentRunway.getDirection());
                     }
 
                     updateObstaclesList();

@@ -63,7 +63,7 @@ public class RunwayConfigViewScene extends VBox {
   }
 
   private Text createTitleSection(Runway runway) {
-    Text title = new Text("Runway: " + airport.getAirportCode() + " -- " + runway.getName());
+    Text title = new Text("Runway: " + airport.getAirportCode() + " -- " + runway.getName() + runway.getDirection());
     title.setFont(Font.font("Arial", 20));
     return title;
   }
@@ -187,7 +187,7 @@ public class RunwayConfigViewScene extends VBox {
     form.setPadding(new Insets(20));
 
     Label degreeLabel = new Label("Degree:");
-    TextField degreeInput = new TextField(currentRunway.getDegrees());
+    TextField degreeInput = new TextField(currentRunway.getName());
     styleTextField(degreeInput);
     degreeInput.setPromptText("Degree");
 
@@ -196,21 +196,19 @@ public class RunwayConfigViewScene extends VBox {
     styleTextField(directionInput);
     directionInput.setPromptText("Direction (L, R, C)");
 
+    Label stopwayLabel = new Label("Stopway");
+    TextField stopwayInput = new TextField(Integer.toString(currentRunway.getStopway()));
+    styleTextField(stopwayInput);
+    stopwayInput.setPromptText("Stopway");
+
+    Label clearwayLabel = new Label("Clearway");
+    TextField clearwayInput = new TextField(Integer.toString(currentRunway.getClearway()));
+    styleTextField(clearwayInput);
+    clearwayInput.setPromptText("Clearway");
+
     Label TORALabel = new Label("TORA:");
     TextField TORAInput = new TextField(Integer.toString(currentRunway.getTORA()));
     styleTextField(TORAInput);
-
-    Label TODALabel = new Label("TODA:");
-    TextField TODAInput = new TextField(Integer.toString(currentRunway.getTODA()));
-    styleTextField(TODAInput);
-
-    Label ASDALabel = new Label("ASDA:");
-    TextField ASDAInput = new TextField(Integer.toString(currentRunway.getASDA()));
-    styleTextField(ASDAInput);
-
-    Label LDALabel = new Label("LDA:");
-    TextField LDAInput = new TextField(Integer.toString(currentRunway.getLDA()));
-    styleTextField(LDAInput);
 
     Label DisThreshLabel = new Label("Displaced Threshold:");
     TextField DisThreshInput = new TextField(Integer.toString(currentRunway.getDisplacedThreshold()));
@@ -236,13 +234,12 @@ public class RunwayConfigViewScene extends VBox {
         showErrorDialog("Invalid runway name. The name must consist of two digits followed by L, C, or R.");
       } else {
         try {
+          int stopway = Integer.parseInt(stopwayInput.getText());
+          int clearway = Integer.parseInt(clearwayInput.getText());
           int TORA = Integer.parseInt(TORAInput.getText());
-          int TODA = Integer.parseInt(TODAInput.getText());
-          int ASDA = Integer.parseInt(ASDAInput.getText());
-          int LDA = Integer.parseInt(LDAInput.getText());
           int DisThresh = Integer.parseInt(DisThreshInput.getText());
 
-          if (TODA <= 0 || TORA <= 0 || ASDA <= 0 || LDA <= 0 || DisThresh < 0) {
+          if (stopway < 0 || clearway < 0 || TORA < 0 || DisThresh < 0) {
             throw new IllegalArgumentException("Invalid measurements for runway.");
           }
 
@@ -250,8 +247,8 @@ public class RunwayConfigViewScene extends VBox {
 
           Runway deletedRunway = currentRunway;
           airport.removeRunway(currentRunway);
-          currentRunway = new Runway(degree, direction, TODA, TORA, ASDA, LDA, DisThresh);
-          if (!currentRunway.getObstacles().isEmpty()) {
+          currentRunway = new Runway(degree,direction,stopway,clearway,TORA,DisThresh);
+          if (!deletedRunway.getObstacles().isEmpty()) {
             Obstacle movedObstacle = deletedRunway.getObstacles().getFirst();
             currentRunway.addObstacle(movedObstacle);
           }
@@ -271,9 +268,8 @@ public class RunwayConfigViewScene extends VBox {
       }
     });
 
-    form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput,
-            ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput,
-            submitButton, cancelButton);
+    form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, stopwayLabel, stopwayInput, clearwayLabel, clearwayInput,
+        TORALabel, TORAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
 
     Stage dialogStage = new Stage();
     dialogStage.initModality(Modality.APPLICATION_MODAL);

@@ -66,7 +66,7 @@ public class ObstacleListScene extends VBox {
         title.setStyle("-fx-fill: #333;");
         VBox.setMargin(title, new Insets(10, 0, 20, 0));
 
-        Text title2 = new Text("List of Obstacles in " + airport.getAirportCode() + "-" + runway.getName());
+        Text title2 = new Text("List of Obstacles in " + airport.getAirportCode() + "-" + runway.getName() + runway.getDirection());
         title.setFont(Font.font("Arial", 20));
 
         Text title3 = new Text("Other obstacles ")  ;
@@ -296,17 +296,21 @@ public class ObstacleListScene extends VBox {
                     int distFromThre = Integer.parseInt(distFromThreInput.getText());
                     int distFromCent = Integer.parseInt(distFromCentInput.getText());
 
-                    if (height <= 0 || distFromThre <= 0 || distFromCent <= 0) {
+                    if (height <= 0 || distFromThre <= 0 || distFromCent < 0) {
                         throw new IllegalArgumentException("Invalid measurements for obstacle");
                     }
 
                     Stage stage = (Stage) form.getScene().getWindow();
 
-                    // replace the obstacle
-                    currentRunway.removeObstacle(selectedObstacle);
                     var newObstacle = new Obstacle(name,height,distFromThre,distFromCent);
-                    selectedObstacle = newObstacle;
-                    currentRunway.addObstacle(newObstacle);
+                    // replace the obstacle in runway object
+                    if (otherObstacles.contains(selectedObstacle)) {
+                        otherObstacles.remove(selectedObstacle);
+                        otherObstacles.add(newObstacle);
+                    } else if (currentRunway.getObstacles().contains(selectedObstacle)) {
+                        currentRunway.removeObstacle(selectedObstacle);
+                        currentRunway.addObstacle(newObstacle);
+                    }
 
                     updateObstaclesList();
 
@@ -366,6 +370,7 @@ public class ObstacleListScene extends VBox {
                     // update the runway object to run calculations to display in the config runway scene
                     currentRunway.removeObstacle(selectedObstacle);
                     currentRunway.addObstacle(selectedObstacle);
+                    currentRunway.setBlastProtectionValue(BPVInt);
                     app.displayRunwayConfigScene(currentAirport,currentRunway);
                     app.updateXMLs();
 

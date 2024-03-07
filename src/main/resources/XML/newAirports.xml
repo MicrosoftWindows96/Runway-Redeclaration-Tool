@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Models xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="newAirport.xsd">
+    <Airport code="LHR" name="Heathrow">
+        <Runway>
+            <LogicalRunway degree="09">
+                <direction>R</direction>
+                <stopway>0</stopway>
+                <clearway>0</clearway>
+                <TORA>3660</TORA>
+                <dispThresh>307</dispThresh>
+                <Obstacles>
+                    <Obstacle name="09R-S2">
+                        <Height>25</Height>
+                        <DistThreshold>2853</DistThreshold>
+                        <DistCent>4</DistCent>
+                    </Obstacle>
+                </Obstacles>
+            </LogicalRunway>
+            <LogicalRunway degree="27">
+                <direction>L</direction>
+                <stopway>0</stopway>
+                <clearway>0</clearway>
+                <TORA>3660</TORA>
+                <dispThresh>0</dispThresh>
+                <Obstacles>
+                    <Obstacle name="27L-S3">
+                        <Height>15</Height>
+                        <DistThreshold>3203</DistThreshold>
+                        <DistCent>5</DistCent>
+                    </Obstacle>
+                </Obstacles>
+            </LogicalRunway>
+            <LogicalRunway degree="27">
+                <direction>R</direction>
+                <stopway>0</stopway>
+                <clearway>78</clearway>
+                <TORA>3884</TORA>
+                <dispThresh>0</dispThresh>
+            </LogicalRunway>
+            <LogicalRunway degree="09">
+                <direction>L</direction>
+                <stopway>0</stopway>
+                <clearway>0</clearway>
+                <TORA>3902</TORA>
+                <dispThresh>306</dispThresh>
+                <Obstacles>
+                    <Obstacle name="09L-S1">
+                        <Height>12</Height>
+                        <DistThreshold>50</DistThreshold>
+                        <DistCent>5</DistCent>
+                    </Obstacle>
+                </Obstacles>
+            </LogicalRunway>
+        </Runway>
+    </Airport>
+</Models>

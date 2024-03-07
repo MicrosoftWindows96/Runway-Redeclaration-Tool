@@ -51,7 +51,7 @@ public class exportXML {
     try {
     Element modelsElement = document.createElement("Models");
     modelsElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-    modelsElement.setAttribute("xsi:noNamespaceSchemaLocation", "airport.xsd");
+    modelsElement.setAttribute("xsi:noNamespaceSchemaLocation", "newAirport.xsd");
     document.appendChild(modelsElement);
 
     for (Airport airport : exportedAirports) {
@@ -62,11 +62,10 @@ public class exportXML {
       airportElement.appendChild(runwayElement);
 
         for (Runway runway : airport.getRunways()) {
-          createRunwayElement(document,runwayElement, runway.getDegrees(), runway.getDirection(),
+          createRunwayElement(document,runwayElement, runway.getName(), runway.getDirection(),
+              String.valueOf(runway.getStopway()),
+              String.valueOf(runway.getClearway()),
               String.valueOf(runway.getTORA()),
-              String.valueOf(runway.getTODA()),
-              String.valueOf(runway.getASDA()),
-              String.valueOf(runway.getLDA()),
               String.valueOf(runway.getDisplacedThreshold()),
               runway.getObstacles());
         }
@@ -140,10 +139,8 @@ public class exportXML {
   }
 
   private static void createRunwayElement(Document document, Element runwayElement,
-      String degree, String direction, String TORA,
-      String TODA, String ASDA, String LDA, String dispThresh,
-      List<Obstacle> obstacles) {
-
+      String degree, String direction, String stopway, String clearway, String TORA,
+      String dispThresh, List<Obstacle> obstacles) {
 
     // Create the LogicalRunway element
     Element logicalRunwayElement = document.createElement("LogicalRunway");
@@ -155,25 +152,20 @@ public class exportXML {
     directionElement.setTextContent(direction);
     logicalRunwayElement.appendChild(directionElement);
 
+    // Create the stopway element
+    Element stopwayElement = document.createElement("stopway");
+    stopwayElement.setTextContent(stopway);
+    logicalRunwayElement.appendChild(stopwayElement);
+
+    // Create clearway element
+    Element clearwayElement = document.createElement("clearway");
+    clearwayElement.setTextContent(clearway);
+    logicalRunwayElement.appendChild(clearwayElement);
+
     // Create the TORA element
     Element toraElement = document.createElement("TORA");
     toraElement.setTextContent(TORA);
     logicalRunwayElement.appendChild(toraElement);
-
-    // Create the TODA element
-    Element todaElement = document.createElement("TODA");
-    todaElement.setTextContent(TODA);
-    logicalRunwayElement.appendChild(todaElement);
-
-    // Create the ASDA element
-    Element asdaElement = document.createElement("ASDA");
-    asdaElement.setTextContent(ASDA);
-    logicalRunwayElement.appendChild(asdaElement);
-
-    // Create the LDA element
-    Element ldaElement = document.createElement("LDA");
-    ldaElement.setTextContent(LDA);
-    logicalRunwayElement.appendChild(ldaElement);
 
     // Create the dispThresh element
     Element dispThreshElement = document.createElement("dispThresh");

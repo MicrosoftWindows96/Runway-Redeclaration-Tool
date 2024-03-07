@@ -216,7 +216,7 @@ public class AirportListScene extends VBox {
             VBox runwaysInfoBox = new VBox(5);
             runwaysInfoBox.setPadding(new Insets(5, 0, 5, 10));
             for (var runway : airport.getRunways()) {
-                Text runwayInfo = new Text("Runway: " + runway.getName() + " - Length: " + runway.getTORA() + "m, Obstacles: " + runway.getObstacles().size());
+                Text runwayInfo = new Text("Runway: " + runway.getName() + runway.getDirection() + " - Length: " + runway.getTORA() + "m, Obstacles: " + runway.getObstacles().size());
                 runwayInfo.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 
                 Button configureButton = new Button("Configure");
@@ -269,21 +269,19 @@ public class AirportListScene extends VBox {
         styleTextField(directionInput);
         directionInput.setPromptText("Direction (L, R, C)");
 
+        Label stopwayLabel = new Label("Stopway");
+        TextField stopwayInput = new TextField();
+        styleTextField(stopwayInput);
+        stopwayInput.setPromptText("Stopway");
+
+        Label clearwayLabel = new Label("Clearway");
+        TextField clearwayInput = new TextField();
+        styleTextField(clearwayInput);
+        clearwayInput.setPromptText("Clearway");
+
         Label TORALabel = new Label("TORA:");
         TextField TORAInput = new TextField();
         styleTextField(TORAInput);
-
-        Label TODALabel = new Label("TODA:");
-        TextField TODAInput = new TextField();
-        styleTextField(TODAInput);
-
-        Label ASDALabel = new Label("ASDA:");
-        TextField ASDAInput = new TextField();
-        styleTextField(ASDAInput);
-
-        Label LDALabel = new Label("LDA:");
-        TextField LDAInput = new TextField();
-        styleTextField(LDAInput);
 
         Label DisThreshLabel = new Label("Displaced Threshold:");
         TextField DisThreshInput = new TextField();
@@ -305,17 +303,16 @@ public class AirportListScene extends VBox {
                 showErrorDialog("Invalid runway name. The name must consist of two digits followed by L, C, or R.");
             } else {
                 try {
+                    int stopway = Integer.parseInt(stopwayInput.getText());
+                    int clearway = Integer.parseInt(clearwayInput.getText());
                     int TORA = Integer.parseInt(TORAInput.getText());
-                    int TODA = Integer.parseInt(TODAInput.getText());
-                    int ASDA = Integer.parseInt(ASDAInput.getText());
-                    int LDA = Integer.parseInt(LDAInput.getText());
                     int DisThresh = Integer.parseInt(DisThreshInput.getText());
 
-                    if (TODA <= 0 || TORA <= 0 || ASDA <= 0 || LDA <= 0 || DisThresh < 0) {
+                    if (stopway < 0 || clearway < 0 || TORA < 0 || DisThresh < 0) {
                         throw new IllegalArgumentException("Invalid measurements for runway.");
                     }
 
-                    Runway newRunway = new Runway(degree, direction, TORA, TODA, ASDA, LDA, DisThresh);
+                    Runway newRunway = new Runway(degree, direction, stopway, clearway, TORA, DisThresh);
                     selectedAirport.getRunways().add(newRunway);
                     app.updateAirportsXML();
                     updateAirportInfo(selectedAirport);
@@ -329,8 +326,8 @@ public class AirportListScene extends VBox {
             }
         });
 
-        VBox form = new VBox(10, degreeLabel, degreeInput, directionLabel, directionInput, TORALabel, TORAInput, TODALabel, TODAInput,
-                ASDALabel, ASDAInput, LDALabel, LDAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
+        VBox form = new VBox(10, degreeLabel, degreeInput, directionLabel, directionInput, stopwayLabel, stopwayInput, clearwayLabel, clearwayInput,
+            TORALabel, TORAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
         form.setAlignment(Pos.CENTER);
         form.setPadding(new Insets(20));
 

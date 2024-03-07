@@ -1,7 +1,6 @@
 package org.universityofsouthampton.runwayredeclarationtool.airport;
 
 import java.util.ArrayList;
-import javax.print.attribute.standard.RequestingUserName;
 
 public class Airport {
     private String airportName;

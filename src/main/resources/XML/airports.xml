@@ -9,13 +9,6 @@
                 <ASDA>100</ASDA>
                 <LDA>100</LDA>
                 <dispThresh>100</dispThresh>
-                <Obstacles>
-                    <Obstacle name="Angelo">
-                        <Height>27</Height>
-                        <DistThreshold>350</DistThreshold>
-                        <DistCent>5</DistCent>
-                    </Obstacle>
-                </Obstacles>
             </LogicalRunway>
             <LogicalRunway degree="21">
                 <direction>R</direction>

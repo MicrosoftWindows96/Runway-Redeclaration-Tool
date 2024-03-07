@@ -131,8 +131,24 @@ public class ObstacleListScene extends VBox {
             }
         });
 
+        Button deleteButton = new Button();
+        styleButton(deleteButton, MaterialDesign.MDI_DELETE, "Delete");
+        deleteButton.setOnAction(e -> {
+            if (this.selectedObstacle == null) {
+                System.out.println("Nothing Selected!");
+            } else if  (this.currentRunway.getObstacles().isEmpty() || !this.currentRunway.getObstacles().contains(this.selectedObstacle)) {
+                this.otherObstacles.remove(this.selectedObstacle);
+                updateObstaclesList();
+                app.updateXMLs();
+            } else {
+                System.out.println("Obstacle is in current obstacles!");
+            }
+
+
+        });
+
         Button removeButton = new Button();
-        styleButton(removeButton, MaterialDesign.MDI_DELETE, "Remove");
+        styleButton(removeButton, MaterialDesign.MDI_MINUS, "Remove");
         removeButton.setOnAction(e -> {
             if (this.selectedObstacle == null || this.currentRunway.getObstacles().isEmpty() || !this.currentRunway.getObstacles().contains(this.selectedObstacle)) {
                 System.out.println("Nothing Selected or not in current obstacles!");
@@ -147,7 +163,7 @@ public class ObstacleListScene extends VBox {
         });
 
         HBox buttonBox = new HBox(10);
-        buttonBox.getChildren().addAll(addButton,removeButton,createButton,editButton, backButton);
+        buttonBox.getChildren().addAll(addButton, removeButton, createButton, editButton, deleteButton, backButton);
 
         this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox);
     }

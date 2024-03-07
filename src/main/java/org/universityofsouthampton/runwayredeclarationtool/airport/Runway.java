@@ -84,7 +84,7 @@ public class Runway {
             throw new IllegalArgumentException("Invalid obstacle");
         }
         this.obstacles.add(obstacle);
-        if (obstacle.getDistanceFromThreshold() <= 1000) {
+        if (obstacle.getDistanceFromThreshold() <= 500) {
             this.takeoffAway = true;
             this.landingOver = true;
             this.landingToward = false;

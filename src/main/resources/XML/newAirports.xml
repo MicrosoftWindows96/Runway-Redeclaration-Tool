@@ -8,6 +8,13 @@
                 <clearway>0</clearway>
                 <TORA>3660</TORA>
                 <dispThresh>307</dispThresh>
+                <Obstacles>
+                    <Obstacle name="27L-S2">
+                        <Height>25</Height>
+                        <DistThreshold>500</DistThreshold>
+                        <DistCent>1</DistCent>
+                    </Obstacle>
+                </Obstacles>
             </LogicalRunway>
             <LogicalRunway degree="27">
                 <direction>L</direction>

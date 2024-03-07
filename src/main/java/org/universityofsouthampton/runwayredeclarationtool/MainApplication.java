@@ -1,9 +1,12 @@
 package org.universityofsouthampton.runwayredeclarationtool;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
@@ -80,14 +83,29 @@ public class MainApplication extends Application {
     }
 
     public void updateXMLs() {
-        exportXML airportXML = new exportXML(airports,obstacles,new File("src/main/resources/XML/newAirports.xml"));
+        exportXML airportXML = new exportXML(airports, obstacles, new File("src/main/resources/XML/newAirports.xml"));
         airportXML.buildAirportsXML();
 
-        exportXML obstacleXML = new exportXML(airports,obstacles,new File("src/main/resources/XML/testObstacles.xml"));
+        exportXML obstacleXML = new exportXML(airports, obstacles, new File("src/main/resources/XML/testObstacles.xml"));
         obstacleXML.buildObstaclesXML();
+
+        showNotification("Airports and obstacles have been updated.");
+        System.out.println("XML files successfully updated!");
+        System.out.println("Airports: " + airports);
+        System.out.println("Obstacles: " + obstacles);
     }
 
-    // Merges any given new imported airport lists with the application's arrayList
+    private void showNotification(String text) {
+        Notifications.create()
+                .title("ATTENTION")
+                .text(text)
+                .hideAfter(Duration.seconds(5))
+                .position(Pos.TOP_RIGHT)
+                .owner(null)
+                .darkStyle()
+                .showInformation();
+    }
+
     public void mergeAirport(ArrayList<Airport> newAirports) {
         airports.addAll(newAirports);
         updateXMLs();

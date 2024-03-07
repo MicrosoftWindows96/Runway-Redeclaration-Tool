@@ -23,7 +23,6 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 public class RunwayConfigViewScene extends VBox {
-
   private Runway currentRunway;
   private final Airport airport;
 
@@ -74,6 +73,7 @@ public class RunwayConfigViewScene extends VBox {
     parameterSection.setPadding(new Insets(15));
     parameterSection.setStyle("-fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: #f9f9f9;");
     parameterSection.getChildren().add(setUpParameters());
+
     return parameterSection;
   }
 

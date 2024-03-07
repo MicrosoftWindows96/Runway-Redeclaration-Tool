@@ -89,7 +89,7 @@ public class ObstacleListScene extends VBox {
         });
 
         Button createButton = new Button();
-        styleButton(createButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Create");
+        styleButton(createButton, MaterialDesign.MDI_PLUS_BOX, "Create");
         createButton.setOnAction(e -> promptCreateObstacleForm());
 
         this.currentObstacleScroll.setFitToWidth(true);
@@ -112,7 +112,7 @@ public class ObstacleListScene extends VBox {
         });
 
         Button addButton = new Button();
-        styleButton(addButton, MaterialDesign.MDI_PLUS_BOX, "Add");
+        styleButton(addButton, MaterialDesign.MDI_PLUS, "Add");
         addButton.setOnAction(e -> {
             if (this.selectedObstacle == null) {
                 System.out.println("Nothing Selected!");
@@ -132,7 +132,7 @@ public class ObstacleListScene extends VBox {
         });
 
         Button removeButton = new Button();
-        styleButton(removeButton, MaterialDesign.MDI_PLUS_BOX, "Remove");
+        styleButton(removeButton, MaterialDesign.MDI_DELETE, "Remove");
         removeButton.setOnAction(e -> {
             if (this.selectedObstacle == null || this.currentRunway.getObstacles().isEmpty() || !this.currentRunway.getObstacles().contains(this.selectedObstacle)) {
                 System.out.println("Nothing Selected or not in current obstacles!");
@@ -147,7 +147,7 @@ public class ObstacleListScene extends VBox {
         });
 
         HBox buttonBox = new HBox(10);
-        buttonBox.getChildren().addAll(backButton,addButton,removeButton,createButton,editButton);
+        buttonBox.getChildren().addAll(addButton,removeButton,createButton,editButton, backButton);
 
         this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox);
     }
@@ -383,7 +383,7 @@ public class ObstacleListScene extends VBox {
 
         Stage dialogStage = new Stage();
         dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setTitle("SET Blast Protection Value");
+        dialogStage.setTitle("Set Blast Protection Value");
         dialogGenerator(form, dialogStage);
     }
 

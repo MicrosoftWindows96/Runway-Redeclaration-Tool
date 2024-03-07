@@ -9,6 +9,13 @@
                 <ASDA>100</ASDA>
                 <LDA>100</LDA>
                 <dispThresh>100</dispThresh>
+                <Obstacles>
+                    <Obstacle name="Angelo">
+                        <Height>27</Height>
+                        <DistThreshold>350</DistThreshold>
+                        <DistCent>5</DistCent>
+                    </Obstacle>
+                </Obstacles>
             </LogicalRunway>
             <LogicalRunway degree="21">
                 <direction>R</direction>
@@ -33,6 +40,14 @@
                 <ASDA>28137</ASDA>
                 <LDA>21873</LDA>
                 <dispThresh>1287</dispThresh>
+            </LogicalRunway>
+            <LogicalRunway degree="14">
+                <direction>R</direction>
+                <TORA>10210312</TORA>
+                <TODA>120120312</TODA>
+                <ASDA>3120312</ASDA>
+                <LDA>102021</LDA>
+                <dispThresh>11230</dispThresh>
             </LogicalRunway>
         </Runway>
     </Airport>

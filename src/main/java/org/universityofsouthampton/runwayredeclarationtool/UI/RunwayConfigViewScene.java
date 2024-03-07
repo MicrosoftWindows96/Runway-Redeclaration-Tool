@@ -4,16 +4,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
@@ -21,6 +19,10 @@ import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class RunwayConfigViewScene extends VBox {
   private Runway currentRunway;
@@ -62,6 +64,30 @@ public class RunwayConfigViewScene extends VBox {
     return breakdownSection;
   }
 
+  private void exportCalculationBreakdown() {
+    FileChooser fileChooser = new FileChooser();
+    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+    fileChooser.getExtensionFilters().add(extFilter);
+    File file = fileChooser.showSaveDialog(null);
+
+    if (file != null) {
+      try (PrintWriter writer = new PrintWriter(file)) {
+        writer.println(currentRunway.getCalculationBreakdown());
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Export Successful");
+        alert.setHeaderText(null);
+        alert.setContentText("Calculation breakdown has been successfully exported.");
+        alert.showAndWait();
+      } catch (IOException ex) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Could not save file");
+        alert.setContentText("An error occurred while trying to save the file: " + ex.getMessage());
+        alert.showAndWait();
+      }
+    }
+  }
+
   private Text createTitleSection(Runway runway) {
     Text title = new Text("Runway: " + airport.getAirportCode() + " -- " + runway.getName() + runway.getDirection());
     title.setFont(Font.font("Arial", 20));
@@ -90,9 +116,15 @@ public class RunwayConfigViewScene extends VBox {
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
     backButton.setOnAction(e -> app.displayAirportListScene());
 
+    Button exportButton = new Button("Export");
+    styleButton(exportButton, MaterialDesign.MDI_EXPORT, "Export");
+    exportButton.setOnAction(e -> exportCalculationBreakdown());
+
     HBox buttonBox = new HBox(10);
     buttonBox.setAlignment(Pos.CENTER);
-    buttonBox.getChildren().addAll(runwayUpdateButton, obstacleUpdateButton, backButton);
+    buttonBox.getChildren().addAll(runwayUpdateButton, obstacleUpdateButton, exportButton, backButton);
+
+
     return buttonBox;
   }
 

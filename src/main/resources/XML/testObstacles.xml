@@ -25,4 +25,9 @@
         <DistThreshold>50</DistThreshold>
         <DistCent>6</DistCent>
     </Obstacle>
+    <Obstacle name="09R-S2">
+        <Height>25</Height>
+        <DistThreshold>2853</DistThreshold>
+        <DistCent>4</DistCent>
+    </Obstacle>
 </Obstacles>

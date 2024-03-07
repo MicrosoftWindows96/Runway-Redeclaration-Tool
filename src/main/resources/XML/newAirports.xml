@@ -8,13 +8,6 @@
                 <clearway>0</clearway>
                 <TORA>3660</TORA>
                 <dispThresh>307</dispThresh>
-                <Obstacles>
-                    <Obstacle name="Tree">
-                        <Height>15</Height>
-                        <DistThreshold>1001</DistThreshold>
-                        <DistCent>5</DistCent>
-                    </Obstacle>
-                </Obstacles>
             </LogicalRunway>
             <LogicalRunway degree="27">
                 <direction>L</direction>
@@ -25,7 +18,7 @@
                 <Obstacles>
                     <Obstacle name="27L-S3">
                         <Height>15</Height>
-                        <DistThreshold>2093</DistThreshold>
+                        <DistThreshold>3203</DistThreshold>
                         <DistCent>5</DistCent>
                     </Obstacle>
                 </Obstacles>

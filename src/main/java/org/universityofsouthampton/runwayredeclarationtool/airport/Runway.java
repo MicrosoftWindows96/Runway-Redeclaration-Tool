@@ -304,13 +304,14 @@ public class Runway {
             } else {
                 this.newLDA =  LDA - obstacle.getDistanceFromThreshold() - blastProtectionValue;
             }
-
+            this.newTODA = this.TORA + stopway;
+            this.newASDA = this.TORA + clearway;
 
         }
         else if (landingToward) {
 
             this.newLDA = obstacle.getDistanceFromThreshold() - RESA - stripEnd;
-
+            this.newTODA = TORA;
         }
         System.out.println("Successfully calculated LDA");
     }
@@ -341,8 +342,8 @@ public class Runway {
         else if (takeoffAway) {
 
             this.newTORA = TORA - blastProtectionValue - obstacle.getDistanceFromThreshold() - displacedThreshold ;
-            this.newASDA = newTORA;
-            this.newTODA = newTORA;
+            this.newASDA = newTORA + stopway;
+            this.newTODA = newTORA + clearway;
 
             System.out.println("BPV: " + blastProtectionValue);
         }
@@ -385,7 +386,7 @@ public class Runway {
                 breakdown.append("\nTake-Off Run Available (TORA), Take-Off Distance Available (TODA), Accelerate-Stop Distance Available (ASDA) calculation:\n");
                 if (takeoffToward) {
                     breakdown.append("Taking off toward the obstacle.\n");
-                    breakdown.append("New TORA = Distance from Threshold to Obstacle + Displaced Threshold - Temporary Threshold - Strip End\n");
+                    breakdown.append("New TORA = Distance from Threshold to Obstacle + Displaced Threshold - Displaced Threshold - Strip End\n");
                     breakdown.append("New TORA = ").append(obstacle.getDistanceFromThreshold()).append(" + ").append(displacedThreshold).append(" - ").append(RESA).append(" - ").append(stripEnd).append("\n");
                 } else {
                     breakdown.append("Taking off away from the obstacle.\n");

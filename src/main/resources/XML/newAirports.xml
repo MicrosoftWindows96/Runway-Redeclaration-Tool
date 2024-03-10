@@ -29,13 +29,6 @@
                 <clearway>78</clearway>
                 <TORA>3884</TORA>
                 <dispThresh>0</dispThresh>
-                <Obstacles>
-                    <Obstacle name="27R-S1">
-                        <Height>12</Height>
-                        <DistThreshold>3646</DistThreshold>
-                        <DistCent>5</DistCent>
-                    </Obstacle>
-                </Obstacles>
             </LogicalRunway>
             <LogicalRunway degree="09">
                 <direction>L</direction>

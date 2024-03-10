@@ -11,28 +11,8 @@ public class Airport {
         runways = new ArrayList<>();
         this.code = code;
     }
-    public void addRunway (Runway runway){
-        this.runways.add(runway);
-    }
-    public void removeRunway (Runway deleteRunway) {
-        runways.remove(deleteRunway);
-    }
 
-    public ArrayList<Runway> getRunways(){
-        return this.runways;
-    }
-
-    public String getAirportName(){ return this.airportName; }
-
-    public void setAirportName(String name) {this.airportName = name;}
-
-    public String getAirportCode() { return this.code; }
-
-    public void setAirportCode(String code){
-        this.code = code;
-    }
-
-    public ArrayList<Integer> getParallelRunways() {
+    public ArrayList<Integer> getParallelRunways() { // Method to get any parallel runways
         int numberOfRunways = runways.size();
         ArrayList<Integer> parallelRunwayIndex = new ArrayList<>();
 
@@ -45,6 +25,24 @@ public class Airport {
             }
         }
         return parallelRunwayIndex;
+    }
+
+    public void addRunway (Runway runway){
+        this.runways.add(runway);
+    }
+    public void removeRunway (Runway deleteRunway) {
+        runways.remove(deleteRunway);
+    }
+
+    // setter + getter methods
+    public String getAirportName(){ return this.airportName; }
+    public void setAirportName(String name) {this.airportName = name;}
+    public String getAirportCode() { return this.code; }
+    public void setAirportCode(String code){
+        this.code = code;
+    }
+    public ArrayList<Runway> getRunways(){
+        return this.runways;
     }
 }
 

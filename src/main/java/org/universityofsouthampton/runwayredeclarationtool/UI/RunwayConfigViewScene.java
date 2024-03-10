@@ -1,10 +1,18 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -12,7 +20,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
@@ -20,15 +27,12 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-public class RunwayConfigViewScene extends VBox {
-  private Runway currentRunway;
-  private final Airport airport;
+public class RunwayConfigViewScene extends BaseScene {
+  private Runway currentRunway; // currently viewed runway
+  private final Airport airport; // Airport associated with the current runway
 
   public RunwayConfigViewScene(MainApplication app, Airport airport, Runway runway) {
+    this.app = app;
     this.airport = airport;
     this.currentRunway = runway;
 
@@ -42,7 +46,32 @@ public class RunwayConfigViewScene extends VBox {
     if (!currentRunway.getObstacles().isEmpty()) {
       getChildren().add(createCalculationBreakdownSection());
     }
-    getChildren().add(createButtonSection(app));
+
+    HBox buttonBox = new HBox(10);
+    buttonBox.setAlignment(Pos.CENTER);
+    buttonBox.getChildren().addAll(addButtons());
+    getChildren().add(buttonBox);
+  }
+
+  @Override
+  ArrayList<Button> addButtons() {
+    Button obstacleUpdateButton = new Button();
+    styleButton(obstacleUpdateButton, MaterialDesign.MDI_SETTINGS, "Obstacles");
+    obstacleUpdateButton.setOnAction(e -> app.displayObstacleListScene(airport, currentRunway));
+
+    Button runwayUpdateButton = new Button();
+    styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
+    runwayUpdateButton.setOnAction(e -> promptEditRunwayForm(app));
+
+    Button backButton = new Button();
+    styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
+    backButton.setOnAction(e -> app.displayAirportListScene());
+
+    Button exportButton = new Button("Export");
+    styleButton(exportButton, MaterialDesign.MDI_EXPORT, "Export");
+    exportButton.setOnAction(e -> exportCalculationBreakdown());
+
+    return new ArrayList<>(Arrays.asList(obstacleUpdateButton,runwayUpdateButton,backButton,exportButton));
   }
 
   private VBox createCalculationBreakdownSection() {
@@ -101,31 +130,6 @@ public class RunwayConfigViewScene extends VBox {
     parameterSection.getChildren().add(setUpParameters());
 
     return parameterSection;
-  }
-
-  private HBox createButtonSection(MainApplication app) {
-    Button obstacleUpdateButton = new Button();
-    styleButton(obstacleUpdateButton, MaterialDesign.MDI_SETTINGS, "Obstacles");
-    obstacleUpdateButton.setOnAction(e -> app.displayObstacleListScene(airport, currentRunway));
-
-    Button runwayUpdateButton = new Button();
-    styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
-    runwayUpdateButton.setOnAction(e -> promptEditRunwayForm(app));
-
-    Button backButton = new Button();
-    styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-    backButton.setOnAction(e -> app.displayAirportListScene());
-
-    Button exportButton = new Button("Export");
-    styleButton(exportButton, MaterialDesign.MDI_EXPORT, "Export");
-    exportButton.setOnAction(e -> exportCalculationBreakdown());
-
-    HBox buttonBox = new HBox(10);
-    buttonBox.setAlignment(Pos.CENTER);
-    buttonBox.getChildren().addAll(runwayUpdateButton, obstacleUpdateButton, exportButton, backButton);
-
-
-    return buttonBox;
   }
 
   private VBox drawRunway() {
@@ -209,10 +213,7 @@ public class RunwayConfigViewScene extends VBox {
     return box;
   }
 
-  private void styleButton(Button button, MaterialDesign icon, String text) {
-    AirportListScene.extractedStylingMethod(button, icon, text);
-  }
-
+  // PROMPT METHODS:
   private void promptEditRunwayForm(MainApplication app) {
     VBox form = new VBox(10);
     form.setAlignment(Pos.CENTER);
@@ -281,11 +282,11 @@ public class RunwayConfigViewScene extends VBox {
           airport.removeRunway(currentRunway);
           currentRunway = new Runway(degree,direction,stopway,clearway,TORA,DisThresh);
           if (!deletedRunway.getObstacles().isEmpty()) {
-            Obstacle movedObstacle = deletedRunway.getObstacles().getFirst();
+            Obstacle movedObstacle = deletedRunway.getObstacles().get(0);
             currentRunway.addObstacle(movedObstacle);
           }
           airport.getRunways().add(currentRunway);
-          app.updateAirportsXML();
+          app.updateXMLs();
           if (!currentRunway.getObstacles().isEmpty()) {
             currentRunway.runCalculations();
           }
@@ -302,38 +303,6 @@ public class RunwayConfigViewScene extends VBox {
 
     form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, stopwayLabel, stopwayInput, clearwayLabel, clearwayInput,
         TORALabel, TORAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
-
-    Stage dialogStage = new Stage();
-    dialogStage.initModality(Modality.APPLICATION_MODAL);
-    dialogStage.setTitle("Edit Runway");
-    AirportListScene.extractedDialogStageMethod(form, dialogStage);
-  }
-
-  private void styleTextField(TextField textField) {
-    textField.setStyle("-fx-background-color: white; -fx-text-fill: black;");
-    textField.setFont(Font.font("Arial", 16));
-  }
-
-  private void showErrorDialog(String message) {
-    Stage dialog = new Stage();
-    dialog.initModality(Modality.APPLICATION_MODAL);
-
-    VBox dialogVbox = new VBox(20);
-
-    Text errorMessage = new Text(message);
-    Button okButton = new Button();
-    styleButton(okButton, MaterialDesign.MDI_CHECK, "OK");
-
-    okButton.setOnAction(e -> dialog.close());
-    dialogVbox.setPadding(new Insets(20));
-
-    dialogVbox.getChildren().addAll(errorMessage, okButton);
-    Scene dialogScene = new Scene(dialogVbox);
-    dialog.setScene(dialogScene);
-    dialog.sizeToScene();
-    dialog.centerOnScreen();
-    dialogVbox.setAlignment(Pos.CENTER);
-
-    dialog.showAndWait();
+    dialogGenerator(form, "Edit Runway");
   }
 }

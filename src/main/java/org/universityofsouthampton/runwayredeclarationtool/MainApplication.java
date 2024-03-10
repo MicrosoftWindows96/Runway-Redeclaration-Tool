@@ -24,25 +24,31 @@ import java.util.ArrayList;
  */
 public class MainApplication extends Application {
 
-    private StackPane root;
+    private static final String AIRPORTS_XML_PATH = "src/main/resources/XML/newAirports.xml";
+    private static final String OBSTACLES_XML_PATH = "src/main/resources/XML/testObstacles.xml";
+    private StackPane root; // The root node to hold the scenes
     private AnimatedPatternBackground background;
-    private ArrayList<Airport> airports;
-    private ArrayList<Obstacle> obstacles;
+    private ArrayList<Airport> airports; // Imported airports
+    private ArrayList<Obstacle> obstacles; // Imported obstacles
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) {
         // Registering Material Design icon pack with the IkonResolver
-        IkonResolver.getInstance().registerHandler(new MaterialDesignIkonHandler());
+//        IkonResolver.getInstance().registerHandler(new MaterialDesignIkonHandler());
 
+        // set the root node
         root = new StackPane();
         background = AnimatedPatternBackground.getInstance();
-
         root.getChildren().add(background);
 
-        importXML airportXML = new importXML(new File("src/main/resources/XML/newAirports.xml"));
+        // Import the default XML files
+        importXML airportXML = new importXML(new File(AIRPORTS_XML_PATH));
         airports = airportXML.makeAirportsXML();
-
-        importXML obstacleXML = new importXML(new File("src/main/resources/XML/testObstacles.xml"));
+        importXML obstacleXML = new importXML(new File(OBSTACLES_XML_PATH));
         obstacles = obstacleXML.makeObstaclesXML();
 
         displayMenu();
@@ -70,28 +76,15 @@ public class MainApplication extends Application {
     }
 
     public void displayRunwayConfigScene(Airport airport, Runway runway) {
-        RunwayConfigViewScene runwayConfigScene = new RunwayConfigViewScene(this, airport, runway);
-
+        RunwayConfigViewScene runwayConfigScene = new RunwayConfigViewScene(this,airport, runway);
         root.getChildren().setAll(background, runwayConfigScene);
     }
 
-    public ArrayList<Airport> getAirports () {
-        return airports;
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    public ArrayList<Obstacle> getObstacles() {
-        return obstacles;
-    }
-
-    public void updateXMLs() {
-        exportXML airportXML = new exportXML(airports, obstacles, new File("src/main/resources/XML/newAirports.xml"));
+    public void updateXMLs() { // Method to update XMl files in the resources folder
+        exportXML airportXML = new exportXML(airports, obstacles, new File(AIRPORTS_XML_PATH));
         airportXML.buildAirportsXML();
 
-        exportXML obstacleXML = new exportXML(airports, obstacles, new File("src/main/resources/XML/testObstacles.xml"));
+        exportXML obstacleXML = new exportXML(airports, obstacles, new File(OBSTACLES_XML_PATH));
         obstacleXML.buildObstaclesXML();
 
         showNotification("System", "Airports and obstacles updated");
@@ -109,22 +102,23 @@ public class MainApplication extends Application {
                 .showInformation();
     }
 
-    public void mergeAirport(ArrayList<Airport> newAirports) {
+    public void mergeAirport(ArrayList<Airport> newAirports) { // Adds to arraylist from user's imported file
         airports.addAll(newAirports);
         showNotification("System", "Airports merged");
         updateXMLs();
     }
 
-    private static final String AIRPORTS_XML_PATH = "src/main/resources/XML/newAirports.xml";
-
     public void addAirport(Airport airport) {
         airports.add(airport);
         showNotification("System", "Airport added");
-        updateAirportsXML();
+        updateXMLs();
     }
 
-    public void updateAirportsXML() {
-        exportXML airportXML = new exportXML(airports, new ArrayList<>(), new File(AIRPORTS_XML_PATH));
-        airportXML.buildAirportsXML();
+    public ArrayList<Airport> getAirports() {
+        return airports;
+    }
+
+    public ArrayList<Obstacle> getObstacles() {
+        return obstacles;
     }
 }

@@ -1,10 +1,10 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -17,7 +17,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
@@ -26,79 +25,80 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
-import java.io.File;
-import java.util.ArrayList;
+public class AirportListScene extends BaseScene {
 
-public class AirportListScene extends VBox {
-
-    private final ScrollPane scrollPane = new ScrollPane();
-    private final MainApplication app;
-    private final ObservableList<Airport> airportsObserve = FXCollections.observableArrayList();
-    private final ArrayList<Airport> importedAirports;
-    private Airport selectedAirport;
+    private final ArrayList<Airport> importedAirports; // Arraylist of airports to display on screen
+    private Airport selectedAirport; // Variable to reference to call onto Runway Scene
     private Button currentlySelectedButton;
-    private final VBox infoBox = new VBox(10);
+    private final VBox infoBox = new VBox(10); // When selected, it'll display the selected airport's info
+    private final ScrollPane airportScroll = new ScrollPane(); // Scroll Pane to store the list of airports
 
     public AirportListScene(MainApplication app) {
         this.app = app;
-
         setPadding(new Insets(20));
         setSpacing(10);
         setAlignment(Pos.CENTER);
 
+        // Set title
         Text title = new Text("List of Airports");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 
+        // Initialise the screen contents and airportScroll
         BorderPane mainPane = new BorderPane();
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(500);
-        scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent; ");
+        airportScroll.setFitToWidth(true);
+        airportScroll.setPrefHeight(500);
+        airportScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; ");
         importedAirports = app.getAirports();
         updateList();
 
+        // Set infoBox's positionings
         infoBox.setPadding(new Insets(10));
         infoBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: #cccccc; -fx-border-width: 1; -fx-border-radius: 5;");
         updateAirportInfo(null);
 
-        mainPane.setLeft(scrollPane);
+        // Set the main buttons
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.getChildren().addAll(addButtons());
+
+        // Add the contents
+        mainPane.setLeft(airportScroll);
         mainPane.setCenter(infoBox);
-
-        HBox buttonBox = createButtonBox();
-
         getChildren().addAll(title, mainPane, buttonBox);
     }
 
-    private HBox createButtonBox() {
-        Button addAirport = new Button();
+    @Override
+    ArrayList<Button> addButtons() {
+        Button addAirport = new Button(); // Button to add a new airport
         styleButton(addAirport, MaterialDesign.MDI_PLUS_BOX, "Add");
         addAirport.setOnAction(e -> {
             promptAddAirportForm(app);
             updateList();
-            app.updateAirportsXML();
+            app.updateXMLs();
         });
 
-        Button backButton = new Button("Log Out");
+        Button backButton = new Button("Log Out"); // Button to return to the login screen
         styleButton(backButton, MaterialDesign.MDI_LOCK, "Log Out");
         backButton.setOnAction(e -> app.displayMenu());
 
-        Button deleteButton = new Button("Delete");
+        Button deleteButton = new Button("Delete"); // Button to delete a selected airport
         styleButton(deleteButton, MaterialDesign.MDI_DELETE, "Delete");
         deleteButton.setOnAction(e -> {
             importedAirports.remove(selectedAirport);
             updateList();
-            app.updateAirportsXML();
+            app.updateXMLs();
             updateAirportInfo(null);
         });
 
-        Button importXMLButton = new Button("Import");
+        Button importXMLButton = new Button("Import"); // Button to Import xml file to add onto airport list
         styleButton(importXMLButton, MaterialDesign.MDI_DOWNLOAD, "Import");
         importXMLButton.setOnAction(e -> importAirportsFromXML());
 
-        Button exportXMLButton = new Button("Export");
+        Button exportXMLButton = new Button("Export"); // Button to Export into a xml file the current airport list contents
         styleButton(exportXMLButton, MaterialDesign.MDI_UPLOAD, "Export");
         exportXMLButton.setOnAction(e -> exportAirportsToXML());
 
-        Button modifyButton = new Button("Modify");
+        Button modifyButton = new Button("Modify"); // Button to edit a selected airport
         styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
         modifyButton.setOnAction(e -> {
             if (selectedAirport != null) {
@@ -106,16 +106,14 @@ public class AirportListScene extends VBox {
             }
         });
 
-        HBox buttonBox = new HBox(10, addAirport, modifyButton, deleteButton, importXMLButton, exportXMLButton, backButton);
-        buttonBox.setAlignment(Pos.CENTER);
-        return buttonBox;
+        return new ArrayList<>(Arrays.asList(addAirport,backButton,deleteButton,importXMLButton,exportXMLButton,modifyButton));
     }
 
-    private void updateList() {
+    private void updateList() { // Method updates the display of airports on the left of the screen
         VBox airportsBox = new VBox(5);
         airportsBox.setAlignment(Pos.CENTER_LEFT);
         airportsBox.setPadding(new Insets(10));
-        scrollPane.setContent(airportsBox);
+        airportScroll.setContent(airportsBox);
 
         importedAirports.forEach(airport -> {
             Button airportButton = new Button();
@@ -129,15 +127,98 @@ public class AirportListScene extends VBox {
         });
     }
 
-    private void setSelectedAirport(Airport airport) {
-        this.selectedAirport = airport;
-        if (currentlySelectedButton != null) {
-            currentlySelectedButton.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+    private void updateAirportInfo(Airport airport) { // This method displays the selected airport's information
+        infoBox.getChildren().clear();
+        if (airport == null) {
+            infoBox.getChildren().add(new Text("Select an airport to view details."));
+        } else {
+            Text airportName = new Text("Name: " + airport.getAirportName());
+            airportName.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+            Text airportCode = new Text("Code: " + airport.getAirportCode());
+            airportCode.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+            Text numRunways = new Text("Number of Runways: " + airport.getRunways().size());
+            numRunways.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+
+            VBox runwaysInfoBox = new VBox(5);
+            runwaysInfoBox.setPadding(new Insets(5, 0, 5, 10));
+            for (var runway : airport.getRunways()) {
+                Text runwayInfo = new Text("Runway: " + runway.getName() + runway.getDirection() + " - Length: " + runway.getTORA() + "m, Obstacles: " + runway.getObstacles().size());
+                runwayInfo.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+
+                Button configureButton = new Button("Configure");
+                configureButton.setOnAction(e -> {
+                    if (runway.getObstacles().size() == 0) { // If there's no obstacles, no need to configure BPV
+                        app.displayRunwayConfigScene(airport,runway);
+                    } else {
+                        promptAddBPV(airport,runway);
+                    }
+                });
+                styleButton(configureButton, MaterialDesign.MDI_SETTINGS, "Configure");
+
+                Button deleteRunwayButton = new Button("Delete");
+                deleteRunwayButton.setOnAction(e -> {
+                    airport.getRunways().remove(runway);
+                    app.updateXMLs();
+                    updateAirportInfo(airport);
+                });
+                styleButton(deleteRunwayButton, MaterialDesign.MDI_DELETE, "Delete");
+
+                HBox runwayButtonsBox = new HBox(10, configureButton, deleteRunwayButton);
+                runwaysInfoBox.getChildren().addAll(runwayInfo, runwayButtonsBox);
+            }
+
+            Button addRunwayButton = new Button("Add Runway");
+            addRunwayButton.setOnAction(e -> promptAddRunwayForm(app));
+            styleButton(addRunwayButton, MaterialDesign.MDI_PLUS_BOX, "Add");
+
+            ScrollPane runwaysScrollPane = new ScrollPane(runwaysInfoBox);
+            runwaysScrollPane.setFitToWidth(true);
+            runwaysScrollPane.setMinHeight(150);
+
+            VBox detailsBox = new VBox(5, airportName, airportCode, numRunways, runwaysScrollPane, addRunwayButton);
+            detailsBox.setPadding(new Insets(10));
+            detailsBox.setStyle("-fx-background-color: #eaeaea; -fx-border-color: #c0c0c0; -fx-border-width: 1; -fx-border-radius: 5;");
+
+            VBox.setVgrow(runwaysScrollPane, Priority.ALWAYS);
+
+            infoBox.getChildren().add(detailsBox);
         }
     }
 
-    static void extractedDialogStageMethod(VBox form, Stage dialogStage) {
-        ObstacleListScene.dialogGenerator(form, dialogStage);
+    public static String capitalize(String string) {
+        char[] chars = string.toLowerCase().toCharArray();
+        boolean found = false;
+        for (int i = 0; i < chars.length; i++) {
+            if (!found && Character.isLetter(chars[i])) {
+                chars[i] = Character.toUpperCase(chars[i]);
+                found = true;
+            } else if (Character.isWhitespace(chars[i]) || chars[i]=='.' || chars[i]=='\'') { // You can add other chars here
+                found = false;
+            }
+        }
+        return String.valueOf(chars);
+    }
+
+    private void importAirportsFromXML() { // Function to import airport xml file from local files
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Airport XML File");
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            importXML importer = new importXML(file);
+            ArrayList<Airport> airports = importer.makeAirportsXML();
+            app.mergeAirport(airports);
+            updateList();
+        }
+    }
+
+    private void exportAirportsToXML() { // Function to export airport xml file of current contents to local files
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Airport XML File");
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            exportXML exporter = new exportXML(importedAirports, new ArrayList<>(), file);
+            exporter.writeXML();
+        }
     }
 
     private void promptAddAirportForm(MainApplication app) {
@@ -174,90 +255,17 @@ public class AirportListScene extends VBox {
 
             Airport newAirport = new Airport(airportName, airportCode);
             app.addAirport(newAirport);
-            app.updateAirportsXML();
+            app.updateXMLs();
             ((Stage) form.getScene().getWindow()).close();
         });
 
-
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Add Airport");
-        stage.setScene(new Scene(form));
-        stage.showAndWait();
+        dialogGenerator(form, "Add airport");
     }
-
-    public static String capitalize(String string) {
-        char[] chars = string.toLowerCase().toCharArray();
-        boolean found = false;
-        for (int i = 0; i < chars.length; i++) {
-            if (!found && Character.isLetter(chars[i])) {
-                chars[i] = Character.toUpperCase(chars[i]);
-                found = true;
-            } else if (Character.isWhitespace(chars[i]) || chars[i]=='.' || chars[i]=='\'') { // You can add other chars here
-                found = false;
-            }
-        }
-        return String.valueOf(chars);
-    }
-
-
-    private void updateAirportInfo(Airport airport) {
-        infoBox.getChildren().clear();
-        if (airport == null) {
-            infoBox.getChildren().add(new Text("Select an airport to view details."));
-        } else {
-            Text airportName = new Text("Name: " + airport.getAirportName());
-            airportName.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-            Text airportCode = new Text("Code: " + airport.getAirportCode());
-            airportCode.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-            Text numRunways = new Text("Number of Runways: " + airport.getRunways().size());
-            numRunways.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
-            VBox runwaysInfoBox = new VBox(5);
-            runwaysInfoBox.setPadding(new Insets(5, 0, 5, 10));
-            for (var runway : airport.getRunways()) {
-                Text runwayInfo = new Text("Runway: " + runway.getName() + runway.getDirection() + " - Length: " + runway.getTORA() + "m, Obstacles: " + runway.getObstacles().size());
-                runwayInfo.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
-
-                Button configureButton = new Button("Configure");
-                configureButton.setOnAction(e -> app.displayRunwayConfigScene(airport, runway));
-                styleButton(configureButton, MaterialDesign.MDI_SETTINGS, "Configure");
-
-                Button deleteRunwayButton = new Button("Delete");
-                deleteRunwayButton.setOnAction(e -> {
-                    airport.getRunways().remove(runway);
-                    app.updateAirportsXML();
-                    updateAirportInfo(airport);
-                });
-                styleButton(deleteRunwayButton, MaterialDesign.MDI_DELETE, "Delete");
-
-                HBox runwayButtonsBox = new HBox(10, configureButton, deleteRunwayButton);
-                runwaysInfoBox.getChildren().addAll(runwayInfo, runwayButtonsBox);
-            }
-
-            Button addRunwayButton = new Button("Add Runway");
-            addRunwayButton.setOnAction(e -> promptAddRunwayForm(app));
-            styleButton(addRunwayButton, MaterialDesign.MDI_PLUS_BOX, "Add");
-
-            ScrollPane runwaysScrollPane = new ScrollPane(runwaysInfoBox);
-            runwaysScrollPane.setFitToWidth(true);
-            runwaysScrollPane.setMinHeight(150);
-
-            VBox detailsBox = new VBox(5, airportName, airportCode, numRunways, runwaysScrollPane, addRunwayButton);
-            detailsBox.setPadding(new Insets(10));
-            detailsBox.setStyle("-fx-background-color: #eaeaea; -fx-border-color: #c0c0c0; -fx-border-width: 1; -fx-border-radius: 5;");
-
-            VBox.setVgrow(runwaysScrollPane, Priority.ALWAYS);
-
-            infoBox.getChildren().add(detailsBox);
-        }
-    }
-
 
     private void promptAddRunwayForm(MainApplication app) {
-        Stage dialogStage = new Stage();
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setTitle("Add New Runway");
+        VBox form = new VBox(10);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(20));
 
         Label degreeLabel = new Label("Degree:");
         TextField degreeInput = new TextField();
@@ -292,7 +300,10 @@ public class AirportListScene extends VBox {
 
         Button cancelButton = new Button("Cancel");
         styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Cancel");
-        cancelButton.setOnAction(e -> dialogStage.close());
+        cancelButton.setOnAction(e -> {
+            Stage stage = (Stage) form.getScene().getWindow();
+            stage.close();
+        });
 
         submitButton.setOnAction(e -> {
             String degree = degreeInput.getText().trim();
@@ -312,11 +323,12 @@ public class AirportListScene extends VBox {
                         throw new IllegalArgumentException("Invalid measurements for runway.");
                     }
 
+                    Stage stage = (Stage) form.getScene().getWindow();
                     Runway newRunway = new Runway(degree, direction, stopway, clearway, TORA, DisThresh);
                     selectedAirport.getRunways().add(newRunway);
-                    app.updateAirportsXML();
+                    app.updateXMLs();
                     updateAirportInfo(selectedAirport);
-                    dialogStage.close();
+                    stage.close();
 
                 } catch (NumberFormatException ex) {
                     showErrorDialog("Invalid input for runway measurements. Please enter valid integers.");
@@ -326,86 +338,14 @@ public class AirportListScene extends VBox {
             }
         });
 
-        VBox form = new VBox(10, degreeLabel, degreeInput, directionLabel, directionInput, stopwayLabel, stopwayInput, clearwayLabel, clearwayInput,
+        form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, stopwayLabel, stopwayInput, clearwayLabel, clearwayInput,
             TORALabel, TORAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
 
-        Scene dialogScene = new Scene(form);
-        dialogStage.setScene(dialogScene);
-        dialogStage.showAndWait();
-    }
-
-
-    private void styleTextField(TextField textField) {
-        textField.setStyle("-fx-background-color: white; -fx-text-fill: black;");
-        textField.setFont(Font.font("Arial", 16));
-    }
-
-    private void showErrorDialog(String message) {
-        Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-
-        VBox dialogVbox = new VBox(20);
-
-        Text errorMessage = new Text(message);
-        Button okButton = new Button();
-        styleButton(okButton, MaterialDesign.MDI_CHECK, "OK");
-
-        okButton.setOnAction(e -> dialog.close());
-        dialogVbox.setPadding(new Insets(20));
-
-        dialogVbox.getChildren().addAll(errorMessage, okButton);
-        Scene dialogScene = new Scene(dialogVbox);
-        dialog.setScene(dialogScene);
-        dialog.sizeToScene();
-        dialog.centerOnScreen();
-        dialogVbox.setAlignment(Pos.CENTER);
-
-        dialog.showAndWait();
-    }
-
-    private void styleButton(Button button, MaterialDesign icon, String text) {
-        extractedStylingMethod(button, icon, text);
-    }
-
-    static void extractedStylingMethod(Button button, MaterialDesign icon, String text) {
-        button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
-        button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-        button.setPrefWidth(120);
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
-        button.setOnMouseClicked(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
-
-        ObstacleListScene.styleIcon(button, icon, text);
-    }
-
-    private void importAirportsFromXML() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Airport XML File");
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            importXML importer = new importXML(file);
-            ArrayList<Airport> airports = importer.makeAirportsXML();
-            app.mergeAirport(airports);
-            updateList();
-        }
-    }
-
-    private void exportAirportsToXML() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Airport XML File");
-        File file = fileChooser.showSaveDialog(null);
-        if (file != null) {
-            exportXML exporter = new exportXML(importedAirports, new ArrayList<>(), file);
-            exporter.writeXML();
-        }
+        dialogGenerator(form,"Add New Runway");
     }
 
     private void showModifyAirportDialog(Airport airport) {
         Stage dialogStage = new Stage();
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setTitle("Modify Airport");
 
         TextField nameInput = new TextField(airport.getAirportName());
         TextField codeInput = new TextField(airport.getAirportCode());
@@ -416,7 +356,7 @@ public class AirportListScene extends VBox {
             airport.setAirportName(nameInput.getText());
             airport.setAirportCode(codeInput.getText());
             updateList();
-            app.updateAirportsXML();
+            app.updateXMLs();
             updateAirportInfo(airport);
             dialogStage.close();
         });
@@ -425,8 +365,69 @@ public class AirportListScene extends VBox {
         dialogVBox.setAlignment(Pos.CENTER);
         dialogVBox.setPadding(new Insets(20));
 
-        Scene dialogScene = new Scene(dialogVBox);
-        dialogStage.setScene(dialogScene);
-        dialogStage.showAndWait();
+        dialogGenerator(dialogVBox,"Modify Airport");
     }
+
+    private void promptAddBPV(Airport airport,Runway runway) {
+        VBox form = new VBox(10);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(20));
+
+        Label BPVLabel = new Label("Blast Protection Value:");
+        TextField BPVInput = new TextField();
+        styleTextField(BPVInput);
+
+        Button submitButton = new Button();
+        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
+
+        Button cancelButton = new Button();
+        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
+        cancelButton.setOnAction(e -> {
+            Stage stage = (Stage) form.getScene().getWindow();
+            stage.close();
+        });
+
+        submitButton.setOnAction(e -> {
+            String BPV = BPVInput.getText();
+
+            if (BPV.isEmpty()) {
+                showErrorDialog("Blast Protection Value Required. Please fill in all fields.");
+            } else {
+                try {
+                    int BPVInt = Integer.parseInt(BPV);
+
+                    if (BPVInt <= 0) {
+                        throw new IllegalArgumentException("Invalid measurements for Blast Protection Value");
+                    }
+
+                    Stage stage = (Stage) form.getScene().getWindow();
+
+                    // update the runway object to run calculations to display in the config runway scene
+                    runway.setBlastProtectionValue(BPVInt);
+                    runway.runCalculations();
+                    app.displayRunwayConfigScene(airport,runway);
+                    app.updateXMLs();
+
+                    stage.close();
+
+                } catch (NumberFormatException ex) {
+                    showErrorDialog("Invalid input for number of BPV. Please enter a valid integer.");
+                } catch (IllegalArgumentException ex) {
+                    showErrorDialog(ex.getMessage());
+                }
+            }
+        });
+
+        form.getChildren().addAll(BPVLabel, BPVInput, submitButton, cancelButton);
+
+        dialogGenerator(form, "Set Blast Protection Value");
+    }
+
+    private void setSelectedAirport(Airport airport) { // Method to set the selectedAirport member variable
+        this.selectedAirport = airport;
+        if (currentlySelectedButton != null) {
+            currentlySelectedButton.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+        }
+    }
+
 }

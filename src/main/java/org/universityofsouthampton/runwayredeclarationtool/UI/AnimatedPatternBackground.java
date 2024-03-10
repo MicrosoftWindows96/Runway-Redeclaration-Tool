@@ -9,7 +9,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.javafx.IkonResolver;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 public class AnimatedPatternBackground extends Pane {

@@ -105,13 +105,13 @@ public class ObstacleListScene extends BaseScene {
 
         Button createButton = new Button();
         styleButton(createButton, MaterialDesign.MDI_PLUS_BOX, "Create");
-        createButton.setOnAction(e -> promptCreateObstacleForm());
+        createButton.setOnAction(e -> promptCreateObstacle());
         
         Button editButton = new Button();
         styleButton(editButton, MaterialDesign.MDI_WRENCH,"Configure");
         editButton.setOnAction(e -> {
             if (this.selectedObstacle != null) {
-                promptEDITObstacleForm();
+                promptEditObstacle();
             } else {
                 System.out.println("Nothing Selected!");
             }
@@ -139,7 +139,7 @@ public class ObstacleListScene extends BaseScene {
                 app.displayRunwayConfigScene(currentAirport,currentRunway);
                 app.updateXMLs();
             } else {
-                promptAddBPV();
+                promptSetBPV();
             }
         });
 
@@ -178,63 +178,40 @@ public class ObstacleListScene extends BaseScene {
         this.otherObstaclesScroll.setContent(otherObstaclesBox);
     }
 
-    private void promptCreateObstacleForm() {
-        VBox form = new VBox(10);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
-
-        Label nameLabel = new Label("Name:");
-        TextField nameInput = new TextField();
-        styleTextField(nameInput);
-
-        Label heightLabel = new Label("Height:");
-        TextField heightInput = new TextField();
-        styleTextField(heightInput);
-
-        Label distFromThreLabel = new Label("Distance From Threshold:");
-        TextField distFromThreInput = new TextField();
-        styleTextField(distFromThreInput);
-
-        Label distFromCentLabel= new Label("Distance From Centreline:");
-        TextField distFromCentInput = new TextField();
-        styleTextField(distFromCentInput);
+    // PROMPT METHODS
+    private void promptCreateObstacle() {
+        PromptWindow promptWindow = new PromptWindow(app);
+        var nameBox = promptWindow.addParameterField("Name");
+        var heightBox = promptWindow.addParameterField("Height");
+        var distFromThreBox = promptWindow.addParameterField("Distance From Threshold");
+        var distFromCentBox = promptWindow.addParameterField("Distance From Centreline");
 
         Button submitButton = new Button();
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
-
-        Button cancelButton = new Button();
-        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        cancelButton.setOnAction(e -> {
-            Stage stage = (Stage) form.getScene().getWindow();
-            stage.close();
-        });
-
         submitButton.setOnAction(e -> {
-            String name = nameInput.getText();
-            String heightName = heightInput.getText();
-            String distFromThreName = distFromThreInput.getText();
-            String distFromCentname = distFromCentInput.getText();
+            String name = promptWindow.getInput(nameBox);
+            String heightName = promptWindow.getInput(heightBox);
+            String distFromThreName = promptWindow.getInput(distFromThreBox);
+            String distFromCentname = promptWindow.getInput(distFromCentBox);
 
             if (name.isEmpty() || heightName.isEmpty() || distFromThreName.isEmpty() || distFromCentname.isEmpty()) {
                 showErrorDialog("All fields are required. Please fill in all fields.");
             } else {
                 try {
-                    int height = Integer.parseInt(heightInput.getText());
-                    int distFromThre = Integer.parseInt(distFromThreInput.getText());
-                    int distFromCent = Integer.parseInt(distFromCentInput.getText());
+                    int height = Integer.parseInt(heightName);
+                    int distFromThre = Integer.parseInt(distFromThreName);
+                    int distFromCent = Integer.parseInt(distFromCentname);
 
                     if (height <= 0 || distFromThre <= 0 || distFromCent <= 0) {
                         throw new IllegalArgumentException("Invalid measurements for obstacle");
                     }
-
-                    Stage stage = (Stage) form.getScene().getWindow();
-
+                    // Add to other obstacles
                     otherObstacles.add(new Obstacle(name,height,distFromThre,distFromCent));
                     app.showNotification("Obstacle Warning", "Obstacle " + name + " created for " + currentAirport.getAirportCode() + " runway " + currentRunway.getName() + currentRunway.getDirection());
                     updateObstaclesList();
 
+                    Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
-
                 } catch (NumberFormatException ex) {
                     showErrorDialog("Invalid input for number of obstacles. Please enter a valid integer.");
                 } catch (IllegalArgumentException ex) {
@@ -242,65 +219,39 @@ public class ObstacleListScene extends BaseScene {
                 }
             }
         });
-
-        form.getChildren().addAll(nameLabel, nameInput, heightLabel, heightInput, distFromThreLabel, distFromThreInput, distFromCentLabel, distFromCentInput, submitButton, cancelButton);
-
-        dialogGenerator(form, "Create Obstacle");
+        promptWindow.getChildren().addAll(nameBox,heightBox,distFromThreBox,distFromCentBox,submitButton);
+        promptWindow.getChildren().addAll(promptWindow.addButtons());
+        dialogGenerator(promptWindow, "Create Obstacle");
     }
 
-    private void promptEDITObstacleForm() {
-        VBox form = new VBox(10);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
-
-        Label nameLabel = new Label("Name:");
-        TextField nameInput = new TextField(selectedObstacle.getName());
-        styleTextField(nameInput);
-
-        Label heightLabel = new Label("Height:");
-        TextField heightInput = new TextField(Integer.toString(selectedObstacle.getHeight()));
-        styleTextField(heightInput);
-
-        Label distFromThreLabel = new Label("Distance From Threshold:");
-        TextField distFromThreInput = new TextField(Integer.toString(selectedObstacle.getDistanceFromThreshold()));
-        styleTextField(distFromThreInput);
-
-        Label distFromCentLabel= new Label("Distance From Centreline:");
-        TextField distFromCentInput = new TextField(Integer.toString(selectedObstacle.getDistanceFromCentreline()));
-        styleTextField(distFromCentInput);
+    private void promptEditObstacle() {
+        PromptWindow promptWindow = new PromptWindow(app);
+        var nameBox = promptWindow.editParameterField("Name",selectedObstacle.getName());
+        var heightBox = promptWindow.editParameterField("Height",Integer.toString(selectedObstacle.getHeight()));
+        var distFromThreBox = promptWindow.editParameterField("Distance From Threshold",Integer.toString(selectedObstacle.getDistanceFromThreshold()));
+        var distFromCentBox = promptWindow.editParameterField("Distance From Centreline",Integer.toString(selectedObstacle.getDistanceFromCentreline()));
 
         Button submitButton = new Button();
-        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Reconfigure");
-
-        Button cancelButton = new Button();
-        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        cancelButton.setOnAction(e -> {
-            Stage stage = (Stage) form.getScene().getWindow();
-            stage.close();
-        });
-
+        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
         submitButton.setOnAction(e -> {
-            String name = nameInput.getText();
-            String heightName = heightInput.getText();
-            String distFromThreName = distFromThreInput.getText();
-            String distFromCentname = distFromCentInput.getText();
+            String name = promptWindow.getInput(nameBox);
+            String heightName = promptWindow.getInput(heightBox);
+            String distFromThreName = promptWindow.getInput(distFromThreBox);
+            String distFromCentname = promptWindow.getInput(distFromCentBox);
 
             if (name.isEmpty() || heightName.isEmpty() || distFromThreName.isEmpty() || distFromCentname.isEmpty()) {
                 showErrorDialog("All fields are required. Please fill in all fields.");
             } else {
                 try {
-                    int height = Integer.parseInt(heightInput.getText());
-                    int distFromThre = Integer.parseInt(distFromThreInput.getText());
-                    int distFromCent = Integer.parseInt(distFromCentInput.getText());
+                    int height = Integer.parseInt(heightName);
+                    int distFromThre = Integer.parseInt(distFromThreName);
+                    int distFromCent = Integer.parseInt(distFromCentname);
 
-                    if (height <= 0 || distFromThre <= 0 || distFromCent < 0) {
+                    if (height <= 0 || distFromThre <= 0 || distFromCent <= 0) {
                         throw new IllegalArgumentException("Invalid measurements for obstacle");
                     }
-
-                    Stage stage = (Stage) form.getScene().getWindow();
-
-                    var newObstacle = new Obstacle(name,height,distFromThre,distFromCent);
                     // replace the obstacle in runway object
+                    var newObstacle = new Obstacle(name,height,distFromThre,distFromCent);
                     if (otherObstacles.contains(selectedObstacle)) {
                         otherObstacles.remove(selectedObstacle);
                         otherObstacles.add(newObstacle);
@@ -310,11 +261,10 @@ public class ObstacleListScene extends BaseScene {
                         currentRunway.addObstacle(newObstacle);
                         app.showNotification("Obstacle Warning", "Obstacle " + name + " reconfigured for " + currentAirport.getAirportCode() + " runway " + currentRunway.getName() + currentRunway.getDirection());
                     }
-
                     updateObstaclesList();
 
+                    Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
-
                 } catch (NumberFormatException ex) {
                     showErrorDialog("Invalid input for number of obstacles. Please enter a valid integer.");
                 } catch (IllegalArgumentException ex) {
@@ -322,52 +272,34 @@ public class ObstacleListScene extends BaseScene {
                 }
             }
         });
-
-        form.getChildren().addAll(nameLabel, nameInput, heightLabel, heightInput, distFromThreLabel, distFromThreInput, distFromCentLabel, distFromCentInput, submitButton, cancelButton);
-
-        dialogGenerator(form, "Edit Obstacle");
+        promptWindow.getChildren().addAll(nameBox,heightBox,distFromThreBox,distFromCentBox,submitButton);
+        promptWindow.getChildren().addAll(promptWindow.addButtons());
+        dialogGenerator(promptWindow, "Edit Obstacle");
     }
 
-    private void promptAddBPV() {
-        VBox form = new VBox(10);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
+    private void promptSetBPV() {
+        PromptWindow promptWindow = new PromptWindow(app);
+        var BPVBox = promptWindow.addParameterField("Blast Protection Value");
 
-        Label BPVLabel = new Label("Blast Protection Value:");
-        TextField BPVInput = new TextField();
-        styleTextField(BPVInput);
-
+        // Implement Submit button
         Button submitButton = new Button();
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
-
-        Button cancelButton = new Button();
-        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        cancelButton.setOnAction(e -> {
-            Stage stage = (Stage) form.getScene().getWindow();
-            stage.close();
-        });
-
         submitButton.setOnAction(e -> {
-            String BPV = BPVInput.getText();
-
+            String BPV = promptWindow.getInput(BPVBox);
             if (BPV.isEmpty()) {
                 showErrorDialog("Blast Protection Value Required. Please fill in all fields.");
             } else {
                 try {
                     int BPVInt = Integer.parseInt(BPV);
-
                     if (BPVInt <= 0) {
                         throw new IllegalArgumentException("Invalid measurements for Blast Protection Value");
                     }
-
-                    Stage stage = (Stage) form.getScene().getWindow();
-
                     // update the runway object to run calculations to display in the config runway scene
                     currentRunway.setBlastProtectionValue(BPVInt);
                     currentRunway.runCalculations();
                     app.displayRunwayConfigScene(currentAirport,currentRunway);
                     app.updateXMLs();
-
+                    Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
 
                 } catch (NumberFormatException ex) {
@@ -377,10 +309,9 @@ public class ObstacleListScene extends BaseScene {
                 }
             }
         });
-
-        form.getChildren().addAll(BPVLabel, BPVInput, submitButton, cancelButton);
-
-        dialogGenerator(form, "Set Blast Protection Value");
+        promptWindow.getChildren().addAll(BPVBox, submitButton);
+        promptWindow.getChildren().addAll(promptWindow.addButtons());
+        dialogGenerator(promptWindow, "Set Blast Protection Value");
     }
 
     public void setSelectedObstacle(Obstacle selectedObstacle) {

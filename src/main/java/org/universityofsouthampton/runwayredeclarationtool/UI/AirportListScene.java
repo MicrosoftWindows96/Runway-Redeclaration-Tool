@@ -6,9 +6,7 @@ import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -72,7 +70,7 @@ public class AirportListScene extends BaseScene {
         Button addAirport = new Button(); // Button to add a new airport
         styleButton(addAirport, MaterialDesign.MDI_PLUS_BOX, "Add");
         addAirport.setOnAction(e -> {
-            promptAddAirportForm(app);
+            promptAddAirport();
             updateList();
             app.updateXMLs();
         });
@@ -102,7 +100,7 @@ public class AirportListScene extends BaseScene {
         styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
         modifyButton.setOnAction(e -> {
             if (selectedAirport != null) {
-                showModifyAirportDialog(selectedAirport);
+                promptModifyAirport(selectedAirport);
             }
         });
 
@@ -150,7 +148,7 @@ public class AirportListScene extends BaseScene {
                     if (runway.getObstacles().size() == 0) { // If there's no obstacles, no need to configure BPV
                         app.displayRunwayConfigScene(airport,runway);
                     } else {
-                        promptAddBPV(airport,runway);
+                        promptSetBPV(airport,runway);
                     }
                 });
                 styleButton(configureButton, MaterialDesign.MDI_SETTINGS, "Configure");
@@ -168,7 +166,7 @@ public class AirportListScene extends BaseScene {
             }
 
             Button addRunwayButton = new Button("Add Runway");
-            addRunwayButton.setOnAction(e -> promptAddRunwayForm(app));
+            addRunwayButton.setOnAction(e -> promptAddRunway());
             styleButton(addRunwayButton, MaterialDesign.MDI_PLUS_BOX, "Add");
 
             ScrollPane runwaysScrollPane = new ScrollPane(runwaysInfoBox);
@@ -221,113 +219,68 @@ public class AirportListScene extends BaseScene {
         }
     }
 
-    private void promptAddAirportForm(MainApplication app) {
-        VBox form = new VBox(10);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
+    // PROMPT METHODS
+    private void promptAddAirport() {
+        PromptWindow promptWindow = new PromptWindow(app);
+        var nameBox = promptWindow.addParameterField("Airport Name");
+        var codeBox = promptWindow.addParameterField("Airport Code");
 
-        Label nameLabel = new Label("Airport Name:");
-        TextField nameInput = new TextField();
-        styleTextField(nameInput);
-
-        Label codeLabel = new Label("Airport Code:");
-        TextField codeInput = new TextField();
-        styleTextField(codeInput);
-
+        // Implement submitButton
         Button submitButton = new Button("Add Airport");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
-
-        Button cancelButton = new Button("Cancel");
-        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        cancelButton.setOnAction(e -> ((Stage) form.getScene().getWindow()).close());
-
-        form.getChildren().addAll(nameLabel, nameInput, codeLabel, codeInput, submitButton, cancelButton);
-
         submitButton.setOnAction(e -> {
-            String airportName = capitalize(nameInput.getText());
+            String name = promptWindow.getInput(nameBox);
+            String code = promptWindow.getInput(codeBox);
 
-            String airportCode = codeInput.getText().toUpperCase();
-
-            if (airportName.isEmpty() || airportCode.isEmpty()) {
+            if (name.isEmpty() || code.isEmpty()) {
                 showErrorDialog("Please enter a valid airport name and code.");
                 return;
             }
-
-            Airport newAirport = new Airport(airportName, airportCode);
+            Airport newAirport = new Airport(name, code);
             app.addAirport(newAirport);
             app.updateXMLs();
-            ((Stage) form.getScene().getWindow()).close();
+            ((Stage) promptWindow.getScene().getWindow()).close();
         });
-
-        dialogGenerator(form, "Add airport");
+        promptWindow.getChildren().addAll(nameBox,codeBox,submitButton);
+        promptWindow.getChildren().addAll(promptWindow.addButtons());
+        dialogGenerator(promptWindow, "Add NEW Airport");
     }
 
-    private void promptAddRunwayForm(MainApplication app) {
-        VBox form = new VBox(10);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
+    private void promptAddRunway() {
+        PromptWindow promptWindow = new PromptWindow(app);
+        var degreeBox = promptWindow.addParameterField("Degree");
+        var directionBox = promptWindow.addParameterField("Direction (L, R, C)");
+        var stopwayBox = promptWindow.addParameterField("Stopway");
+        var clearwayBox = promptWindow.addParameterField("Clearway");
+        var TORAbox = promptWindow.addParameterField("TORA");
+        var dispThreshBox = promptWindow.addParameterField("Displaced Threshold:");
 
-        Label degreeLabel = new Label("Degree:");
-        TextField degreeInput = new TextField();
-        styleTextField(degreeInput);
-        degreeInput.setPromptText("Degree");
-
-        Label directionLabel = new Label("Direction (L, R, C):");
-        TextField directionInput = new TextField();
-        styleTextField(directionInput);
-        directionInput.setPromptText("Direction (L, R, C)");
-
-        Label stopwayLabel = new Label("Stopway");
-        TextField stopwayInput = new TextField();
-        styleTextField(stopwayInput);
-        stopwayInput.setPromptText("Stopway");
-
-        Label clearwayLabel = new Label("Clearway");
-        TextField clearwayInput = new TextField();
-        styleTextField(clearwayInput);
-        clearwayInput.setPromptText("Clearway");
-
-        Label TORALabel = new Label("TORA:");
-        TextField TORAInput = new TextField();
-        styleTextField(TORAInput);
-
-        Label DisThreshLabel = new Label("Displaced Threshold:");
-        TextField DisThreshInput = new TextField();
-        styleTextField(DisThreshInput);
-
+        // Implement addButton
         Button submitButton = new Button("Add");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
-
-        Button cancelButton = new Button("Cancel");
-        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Cancel");
-        cancelButton.setOnAction(e -> {
-            Stage stage = (Stage) form.getScene().getWindow();
-            stage.close();
-        });
-
         submitButton.setOnAction(e -> {
-            String degree = degreeInput.getText().trim();
-            String direction = directionInput.getText().trim();
+            String degree = promptWindow.getInput(degreeBox);
+            String direction = promptWindow.getInput(directionBox);
             String name = degree + direction;
-
+            // Try making a runway object and check for any illegal parameters
             if (!name.matches("\\d{2}[LCR]")) {
                 showErrorDialog("Invalid runway name. The name must consist of two digits followed by L, C, or R.");
             } else {
                 try {
-                    int stopway = Integer.parseInt(stopwayInput.getText());
-                    int clearway = Integer.parseInt(clearwayInput.getText());
-                    int TORA = Integer.parseInt(TORAInput.getText());
-                    int DisThresh = Integer.parseInt(DisThreshInput.getText());
+                    int stopway = Integer.parseInt(promptWindow.getInput(stopwayBox));
+                    int clearway = Integer.parseInt(promptWindow.getInput(clearwayBox));
+                    int TORA = Integer.parseInt(promptWindow.getInput(TORAbox));
+                    int dispThresh = Integer.parseInt(promptWindow.getInput(dispThreshBox));
 
-                    if (stopway < 0 || clearway < 0 || TORA < 0 || DisThresh < 0) {
+                    if (stopway < 0 || clearway < 0 || TORA < 0 || dispThresh < 0) {
                         throw new IllegalArgumentException("Invalid measurements for runway.");
                     }
-
-                    Stage stage = (Stage) form.getScene().getWindow();
-                    Runway newRunway = new Runway(degree, direction, stopway, clearway, TORA, DisThresh);
-                    selectedAirport.getRunways().add(newRunway);
+                    // If Runway valid, add object to application and close window
+                    Runway testRunway = new Runway(degree,direction,stopway,clearway,TORA,dispThresh);
+                    selectedAirport.getRunways().add(testRunway);
                     app.updateXMLs();
                     updateAirportInfo(selectedAirport);
+                    Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
 
                 } catch (NumberFormatException ex) {
@@ -337,77 +290,56 @@ public class AirportListScene extends BaseScene {
                 }
             }
         });
-
-        form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, stopwayLabel, stopwayInput, clearwayLabel, clearwayInput,
-            TORALabel, TORAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
-
-        dialogGenerator(form,"Add New Runway");
+        promptWindow.getChildren().addAll(degreeBox,directionBox,stopwayBox,clearwayBox,
+            TORAbox,dispThreshBox,submitButton);
+        promptWindow.getChildren().addAll(promptWindow.addButtons());
+        dialogGenerator(promptWindow, "Add NEW Runway");
     }
 
-    private void showModifyAirportDialog(Airport airport) {
-        Stage dialogStage = new Stage();
-
-        TextField nameInput = new TextField(airport.getAirportName());
-        TextField codeInput = new TextField(airport.getAirportCode());
+    private void promptModifyAirport(Airport airport) {
+        PromptWindow promptWindow = new PromptWindow(app);
+        var nameBox = promptWindow.editParameterField("Airport Name", airport.getAirportName());
+        var codeBox = promptWindow.editParameterField("Airport Code", airport.getAirportCode());
 
         Button submitButton = new Button("Save Changes");
         styleButton(submitButton, MaterialDesign.MDI_CHECK, "Save");
         submitButton.setOnAction(e -> {
-            airport.setAirportName(nameInput.getText());
-            airport.setAirportCode(codeInput.getText());
+            airport.setAirportName(promptWindow.getInput(nameBox));
+            airport.setAirportCode(promptWindow.getInput(codeBox));
             updateList();
             app.updateXMLs();
             updateAirportInfo(airport);
-            dialogStage.close();
-        });
-
-        VBox dialogVBox = new VBox(10, new Label("Airport Name:"), nameInput, new Label("Airport Code:"), codeInput, submitButton);
-        dialogVBox.setAlignment(Pos.CENTER);
-        dialogVBox.setPadding(new Insets(20));
-
-        dialogGenerator(dialogVBox,"Modify Airport");
-    }
-
-    private void promptAddBPV(Airport airport,Runway runway) {
-        VBox form = new VBox(10);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
-
-        Label BPVLabel = new Label("Blast Protection Value:");
-        TextField BPVInput = new TextField();
-        styleTextField(BPVInput);
-
-        Button submitButton = new Button();
-        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
-
-        Button cancelButton = new Button();
-        styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        cancelButton.setOnAction(e -> {
-            Stage stage = (Stage) form.getScene().getWindow();
+            Stage stage = (Stage) promptWindow.getScene().getWindow();
             stage.close();
         });
 
-        submitButton.setOnAction(e -> {
-            String BPV = BPVInput.getText();
+        promptWindow.getChildren().addAll(nameBox,codeBox,submitButton);
+        dialogGenerator(promptWindow,"Modify Airport");
+    }
 
+    private void promptSetBPV(Airport airport, Runway runway) {
+        PromptWindow promptWindow = new PromptWindow(app);
+        var BPVBox = promptWindow.addParameterField("Blast Protection Value");
+
+        // Implement Submit button
+        Button submitButton = new Button();
+        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
+        submitButton.setOnAction(e -> {
+            String BPV = promptWindow.getInput(BPVBox);
             if (BPV.isEmpty()) {
                 showErrorDialog("Blast Protection Value Required. Please fill in all fields.");
             } else {
                 try {
                     int BPVInt = Integer.parseInt(BPV);
-
                     if (BPVInt <= 0) {
                         throw new IllegalArgumentException("Invalid measurements for Blast Protection Value");
                     }
-
-                    Stage stage = (Stage) form.getScene().getWindow();
-
                     // update the runway object to run calculations to display in the config runway scene
                     runway.setBlastProtectionValue(BPVInt);
                     runway.runCalculations();
                     app.displayRunwayConfigScene(airport,runway);
                     app.updateXMLs();
-
+                    Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
 
                 } catch (NumberFormatException ex) {
@@ -417,10 +349,9 @@ public class AirportListScene extends BaseScene {
                 }
             }
         });
-
-        form.getChildren().addAll(BPVLabel, BPVInput, submitButton, cancelButton);
-
-        dialogGenerator(form, "Set Blast Protection Value");
+        promptWindow.getChildren().addAll(BPVBox, submitButton);
+        promptWindow.getChildren().addAll(promptWindow.addButtons());
+        dialogGenerator(promptWindow, "Set Blast Protection Value");
     }
 
     private void setSelectedAirport(Airport airport) { // Method to set the selectedAirport member variable
@@ -429,5 +360,4 @@ public class AirportListScene extends BaseScene {
             currentlySelectedButton.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
         }
     }
-
 }

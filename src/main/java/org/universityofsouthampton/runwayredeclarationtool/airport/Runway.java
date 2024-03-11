@@ -45,8 +45,10 @@ public class Runway {
         this.TODA = TORA + clearway;
         this.ASDA = TORA + stopway;
         this.LDA = TORA - displacedThreshold;
-        if(!isValidName(name) && checkValidParameters()){
-            throw new IllegalArgumentException("Invalid runway parameters");
+        if(!isValidName(name)){
+            throw new IllegalArgumentException("Invalid runway name!");
+        } else if (checkValidParameters()) {
+            throw new IllegalArgumentException("Invalid distances!");
         }
     }
 
@@ -64,7 +66,7 @@ public class Runway {
 
     // Removing obstacle AND adding obstacle changes calculation conditions
     public void addObstacle(Obstacle obstacle) {
-        if(obstacle == null){
+        if (obstacle == null || this.obstacles.size() == 1) {
             throw new IllegalArgumentException("Invalid obstacle");
         }
         this.obstacles.add(obstacle);

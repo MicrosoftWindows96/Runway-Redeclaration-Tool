@@ -10,9 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -61,7 +59,7 @@ public class RunwayConfigViewScene extends BaseScene {
 
     Button runwayUpdateButton = new Button();
     styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
-    runwayUpdateButton.setOnAction(e -> promptEditRunwayForm(app));
+    runwayUpdateButton.setOnAction(e -> promptEditRunway());
 
     Button backButton = new Button();
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
@@ -71,7 +69,11 @@ public class RunwayConfigViewScene extends BaseScene {
     styleButton(exportButton, MaterialDesign.MDI_EXPORT, "Export");
     exportButton.setOnAction(e -> exportCalculationBreakdown());
 
-    return new ArrayList<>(Arrays.asList(obstacleUpdateButton,runwayUpdateButton,backButton,exportButton));
+    Button viewsButton = new Button("2D Views");
+    styleButton(viewsButton, MaterialDesign.MDI_EXPORT, "2D Views");
+    viewsButton.setOnAction(e -> app.displayViewsScene());
+
+    return new ArrayList<>(Arrays.asList(obstacleUpdateButton,runwayUpdateButton,backButton,exportButton,viewsButton));
   }
 
   private VBox createCalculationBreakdownSection() {
@@ -214,73 +216,40 @@ public class RunwayConfigViewScene extends BaseScene {
   }
 
   // PROMPT METHODS:
-  private void promptEditRunwayForm(MainApplication app) {
-    VBox form = new VBox(10);
-    form.setAlignment(Pos.CENTER);
-    form.setPadding(new Insets(20));
+  private void promptEditRunway() {
+    PromptWindow promptWindow = new PromptWindow(app);
+    var degreeBox = promptWindow.editParameterField("Degree",currentRunway.getName());
+    var directionBox = promptWindow.editParameterField("Direction (L, R, C)",currentRunway.getDirection());
+    var stopwayBox = promptWindow.editParameterField("Stopway",Integer.toString(currentRunway.getStopway()));
+    var clearwayBox = promptWindow.editParameterField("Clearway",Integer.toString(currentRunway.getClearway()));
+    var TORAbox = promptWindow.editParameterField("TORA",Integer.toString(currentRunway.getTORA()));
+    var dispThreshBox = promptWindow.editParameterField("Displaced Threshold:",Integer.toString(currentRunway.getDisplacedThreshold()));
 
-    Label degreeLabel = new Label("Degree:");
-    TextField degreeInput = new TextField(currentRunway.getName());
-    styleTextField(degreeInput);
-    degreeInput.setPromptText("Degree");
-
-    Label directionLabel = new Label("Direction (L, R, C):");
-    TextField directionInput = new TextField(currentRunway.getDirection());
-    styleTextField(directionInput);
-    directionInput.setPromptText("Direction (L, R, C)");
-
-    Label stopwayLabel = new Label("Stopway");
-    TextField stopwayInput = new TextField(Integer.toString(currentRunway.getStopway()));
-    styleTextField(stopwayInput);
-    stopwayInput.setPromptText("Stopway");
-
-    Label clearwayLabel = new Label("Clearway");
-    TextField clearwayInput = new TextField(Integer.toString(currentRunway.getClearway()));
-    styleTextField(clearwayInput);
-    clearwayInput.setPromptText("Clearway");
-
-    Label TORALabel = new Label("TORA:");
-    TextField TORAInput = new TextField(Integer.toString(currentRunway.getTORA()));
-    styleTextField(TORAInput);
-
-    Label DisThreshLabel = new Label("Displaced Threshold:");
-    TextField DisThreshInput = new TextField(Integer.toString(currentRunway.getDisplacedThreshold()));
-    styleTextField(DisThreshInput);
-
-    Button submitButton = new Button();
-    styleButton(submitButton, MaterialDesign.MDI_CHECK_CIRCLE, "Submit");
-
-    Button cancelButton = new Button();
-    styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-    cancelButton.setOnAction(e -> {
-      Stage stage = (Stage) form.getScene().getWindow();
-      stage.close();
-    });
-
+    // Implement addButton
+    Button submitButton = new Button("Add");
+    styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
     submitButton.setOnAction(e -> {
-      String degree = degreeInput.getText().trim();
-      String direction = directionInput.getText().trim();
+      String degree = promptWindow.getInput(degreeBox);
+      String direction = promptWindow.getInput(directionBox);
       String name = degree + direction;
-
-
+      // Try making a runway object and check for any illegal parameters
       if (!name.matches("\\d{2}[LCR]")) {
         showErrorDialog("Invalid runway name. The name must consist of two digits followed by L, C, or R.");
       } else {
         try {
-          int stopway = Integer.parseInt(stopwayInput.getText());
-          int clearway = Integer.parseInt(clearwayInput.getText());
-          int TORA = Integer.parseInt(TORAInput.getText());
-          int DisThresh = Integer.parseInt(DisThreshInput.getText());
+          int stopway = Integer.parseInt(promptWindow.getInput(stopwayBox));
+          int clearway = Integer.parseInt(promptWindow.getInput(clearwayBox));
+          int TORA = Integer.parseInt(promptWindow.getInput(TORAbox));
+          int dispThresh = Integer.parseInt(promptWindow.getInput(dispThreshBox));
 
-          if (stopway < 0 || clearway < 0 || TORA < 0 || DisThresh < 0) {
+          if (stopway < 0 || clearway < 0 || TORA < 0 || dispThresh < 0) {
             throw new IllegalArgumentException("Invalid measurements for runway.");
           }
 
-          Stage stage = (Stage) form.getScene().getWindow();
-
+          // If Runway valid, replace object to application and close window
           Runway deletedRunway = currentRunway;
           airport.removeRunway(currentRunway);
-          currentRunway = new Runway(degree,direction,stopway,clearway,TORA,DisThresh);
+          currentRunway = new Runway(degree,direction,stopway,clearway,TORA,dispThresh);
           if (!deletedRunway.getObstacles().isEmpty()) {
             Obstacle movedObstacle = deletedRunway.getObstacles().get(0);
             currentRunway.addObstacle(movedObstacle);
@@ -291,18 +260,20 @@ public class RunwayConfigViewScene extends BaseScene {
             currentRunway.runCalculations();
           }
           app.displayRunwayConfigScene(airport,currentRunway);
+          Stage stage = (Stage) promptWindow.getScene().getWindow();
           stage.close();
 
         } catch (NumberFormatException ex) {
-          showErrorDialog("Invalid input for number of runways. Please enter a valid integer.");
+          showErrorDialog("Invalid input for runway measurements. Please enter valid integers.");
         } catch (IllegalArgumentException ex) {
           showErrorDialog(ex.getMessage());
         }
       }
     });
-
-    form.getChildren().addAll(degreeLabel, degreeInput, directionLabel, directionInput, stopwayLabel, stopwayInput, clearwayLabel, clearwayInput,
-        TORALabel, TORAInput, DisThreshLabel, DisThreshInput, submitButton, cancelButton);
-    dialogGenerator(form, "Edit Runway");
+    promptWindow.getChildren().addAll(degreeBox,directionBox,stopwayBox,clearwayBox,
+        TORAbox,dispThreshBox,submitButton);
+    promptWindow.getChildren().addAll(promptWindow.addButtons());
+    dialogGenerator(promptWindow, "Configure Runway");
   }
+
 }

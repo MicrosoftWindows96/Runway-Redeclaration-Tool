@@ -16,6 +16,7 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
+import javax.swing.text.View;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -31,9 +32,9 @@ public class MainApplication extends Application {
     private ArrayList<Airport> airports; // Imported airports
     private ArrayList<Obstacle> obstacles; // Imported obstacles
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+//    public static void main(String[] args) {
+//        launch(args);
+//    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -63,6 +64,10 @@ public class MainApplication extends Application {
     public void displayMenu() {
         MenuScene menuScene = new MenuScene(this);
         root.getChildren().setAll(background, menuScene);
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
     public void displayObstacleListScene(Airport airport, Runway runway) {
@@ -120,5 +125,25 @@ public class MainApplication extends Application {
 
     public ArrayList<Obstacle> getObstacles() {
         return obstacles;
+    }
+
+    public void displayViewsScene() {
+        ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this);
+        root.getChildren().setAll(background, viewSelectionScene);
+    }
+
+    public void display2DsideViewScene() {
+        SideViewScene sideViewScene = new SideViewScene(this);
+        root.getChildren().setAll(background, sideViewScene);
+    }
+
+    public void display2DtopDownViewScene() {
+        TopDownScene topDownScene = new TopDownScene(this);
+        root.getChildren().setAll(background, topDownScene);
+    }
+
+    public void display2DbothViewScene() {
+        BothViewScene bothViewScene = new BothViewScene(this);
+        root.getChildren().setAll(background, bothViewScene);
     }
 }

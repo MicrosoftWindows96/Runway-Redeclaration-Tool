@@ -71,7 +71,7 @@ public class RunwayConfigViewScene extends BaseScene {
 
     Button viewsButton = new Button("2D Views");
     styleButton(viewsButton, MaterialDesign.MDI_EXPORT, "2D Views");
-    viewsButton.setOnAction(e -> app.displayViewsScene());
+    viewsButton.setOnAction(e -> app.displayViewsScene(currentRunway));
 
     return new ArrayList<>(Arrays.asList(obstacleUpdateButton,runwayUpdateButton,backButton,exportButton,viewsButton));
   }

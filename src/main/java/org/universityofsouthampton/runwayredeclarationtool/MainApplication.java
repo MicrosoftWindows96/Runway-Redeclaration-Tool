@@ -127,23 +127,23 @@ public class MainApplication extends Application {
         return obstacles;
     }
 
-    public void displayViewsScene() {
-        ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this);
+    public void displayViewsScene(Runway runway) {
+        ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this,runway);
         root.getChildren().setAll(background, viewSelectionScene);
     }
 
-    public void display2DsideViewScene() {
-        SideViewScene sideViewScene = new SideViewScene(this);
+    public void display2DsideViewScene(Runway runway) {
+        SideViewScene sideViewScene = new SideViewScene(this,runway);
         root.getChildren().setAll(background, sideViewScene);
     }
 
-    public void display2DtopDownViewScene() {
-        TopDownScene topDownScene = new TopDownScene(this);
+    public void display2DtopDownViewScene(Runway runway) {
+        TopDownScene topDownScene = new TopDownScene(this,runway);
         root.getChildren().setAll(background, topDownScene);
     }
 
-    public void display2DbothViewScene() {
-        BothViewScene bothViewScene = new BothViewScene(this);
+    public void display2DbothViewScene(Runway runway) {
+        BothViewScene bothViewScene = new BothViewScene(this,runway);
         root.getChildren().setAll(background, bothViewScene);
     }
 }

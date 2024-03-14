@@ -8,14 +8,17 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ViewSelectionScene extends BaseScene {
 
-    public ViewSelectionScene(MainApplication app) {
+    private Runway currentRunway; // currently viewed runway
+    public ViewSelectionScene(MainApplication app, Runway runway) {
         this.app = app;
+        this.currentRunway = runway;
         this.setAlignment(Pos.TOP_CENTER);
         this.setSpacing(200);
 
@@ -39,15 +42,15 @@ public class ViewSelectionScene extends BaseScene {
 
         Button sideViewButton = new Button(); // Button to open the Login prompt
         styleButton(sideViewButton, MaterialDesign.MDI_LOGIN, "2D Side View");
-        sideViewButton.setOnAction(e -> app.display2DsideViewScene());
+        sideViewButton.setOnAction(e -> app.display2DsideViewScene(currentRunway));
 
         Button topDownViewButton = new Button(); // Button to open the Login prompt
         styleButton(topDownViewButton, MaterialDesign.MDI_LOGIN, "2D Top-down View");
-        topDownViewButton.setOnAction(e -> app.display2DtopDownViewScene());
+        topDownViewButton.setOnAction(e -> app.display2DtopDownViewScene(currentRunway));
 
         Button bothViewButton = new Button(); // Button to open the Login prompt
         styleButton(bothViewButton, MaterialDesign.MDI_LOGIN, "2D Both View");
-        bothViewButton.setOnAction(e -> app.display2DbothViewScene());
+        bothViewButton.setOnAction(e -> app.display2DbothViewScene(currentRunway));
 
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");

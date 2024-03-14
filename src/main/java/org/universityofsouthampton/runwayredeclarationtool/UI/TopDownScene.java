@@ -8,14 +8,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TopDownScene extends BaseScene {
 
-    public TopDownScene(MainApplication app) {
+    private Runway currentRunway; // currently viewed runway
+
+    public TopDownScene(MainApplication app, Runway runway) {
         this.app = app;
+        this.currentRunway = runway;
         this.setAlignment(Pos.TOP_CENTER);
         this.setSpacing(200);
 
@@ -38,7 +42,7 @@ public class TopDownScene extends BaseScene {
     ArrayList<Button> addButtons() {
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        backButton.setOnAction(e -> app.displayViewsScene());
+        backButton.setOnAction(e -> app.displayViewsScene(currentRunway));
 
         return new ArrayList<>(Arrays.asList(backButton));
     }

@@ -114,10 +114,10 @@ public class SideViewScene extends BaseScene {
             String landingDirection = "R"; // Right
 
             // g. Re-declared distances (example values)
-            double TORA = (double) currentRunway.getTORA() / 100; // Takeoff Run Available
-            double TODA = (TORA + currentRunway.getClearway()) / 100; // Takeoff Distance Available
-            double ASDA = (TORA + currentRunway.getStopway()) /100; // Accelerate-Stop Distance Available
-            double LDA = (double) currentRunway.getLDA() /100; // Landing Distance Available
+            double TORA = (double) currentRunway.getTORA() / 6; // Takeoff Run Available
+            double TODA = (TORA + currentRunway.getClearway()); // Takeoff Distance Available
+            double ASDA = (TORA + currentRunway.getStopway()); // Accelerate-Stop Distance Available
+            double LDA = (double) currentRunway.getLDA() /6; // Landing Distance Available
 
             // i. The obstacle (example values)
             double obstacleX = 350; // X position of the obstacle
@@ -139,9 +139,9 @@ public class SideViewScene extends BaseScene {
             gc.fillRect(runwayStartX + runwayWidth - thresholdWidth, runwayStartY, thresholdWidth, thresholdHeight);
 
             // c. Draw threshold designators
-//            gc.setFill(Color.BLACK);
-//            gc.fillText("27L", runwayStartX + 5, runwayStartY + 20); // Adjust text position as needed
-//            gc.fillText("09R", runwayStartX + runwayWidth - 35, runwayStartY + 20); // Adjust text position as needed
+            gc.setFill(Color.BLACK);
+            gc.fillText(currentRunway.getLogicalRunway1(), runwayStartX + 5, runwayStartY + 20); // Adjust text position as needed
+            gc.fillText(currentRunway.getLogicalRunway2(), runwayStartX + runwayWidth - 5, runwayStartY + 20); // Adjust text position as needed
 
             // d. Displaced threshold representation
             gc.setFill(Color.BLACK);
@@ -153,15 +153,19 @@ public class SideViewScene extends BaseScene {
             gc.fillRect(runwayStartX + runwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway right
 
             // f. Indicate take-off/landing direction
+            gc.setFill(Color.DARKBLUE);
 //            gc.fillText("Take-off →", runwayStartX + TORA - 50, runwayStartY + 30); // Adjust text position as needed
 //            gc.fillText("← Landing", runwayStartX + LDA - 50, runwayStartY - 10); // Adjust text position as needed
 
             // g. Re-declared distances indicators
-//            gc.setStroke(Color.RED);
-//            gc.strokeLine(runwayStartX, runwayStartY + 20, runwayStartX + TORA, runwayStartY + 20); // TORA line
-//            gc.strokeLine(runwayStartX, runwayStartY + 30, runwayStartX + TODA, runwayStartY + 30); // TODA line
-//            gc.strokeLine(runwayStartX, runwayStartY + 40, runwayStartX + ASDA, runwayStartY + 40); // ASDA line
-//            gc.strokeLine(runwayStartX, runwayStartY - 10, runwayStartX + LDA, runwayStartY - 10); // LDA line
+            gc.setStroke(Color.RED);
+            gc.strokeLine(runwayStartX, runwayStartY + 20, runwayStartX + TORA, runwayStartY + 20); // TORA line
+            gc.setStroke(Color.YELLOW);
+            gc.strokeLine(runwayStartX, runwayStartY + 30, runwayStartX + TODA, runwayStartY + 30); // TODA line
+            gc.setStroke(Color.GREEN);
+            gc.strokeLine(runwayStartX, runwayStartY + 40, runwayStartX + ASDA, runwayStartY + 40); // ASDA line
+            gc.setStroke(Color.BLUE);
+            gc.strokeLine(runwayStartX, runwayStartY - 10, runwayStartX + LDA, runwayStartY - 10); // LDA line
 
             // h. Distances broken down (including RESA/Blast Allowance)
             // This would typically be text and lines similar to the re-declared distances

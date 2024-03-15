@@ -81,7 +81,7 @@ public class AirportListScene extends BaseScene {
         backButton.setOnAction(e -> app.displayMenu());
 
         Button deleteButton = new Button("Delete"); // Button to delete a selected airport
-        styleButton(deleteButton, MaterialDesign.MDI_DELETE, "Delete");
+        styleButton(deleteButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
         deleteButton.setOnAction(e -> {
             importedAirports.remove(selectedAirport);
             updateList();

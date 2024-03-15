@@ -136,11 +136,10 @@ public class MainApplication extends Application {
         ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this, runway);
         viewSelectionScene.setSecondaryStage(secondaryStage);
 
-        Scene scene = new Scene(viewSelectionScene, 300, 600);
+        Scene scene = new Scene(viewSelectionScene, 800, 600);
         secondaryStage.setTitle("Runway View Selection");
         secondaryStage.setScene(scene);
 
-        // Position the secondary stage next to the main window
         secondaryStage.setX(primaryStage.getX() + primaryStage.getWidth());
         secondaryStage.setY(primaryStage.getY());
 
@@ -154,7 +153,7 @@ public class MainApplication extends Application {
         }
         SideViewScene sideViewScene = new SideViewScene(this, runway);
         sideViewScene.setSecondaryStage(secondaryStage);
-        Scene sideViewSceneScene = new Scene(sideViewScene, 300, 600);
+        Scene sideViewSceneScene = new Scene(sideViewScene, 800, 600);
         secondaryStage.setScene(sideViewSceneScene);
         secondaryStage.show();
     }
@@ -169,7 +168,7 @@ public class MainApplication extends Application {
 
         TopDownScene topDownScene = new TopDownScene(this, runway);
         topDownScene.setSecondaryStage(secondaryStage);
-        Scene topDownSceneScene = new Scene(topDownScene, 300, 600);
+        Scene topDownSceneScene = new Scene(topDownScene, 800, 600);
         secondaryStage.setScene(topDownSceneScene);
         secondaryStage.show();
     }
@@ -182,7 +181,7 @@ public class MainApplication extends Application {
 
         BothViewScene bothViewScene = new BothViewScene(this, runway);
         bothViewScene.setSecondaryStage(secondaryStage);
-        Scene bothViewSceneScene = new Scene(bothViewScene, 300, 600);
+        Scene bothViewSceneScene = new Scene(bothViewScene, 800, 600);
         secondaryStage.setScene(bothViewSceneScene);
         secondaryStage.show();
     }

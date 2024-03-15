@@ -127,7 +127,7 @@ public class MainApplication extends Application {
         ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this, runway);
         viewSelectionScene.setSecondaryStage(secondaryStage);
 
-        Scene scene = new Scene(viewSelectionScene, 800, 600);
+        Scene scene = new Scene(viewSelectionScene, 300, 600);
         secondaryStage.setTitle("Runway View Selection");
         secondaryStage.setScene(scene);
 

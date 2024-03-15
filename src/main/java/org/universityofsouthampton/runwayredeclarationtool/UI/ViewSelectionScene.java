@@ -3,7 +3,10 @@ package org.universityofsouthampton.runwayredeclarationtool.UI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -19,11 +22,12 @@ public class ViewSelectionScene extends BaseScene {
     public ViewSelectionScene(MainApplication app, Runway runway) {
         this.app = app;
         this.currentRunway = runway;
+        BorderPane borderPane = new BorderPane();
+        borderPane.setPrefSize(1200.0,1200.0);
+        borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
 
-        this.setAlignment(Pos.TOP_CENTER);
-        this.setSpacing(200);
 
-        var title = new Text("View Selection");
+        Text title = new Text("Top Down View");
         title.setFont(Font.font("Arial", 24));
         title.setStyle("-fx-fill: #333;");
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
@@ -32,7 +36,15 @@ public class ViewSelectionScene extends BaseScene {
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(addButtons());
 
-        this.getChildren().addAll(title, buttons);
+        VBox topLayout = new VBox();
+        topLayout.setAlignment(Pos.TOP_CENTER);
+        topLayout.getChildren().addAll(title, buttons);
+        BorderPane.setMargin(topLayout, new Insets(10));
+
+        borderPane.setTop(topLayout);
+
+
+        this.getChildren().add(borderPane);
     }
 
     private Stage secondaryStage;
@@ -66,4 +78,5 @@ public class ViewSelectionScene extends BaseScene {
         });
 
         return new ArrayList<>(Arrays.asList(sideViewButton, topDownViewButton, bothViewButton, backButton));
-    }}
+    }
+}

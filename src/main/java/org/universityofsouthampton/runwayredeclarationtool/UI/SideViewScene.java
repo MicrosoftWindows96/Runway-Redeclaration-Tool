@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -32,6 +33,7 @@ public class SideViewScene extends BaseScene {
         this.obstacles = runway.getObstacles();
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0, 1200.0);
+        borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
 
         Text title = new Text("Side View");
         title.setFont(Font.font("Arial", 24));
@@ -65,8 +67,12 @@ public class SideViewScene extends BaseScene {
 
     private void drawRunway(Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.LIGHTGRAY);
+        Color skyColor = Color.rgb(201,233,246);
+        gc.setFill(skyColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        gc.setFill(Color.GREEN);
+        gc.fillRect(0, 50, canvas.getWidth(), canvas.getHeight() - 50);
 
         double runwayStartX = 100;
         double runwayStartY = 50;

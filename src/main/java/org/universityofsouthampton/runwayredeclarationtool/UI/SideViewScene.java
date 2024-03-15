@@ -33,6 +33,7 @@ public class SideViewScene extends BaseScene {
 
     private final Runway currentRunway;
     private final ArrayList<Obstacle> obstacles;
+    private Obstacle currentObstacle;
     private final Pane animationOverlay;
     private final Pane cloudLayer = new Pane();
     private final double iconSize = 24;
@@ -42,8 +43,8 @@ public class SideViewScene extends BaseScene {
     public SideViewScene(MainApplication app, Runway runway) {
         this.app = app;
         this.currentRunway = runway;
-        setObstacles();
         this.obstacles = runway.getObstacles();
+//        currentObstacle = obstacles.getFirst();
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0, 1200.0);
         borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
@@ -191,7 +192,7 @@ public class SideViewScene extends BaseScene {
         double runwayStartX = 100;
         double runwayStartY = 50;
         double runwayWidth = (double) currentRunway.getTORA() / 6;
-        double runwayHeight = 10;
+        double runwayHeight = 5;
 
         double thresholdWidth = 5;
         double displacedThresholdOffset = (double) currentRunway.getDisplacedThreshold() / 6;
@@ -206,14 +207,24 @@ public class SideViewScene extends BaseScene {
         gc.setFill(Color.DARKGRAY);
         gc.fillRect(runwayStartX, runwayStartY, runwayWidth, runwayHeight);
 
+        // b. Draw threshold indicators
         gc.setFill(Color.WHITE);
         gc.fillRect(runwayStartX, runwayStartY, thresholdWidth, runwayHeight);
         gc.fillRect(runwayStartX + runwayWidth - thresholdWidth, runwayStartY, thresholdWidth, runwayHeight);
 
         if (displacedThresholdOffset > 0) {
-            gc.setFill(Color.DARKGRAY);
-            gc.fillRect(runwayStartX, runwayStartY, displacedThresholdOffset, runwayHeight);
+            gc.setFill(Color.RED);
+            gc.fillRect(runwayStartX + displacedThresholdOffset, runwayStartY, thresholdWidth, runwayHeight);
         }
+
+        // e. Draw Stopway/Clearway
+        gc.setFill(Color.DARKBLUE);
+        gc.fillRect(runwayStartX - stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway left
+        gc.fillRect(runwayStartX + stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway right
+
+        gc.setFill(Color.LIGHTBLUE);
+        gc.fillRect(runwayStartX - stopwayWidth - clearwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway left
+        gc.fillRect(runwayStartX + runwayWidth + stopwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway right
 
         Font labelFont = Font.font("Arial", 14);
         gc.setFont(labelFont);
@@ -221,16 +232,20 @@ public class SideViewScene extends BaseScene {
 
         if (!obstacles.isEmpty()) {
             Obstacle obstacle = obstacles.getFirst();
-            double obstacleX = runwayStartX + ((double) obstacle.getDistanceFromThreshold() / 6);
-            double obstacleY = runwayStartY - ((double) obstacle.getHeight() / 2);
+            double obstacleX = runwayStartX + ((double) obstacle.getDistanceFromThreshold() / 6); // X position of the obstacle
+            double obstacleHeight = (double) obstacle.getHeight() / 6;
+            double obstacleY = runwayStartY - obstacleHeight; // Adjust Y position to place on top of the runway
             double obstacleWidth = 10;
-            double obstacleHeight = obstacle.getHeight();
 
             gc.setFill(Color.BLACK);
-            gc.fillRect(obstacleX, obstacleY - obstacleHeight, obstacleWidth, obstacleHeight);
+            gc.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
 
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";
             gc.fillText(obstacleText, obstacleX + 15, runwayStartY - runwayHeight - 5);
+
+            gc.setStroke(Color.BLACK);
+//            gc.strokeLine(runwayStartX, runwayStartY + 20, runwayStartX + TORA, runwayStartY + 20); // slope line
+
         }
 
         String toraText = "TORA: " + currentRunway.getTORA() + "m";
@@ -247,10 +262,10 @@ public class SideViewScene extends BaseScene {
 
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 
-        String leftRunwayName = currentRunway.getName() + "L";
+        String leftRunwayName = currentRunway.getLogicalRunway1();
         gc.fillText(leftRunwayName, runwayStartX - 25, runwayStartY - 25);
 
-        String rightRunwayName = currentRunway.getName() + "R";
+        String rightRunwayName = currentRunway.getLogicalRunway2();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayWidth - stringWidth + 25, runwayStartY - 25);
     }

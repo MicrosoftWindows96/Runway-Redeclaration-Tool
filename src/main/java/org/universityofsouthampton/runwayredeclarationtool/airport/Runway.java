@@ -48,7 +48,14 @@ public class Runway {
         } else if (checkValidParameters()) {
             throw new IllegalArgumentException("Invalid distances!");
         }
+
+        try {
+            setName(name);
+        } catch (Exception e){
+            throw new IllegalArgumentException("Invalid runway name!");
+        }
     }
+
 
     // Validators for the runway object
     public boolean isNameInvalid(String name){  // Checks name credentials

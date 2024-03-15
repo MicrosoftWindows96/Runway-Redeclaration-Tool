@@ -146,9 +146,9 @@ public class AirportListScene extends BaseScene {
                 Text runwayInfo = new Text("Runway: " + runway.getName() + runway.getDirection() + " - Length: " + runway.getTORA() + "m, Obstacles: " + runway.getObstacles().size());
                 runwayInfo.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 
-                Button configureButton = new Button("Configure");
+                Button configureButton = new Button();
                 configureButton.setOnAction(e -> app.displayRunwayConfigScene(airport,runway));
-                styleButton(configureButton, MaterialDesign.MDI_SETTINGS, "Configure");
+                styleButton(configureButton, MaterialDesign.MDI_LOGIN, "Access");
 
                 Button deleteRunwayButton = new Button("Delete");
                 deleteRunwayButton.setOnAction(e -> {
@@ -156,7 +156,7 @@ public class AirportListScene extends BaseScene {
                     app.updateXMLs();
                     updateAirportInfo(airport);
                 });
-                styleButton(deleteRunwayButton, MaterialDesign.MDI_DELETE, "Delete");
+                styleButton(deleteRunwayButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
 
                 HBox runwayButtonsBox = new HBox(10, configureButton, deleteRunwayButton);
                 runwaysInfoBox.getChildren().addAll(runwayInfo, runwayButtonsBox);
@@ -178,20 +178,6 @@ public class AirportListScene extends BaseScene {
 
             infoBox.getChildren().add(detailsBox);
         }
-    }
-
-    public static String capitalize(String string) {
-        char[] chars = string.toLowerCase().toCharArray();
-        boolean found = false;
-        for (int i = 0; i < chars.length; i++) {
-            if (!found && Character.isLetter(chars[i])) {
-                chars[i] = Character.toUpperCase(chars[i]);
-                found = true;
-            } else if (Character.isWhitespace(chars[i]) || chars[i]=='.' || chars[i]=='\'') { // You can add other chars here
-                found = false;
-            }
-        }
-        return String.valueOf(chars);
     }
 
     private void importAirportsFromXML() { // Function to import airport xml file from local files
@@ -216,6 +202,20 @@ public class AirportListScene extends BaseScene {
         }
     }
 
+    public static String capitalize(String string) {
+        char[] chars = string.toLowerCase().toCharArray();
+        boolean found = false;
+        for (int i = 0; i < chars.length; i++) {
+            if (!found && Character.isLetter(chars[i])) {
+                chars[i] = Character.toUpperCase(chars[i]);
+                found = true;
+            } else if (Character.isWhitespace(chars[i]) || chars[i]=='.' || chars[i]=='\'') { // You can add other chars here
+                found = false;
+            }
+        }
+        return String.valueOf(chars);
+    }
+
     // PROMPT METHODS
     private void promptAddAirport() {
         PromptWindow promptWindow = new PromptWindow(app);
@@ -226,8 +226,9 @@ public class AirportListScene extends BaseScene {
         Button submitButton = new Button("Add Airport");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
         submitButton.setOnAction(e -> {
-            String name = promptWindow.getInput(nameBox);
-            String code = promptWindow.getInput(codeBox);
+            String name = capitalize(promptWindow.getInput(nameBox));
+            String code = promptWindow.getInput(codeBox).toUpperCase();
+
 
             if (name.isEmpty() || code.isEmpty()) {
                 showErrorDialog("Please enter a valid airport name and code.");

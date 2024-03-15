@@ -29,21 +29,12 @@ public class MainApplication extends Application {
     private ArrayList<Airport> airports; // Imported airports
     private ArrayList<Obstacle> obstacles; // Imported obstacles
 
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
-
     @Override
     public void start(Stage primaryStage) {
-        // Registering Material Design icon pack with the IkonResolver
-//        IkonResolver.getInstance().registerHandler(new MaterialDesignIkonHandler());
-
-        // set the root node
         root = new StackPane();
         background = AnimatedPatternBackground.getInstance();
         root.getChildren().add(background);
 
-        // Import the default XML files
         importXML airportXML = new importXML(new File(AIRPORTS_XML_PATH));
         airports = airportXML.makeAirportsXML();
         importXML obstacleXML = new importXML(new File(OBSTACLES_XML_PATH));

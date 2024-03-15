@@ -312,44 +312,7 @@ public class AirportListScene extends BaseScene {
         dialogGenerator(promptWindow,"Modify Airport");
     }
 
-    private void promptSetBPV(Airport airport, Runway runway) {
-        PromptWindow promptWindow = new PromptWindow(app);
-        var BPVBox = promptWindow.addParameterField("Blast Protection Value");
-
-        // Implement Submit button
-        Button submitButton = new Button();
-        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
-        submitButton.setOnAction(e -> {
-            String BPV = promptWindow.getInput(BPVBox);
-            if (BPV.isEmpty()) {
-                showErrorDialog("Blast Protection Value Required. Please fill in all fields.");
-            } else {
-                try {
-                    int BPVInt = Integer.parseInt(BPV);
-                    if (BPVInt <= 0) {
-                        throw new IllegalArgumentException("Invalid measurements for Blast Protection Value");
-                    }
-                    // update the runway object to run calculations to display in the config runway scene
-                    runway.setBlastProtectionValue(BPVInt);
-                    runway.runCalculations();
-                    app.displayRunwayConfigScene(airport,runway);
-                    app.updateXMLs();
-                    Stage stage = (Stage) promptWindow.getScene().getWindow();
-                    stage.close();
-
-                } catch (NumberFormatException ex) {
-                    showErrorDialog("Invalid input for number of BPV. Please enter a valid integer.");
-                } catch (IllegalArgumentException ex) {
-                    showErrorDialog(ex.getMessage());
-                }
-            }
-        });
-        promptWindow.getChildren().addAll(BPVBox, submitButton);
-        promptWindow.getChildren().addAll(promptWindow.addButtons());
-        dialogGenerator(promptWindow, "Set Blast Protection Value");
-    }
-
-    private void setSelectedAirport(Airport airport) { // Method to set the selectedAirport member variable
+    private void setSelectedAirport(Airport airport) {
         this.selectedAirport = airport;
         if (currentlySelectedButton != null) {
             currentlySelectedButton.setStyle("-fx-background-color: #333; -fx-text-fill: white;");

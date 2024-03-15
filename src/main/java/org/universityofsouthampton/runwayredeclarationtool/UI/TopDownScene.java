@@ -52,7 +52,6 @@ public class TopDownScene extends BaseScene {
         drawRunway(runwayCanvas);
 
         borderPane.setCenter(runwayCanvas);
-
         this.getChildren().add(borderPane);
     }
 

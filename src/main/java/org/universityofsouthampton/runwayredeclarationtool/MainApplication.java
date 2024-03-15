@@ -51,6 +51,7 @@ public class MainApplication extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Runway Redeclaration Tool");
+        primaryStage.setResizable(false);
 
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo.jpg"))));
 
@@ -149,6 +150,7 @@ public class MainApplication extends Application {
 
         if (secondaryStage == null) {
             secondaryStage = new Stage();
+            secondaryStage.setResizable(false);
         }
 
         ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this, runway);
@@ -157,6 +159,7 @@ public class MainApplication extends Application {
         Scene scene = new Scene(viewSelectionScene, 300, 600);
         secondaryStage.setTitle("Runway View Selection");
         secondaryStage.setScene(scene);
+        secondaryStage.setResizable(false);
 
         secondaryStage.setX(primaryStage.getX() + primaryStage.getWidth());
         secondaryStage.setY(primaryStage.getY());

@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -16,6 +18,7 @@ import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Class that handles the scene changes (Controller)
@@ -41,6 +44,7 @@ public class MainApplication extends Application {
         obstacles = obstacleXML.makeObstaclesXML();
 
         displayMenu();
+        playBackgroundMusic();
 
         Scene scene = new Scene(root, 800, 600);
 
@@ -53,6 +57,25 @@ public class MainApplication extends Application {
         MenuScene menuScene = new MenuScene(this);
         root.getChildren().setAll(background, menuScene);
     }
+
+    private void playBackgroundMusic() {
+        try {
+            String musicFile = Objects.requireNonNull(getClass().getResource("/music/background_music.mp3")).toURI().toString();
+
+            Media sound = new Media(musicFile);
+
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+
+            mediaPlayer.play();
+            mediaPlayer.setVolume(0.1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Could not play background music");
+        }
+    }
+
 
     public static void main(String[] args) {
         launch(args);

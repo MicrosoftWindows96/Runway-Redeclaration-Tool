@@ -15,6 +15,7 @@ module org.universityofsouthampton.runwayredeclarationtool {
     requires org.kordamp.ikonli.materialdesign;
     requires java.xml.bind;
     requires annotations;
+    requires javafx.media;
 
     opens org.universityofsouthampton.runwayredeclarationtool to javafx.fxml;
     exports org.universityofsouthampton.runwayredeclarationtool;

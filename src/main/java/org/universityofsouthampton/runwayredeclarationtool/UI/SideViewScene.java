@@ -61,7 +61,7 @@ public class SideViewScene extends BaseScene {
 
         VBox topLayout = new VBox();
         topLayout.setAlignment(Pos.TOP_CENTER);
-        topLayout.getChildren().addAll(title, buttons);
+        topLayout.getChildren().addAll(cloudLayer, title, buttons);
         BorderPane.setMargin(topLayout, new Insets(10));
 
         borderPane.setTop(topLayout);
@@ -75,7 +75,7 @@ public class SideViewScene extends BaseScene {
         animationOverlay.setPrefSize(800, 200);
 
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(cloudLayer, runwayCanvas, animationOverlay);
+        stackPane.getChildren().addAll(runwayCanvas, animationOverlay);
 
         borderPane.setBottom(stackPane);
 
@@ -136,8 +136,6 @@ public class SideViewScene extends BaseScene {
             cloudLayer.getChildren().add(cloud);
         }
     }
-
-
 
     private FontIcon createCloudIcon(double x, double y, int size) {
         FontIcon cloudIcon = FontIcon.of(MaterialDesign.MDI_CLOUD, size);

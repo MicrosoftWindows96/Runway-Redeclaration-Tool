@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ViewSelectionScene extends BaseScene {
-    private final Runway currentRunway; // currently viewed runway
+    private final Runway currentRunway;
     public ViewSelectionScene(MainApplication app, Runway runway) {
         this.app = app;
         this.currentRunway = runway;
@@ -23,22 +23,19 @@ public class ViewSelectionScene extends BaseScene {
         this.setAlignment(Pos.TOP_CENTER);
         this.setSpacing(200);
 
-        // Set the title of the screen
         var title = new Text("View Selection");
         title.setFont(Font.font("Arial", 24));
         title.setStyle("-fx-fill: #333;");
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
-        // Make the screen buttons
         VBox buttons = new VBox(10);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(addButtons());
 
-        // Add nodes
         this.getChildren().addAll(title, buttons);
     }
 
-    private Stage secondaryStage; // Field to hold the reference to the secondary stage
+    private Stage secondaryStage;
 
     public void setSecondaryStage(Stage stage) {
         this.secondaryStage = stage;
@@ -48,16 +45,16 @@ public class ViewSelectionScene extends BaseScene {
     @Override
     ArrayList<Button> addButtons() {
 
-        Button sideViewButton = new Button(); // Button to open the Login prompt
-        styleButton(sideViewButton, MaterialDesign.MDI_LOGIN, "2D Side View");
+        Button sideViewButton = new Button();
+        styleButton(sideViewButton, MaterialDesign.MDI_LOGIN, "Side");
         sideViewButton.setOnAction(e -> app.display2DsideViewScene(currentRunway));
 
-        Button topDownViewButton = new Button(); // Button to open the Login prompt
-        styleButton(topDownViewButton, MaterialDesign.MDI_LOGIN, "2D Top-down View");
+        Button topDownViewButton = new Button();
+        styleButton(topDownViewButton, MaterialDesign.MDI_LOGIN, "Aerial");
         topDownViewButton.setOnAction(e -> app.display2DtopDownViewScene(currentRunway));
 
-        Button bothViewButton = new Button(); // Button to open the Login prompt
-        styleButton(bothViewButton, MaterialDesign.MDI_LOGIN, "2D Both View");
+        Button bothViewButton = new Button();
+        styleButton(bothViewButton, MaterialDesign.MDI_LOGIN, "Both");
         bothViewButton.setOnAction(e -> app.display2DbothViewScene(currentRunway));
 
         Button backButton = new Button();

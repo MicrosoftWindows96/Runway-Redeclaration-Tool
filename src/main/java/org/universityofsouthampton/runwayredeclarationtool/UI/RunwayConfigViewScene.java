@@ -59,11 +59,23 @@ public class RunwayConfigViewScene extends BaseScene {
   ArrayList<Button> addButtons() {
     Button obstacleUpdateButton = new Button();
     styleButton(obstacleUpdateButton, MaterialDesign.MDI_SETTINGS, "Obstacles");
-    obstacleUpdateButton.setOnAction(e -> app.displayObstacleListScene(airport, currentRunway));
+    obstacleUpdateButton.setOnAction(e -> {
+      app.displayObstacleListScene(airport, currentRunway);
+
+      if (secondaryStage != null) {
+        secondaryStage.close();
+      }
+    });
 
     Button runwayUpdateButton = new Button();
     styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
-    runwayUpdateButton.setOnAction(e -> promptEditRunway());
+    runwayUpdateButton.setOnAction(e -> {
+      promptEditRunway();
+
+      if (secondaryStage != null) {
+        secondaryStage.close();
+      }
+    });
 
     Button backButton = new Button();
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
@@ -79,11 +91,11 @@ public class RunwayConfigViewScene extends BaseScene {
     styleButton(exportButton, MaterialDesign.MDI_EXPORT, "Export");
     exportButton.setOnAction(e -> exportCalculationBreakdown());
 
-    Button viewsButton = new Button("2D Views");
-    styleButton(viewsButton, MaterialDesign.MDI_EXPORT, "2D Views");
+    Button viewsButton = new Button("Render");
+    styleButton(viewsButton, MaterialDesign.MDI_VIEW_AGENDA, "Render");
     viewsButton.setOnAction(e -> app.displayViewsSceneBeta(currentRunway));
 
-    return new ArrayList<>(Arrays.asList(obstacleUpdateButton,runwayUpdateButton,backButton,exportButton,viewsButton));
+    return new ArrayList<>(Arrays.asList(runwayUpdateButton, obstacleUpdateButton, viewsButton, exportButton, backButton));
   }
 
   private VBox createCalculationBreakdownSection() {

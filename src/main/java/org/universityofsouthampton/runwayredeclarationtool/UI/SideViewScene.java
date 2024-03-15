@@ -65,7 +65,7 @@ public class SideViewScene extends BaseScene {
         }
     }
 
-    private void drawRunway(Canvas canvas) {
+    public void drawRunway(Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Color skyColor = Color.rgb(201,233,246);
         gc.setFill(skyColor);
@@ -128,7 +128,7 @@ public class SideViewScene extends BaseScene {
         String asdaText = "ASDA: " + currentRunway.getASDA() + "m";
         gc.fillText(asdaText, runwayStartX + runwayWidth, runwayStartY + 50);
 
-        String ldaText = "LDA: " + currentRunway.getLDA() + "m";
+        String ldaText = "LDA: " + currentRunway.getLDA() + "m";
         gc.fillText(ldaText, runwayStartX + runwayWidth, runwayStartY + 65);
 
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));

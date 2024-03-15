@@ -56,7 +56,7 @@ public class TopDownScene extends BaseScene {
         this.getChildren().add(borderPane);
     }
 
-    private void drawRunway(Canvas canvas) {
+    public void drawRunway(Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());

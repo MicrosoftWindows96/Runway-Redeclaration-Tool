@@ -1,18 +1,20 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
@@ -20,11 +22,13 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SideViewScene extends BaseScene {
 
     private final Runway currentRunway;
     private final ArrayList<Obstacle> obstacles;
+    private final Pane animationOverlay;
 
     public SideViewScene(MainApplication app, Runway runway) {
         this.app = app;
@@ -56,8 +60,51 @@ public class SideViewScene extends BaseScene {
 
         borderPane.setBottom(runwayCanvas);
 
+        animationOverlay = new Pane();
+        animationOverlay.setPrefSize(800, 200);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(runwayCanvas, animationOverlay);
+
+        borderPane.setBottom(stackPane);
+
+        animatePlane();
+
         this.getChildren().add(borderPane);
     }
+
+    private ImageView createPlaneImage() {
+        Image planeImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plane.png")));
+        ImageView planeImageView = new ImageView(planeImage);
+
+        planeImageView.setFitWidth(40);
+        planeImageView.setPreserveRatio(true);
+
+        return planeImageView;
+    }
+
+
+    private void animatePlane() {
+        ImageView plane = createPlaneImage();
+
+        double startingAltitude = 0;
+
+        double runwayEndX = 100; // Needs changing to be in line with calculations!
+
+        plane.setTranslateX(animationOverlay.getPrefWidth());
+        plane.setTranslateY(startingAltitude);
+
+        animationOverlay.getChildren().add(plane);
+
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(5), plane);
+        transition.setFromX(animationOverlay.getPrefWidth());
+        transition.setToX(runwayEndX);
+        transition.setFromY(startingAltitude);
+        transition.setToY(30);
+
+        transition.play();
+    }
+
 
     private void setObstacles() {
         if (obstacles != null && !obstacles.isEmpty()) {
@@ -139,9 +186,7 @@ public class SideViewScene extends BaseScene {
         String rightRunwayName = currentRunway.getName() + "R";
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayWidth - stringWidth + 25, runwayStartY - 25);
-
     }
-
 
     private Stage secondaryStage;
 

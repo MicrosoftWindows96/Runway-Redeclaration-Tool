@@ -102,10 +102,12 @@ public class AirportListScene extends BaseScene {
         modifyButton.setOnAction(e -> {
             if (selectedAirport != null) {
                 promptModifyAirport(selectedAirport);
+            } else {
+                showErrorDialog("Please select an airport to modify.");
             }
         });
 
-        return new ArrayList<>(Arrays.asList(addAirport,backButton,deleteButton,importXMLButton,exportXMLButton,modifyButton));
+        return new ArrayList<>(Arrays.asList(modifyButton, addAirport, deleteButton, importXMLButton,exportXMLButton, backButton));
     }
 
     private void updateList() { // Method updates the display of airports on the left of the screen

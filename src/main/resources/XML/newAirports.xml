@@ -9,10 +9,10 @@
                 <TORA>3660</TORA>
                 <dispThresh>307</dispThresh>
                 <Obstacles>
-                    <Obstacle name="27L-S2">
-                        <Height>25</Height>
-                        <DistThreshold>500</DistThreshold>
-                        <DistCent>1</DistCent>
+                    <Obstacle name="27R-S4">
+                        <Height>20</Height>
+                        <DistThreshold>50</DistThreshold>
+                        <DistCent>6</DistCent>
                     </Obstacle>
                 </Obstacles>
             </LogicalRunway>

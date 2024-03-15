@@ -52,8 +52,9 @@ public class BothViewScene extends BaseScene {
         backButton.setOnAction(e -> {
             if (secondaryStage != null) {
                 ViewSelectionScene viewSelectionScene = new ViewSelectionScene(app, currentRunway);
-                Scene viewScene = new Scene(viewSelectionScene, secondaryStage.getScene().getWidth(), secondaryStage.getScene().getHeight());
+                Scene viewScene = new Scene(viewSelectionScene, 300, 600);
                 secondaryStage.setScene(viewScene);
+                secondaryStage.show();
                 viewSelectionScene.setSecondaryStage(secondaryStage);
             }
         });

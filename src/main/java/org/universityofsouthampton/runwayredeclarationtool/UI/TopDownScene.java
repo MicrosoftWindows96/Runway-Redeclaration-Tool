@@ -46,7 +46,7 @@ public class TopDownScene extends BaseScene {
 
         borderPane.setTop(topLayout);
 
-        Canvas runwayCanvas = new Canvas(800, 600); // Set the size as needed
+        Canvas runwayCanvas = new Canvas(800, 600);
         drawRunway(runwayCanvas);
 
         borderPane.setCenter(runwayCanvas);
@@ -57,14 +57,14 @@ public class TopDownScene extends BaseScene {
     private void drawRunway(Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.LIGHTGRAY);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Background
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         double centerLineY = canvas.getHeight() / 2;
-        double runwayLength = canvas.getWidth() - 200; // Sample width for the runway
-        double runwayStartX = 100; // Start position of the runway
+        double runwayLength = canvas.getWidth() - 200;
+        double runwayStartX = 100;
 
         gc.setFill(Color.GRAY);
-        gc.fillRect(runwayStartX, centerLineY - 20, runwayLength, 40); // Runway rectangle
+        gc.fillRect(runwayStartX, centerLineY - 20, runwayLength, 40);
 
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(2);
@@ -80,12 +80,9 @@ public class TopDownScene extends BaseScene {
 
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 
-
-        // Runway name left
         String leftRunwayName = currentRunway.getName() + "L";
         gc.fillText(leftRunwayName, runwayStartX, centerLineY - 25);
 
-        // Runway name right
         String rightRunwayName = currentRunway.getName() + "R";
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);

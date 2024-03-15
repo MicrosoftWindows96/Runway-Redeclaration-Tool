@@ -29,14 +29,15 @@ import java.util.Arrays;
 import static org.universityofsouthampton.runwayredeclarationtool.MainApplication.secondaryStage;
 
 public class RunwayConfigViewScene extends BaseScene {
-  private Runway currentRunway; // currently viewed runway
+  private Runway currentRunway;
 
-  private final Airport airport; // Airport associated with the current runway
+  private final Airport airport;
 
   public RunwayConfigViewScene(MainApplication app, Airport airport, Runway runway) {
     this.app = app;
     this.airport = airport;
     this.currentRunway = runway;
+    currentRunway.runCalculations();
 
     setPadding(new Insets(20));
     setSpacing(10);
@@ -70,11 +71,11 @@ public class RunwayConfigViewScene extends BaseScene {
     Button runwayUpdateButton = new Button();
     styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
     runwayUpdateButton.setOnAction(e -> {
-      promptEditRunway();
-
       if (secondaryStage != null) {
         secondaryStage.close();
       }
+
+      promptEditRunway();
     });
 
     Button backButton = new Button();

@@ -41,7 +41,7 @@ public class MenuScene extends BaseScene {
   ArrayList<Button> addButtons() {
 
     Button login = new Button(); // Button to open the Login prompt
-    styleButton(login, MaterialDesign.MDI_LOGIN_VARIANT, "Login");
+    styleButton(login, MaterialDesign.MDI_KEY, "Login");
     login.setOnAction(e -> promptLogin());
 
     Button quit = new Button(); // Button to close the Application

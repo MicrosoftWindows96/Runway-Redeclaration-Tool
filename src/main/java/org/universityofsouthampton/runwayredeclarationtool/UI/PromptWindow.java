@@ -1,8 +1,5 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,12 +10,15 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class deals with building prompt windows
  */
 public class PromptWindow extends BaseScene {
 
-  public PromptWindow(MainApplication app) { // Window Box default settings
+  public PromptWindow(MainApplication app) {
     this.app = app;
     setSpacing(10);
     setAlignment(Pos.CENTER);
@@ -28,7 +28,7 @@ public class PromptWindow extends BaseScene {
   @Override
   ArrayList<Button> addButtons() {
     Button cancelButton = new Button();
-    styleButton(cancelButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
+    styleButton(cancelButton, MaterialDesign.MDI_CLOSE, "Cancel");
     cancelButton.setOnAction(e -> ((Stage) getScene().getWindow()).close());
     return new ArrayList<>(List.of(cancelButton));
   }

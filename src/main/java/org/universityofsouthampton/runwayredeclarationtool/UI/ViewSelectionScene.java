@@ -70,7 +70,7 @@ public class ViewSelectionScene extends BaseScene {
         bothViewButton.setOnAction(e -> app.display2DbothViewScene(currentRunway));
 
         Button backButton = new Button();
-        styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Close");
+        styleButton(backButton, MaterialDesign.MDI_CLOSE, "Close");
         backButton.setOnAction(e -> {
             if (secondaryStage != null) {
                 secondaryStage.close();

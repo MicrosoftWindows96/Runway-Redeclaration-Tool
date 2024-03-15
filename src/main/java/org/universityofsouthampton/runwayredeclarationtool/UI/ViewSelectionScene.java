@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
@@ -14,11 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ViewSelectionScene extends BaseScene {
-
-    private Runway currentRunway; // currently viewed runway
+    private final Runway currentRunway; // currently viewed runway
     public ViewSelectionScene(MainApplication app, Runway runway) {
         this.app = app;
         this.currentRunway = runway;
+
         this.setAlignment(Pos.TOP_CENTER);
         this.setSpacing(200);
 
@@ -37,6 +38,13 @@ public class ViewSelectionScene extends BaseScene {
         this.getChildren().addAll(title, buttons);
     }
 
+    private Stage secondaryStage; // Field to hold the reference to the secondary stage
+
+    public void setSecondaryStage(Stage stage) {
+        this.secondaryStage = stage;
+    }
+
+
     @Override
     ArrayList<Button> addButtons() {
 
@@ -53,8 +61,12 @@ public class ViewSelectionScene extends BaseScene {
         bothViewButton.setOnAction(e -> app.display2DbothViewScene(currentRunway));
 
         Button backButton = new Button();
-        styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        backButton.setOnAction(e -> app.displayAirportListScene());
+        styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Close");
+        backButton.setOnAction(e -> {
+            if (secondaryStage != null) {
+                secondaryStage.close();
+            }
+        });
 
         return new ArrayList<>(Arrays.asList(sideViewButton, topDownViewButton, bothViewButton, backButton));
     }}

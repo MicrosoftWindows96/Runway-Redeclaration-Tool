@@ -2,20 +2,22 @@ package org.universityofsouthampton.runwayredeclarationtool.UI;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class BothViewScene extends BaseScene {
 
-    private Runway currentRunway; // currently viewed runway
+    private final Runway currentRunway; // currently viewed runway
 
     public BothViewScene(MainApplication app, Runway runway) {
         this.app = app;
@@ -37,12 +39,26 @@ public class BothViewScene extends BaseScene {
         this.getChildren().addAll(title, buttons);
     }
 
+    private Stage secondaryStage;
+
+    public void setSecondaryStage(Stage stage) {
+        this.secondaryStage = stage;
+    }
+
     @Override
     ArrayList<Button> addButtons() {
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        backButton.setOnAction(e -> app.displayViewsScene(currentRunway));
+        backButton.setOnAction(e -> {
+            if (secondaryStage != null) {
+                ViewSelectionScene viewSelectionScene = new ViewSelectionScene(app, currentRunway);
+                Scene viewScene = new Scene(viewSelectionScene, secondaryStage.getScene().getWidth(), secondaryStage.getScene().getHeight());
+                secondaryStage.setScene(viewScene);
+                viewSelectionScene.setSecondaryStage(secondaryStage);
+            }
+        });
 
-        return new ArrayList<>(Arrays.asList(backButton));
+
+        return new ArrayList<>(List.of(backButton));
     }
 }

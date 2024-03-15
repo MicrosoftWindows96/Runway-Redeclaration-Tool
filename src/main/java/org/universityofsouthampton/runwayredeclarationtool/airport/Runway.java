@@ -10,7 +10,6 @@ public class Runway {
     private String name; // Runway name
     private final String direction; // Runway direction
     String logicalRunway1, logicalRunway2;
-    private String logicalRunway; //runway name if used from the other side. 09L -> 27R
     private final int TORA; // Take-Off Run Available (same as length of runway)
     private final int TODA; // Take-Off Distance Available
     private final int ASDA; // Accelerate-Stop Distance Available
@@ -23,7 +22,6 @@ public class Runway {
     private final int displacedThreshold; // Displaced Threshold
     private final ArrayList<Obstacle> obstacles; // ArrayList of Obstacles
     private final int RESA = 240; // Runway End Safety Area
-    private int TOCS = 50; // Take-Off Climb Surface
     private final int ALS = 50; // Approach Landing Surface
     private final int stripEnd = 60;
     private int blastProtectionValue;
@@ -31,8 +29,8 @@ public class Runway {
     private boolean landingToward;
     private boolean takeoffAway;
     private boolean takeoffToward;
-    private int stopway;
-    private int clearway;
+    private final int stopway;
+    private final int clearway;
 
     public Runway(String name,String direction, int stopway, int clearway, int TORA, int displacedThreshold){
         this.name = name;
@@ -45,7 +43,7 @@ public class Runway {
         this.TODA = TORA + clearway;
         this.ASDA = TORA + stopway;
         this.LDA = TORA - displacedThreshold;
-        if(!isValidName(name)){
+        if(isNameInvalid(name)){
             throw new IllegalArgumentException("Invalid runway name!");
         } else if (checkValidParameters()) {
             throw new IllegalArgumentException("Invalid distances!");
@@ -53,9 +51,9 @@ public class Runway {
     }
 
     // Validators for the runway object
-    public boolean isValidName(String name){  // Checks name credentials
-        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])(L|R|C)?$";
-        return name.matches(regex);
+    public boolean isNameInvalid(String name){  // Checks name credentials
+        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])([LRC])?$";
+        return !name.matches(regex);
     }
     public boolean checkValidParameters(){ // Checks parameters
         boolean greaterThanZero = (TORA<0 || TODA <0 || ASDA <0 || LDA<0 || displacedThreshold <0 || stopway <0 || clearway<0);
@@ -97,10 +95,10 @@ public class Runway {
     }
 
     public void runCalculations() { // Only call when blast protection value is set
-        if (obstacles.size() > 0) {
+        if (!obstacles.isEmpty()) {
             System.out.println("Running calculations...");
-            this.calculateLDA(obstacles.get(0));
-            this.calculateTORA_ASDA_TODA(obstacles.get(0));
+            this.calculateLDA(obstacles.getFirst());
+            this.calculateTORA_ASDA_TODA(obstacles.getFirst());
         } else {
             System.out.println("No obstacle present!");
         }
@@ -129,6 +127,8 @@ public class Runway {
     private void calculateTORA_ASDA_TODA(Obstacle obstacle) {
         if (takeoffToward) {
             int obstacleHeight = obstacle.getHeight();
+            // Take-Off Climb Surface
+            int TOCS = 50;
             int temporaryThreshold = Math.max(obstacleHeight * TOCS, RESA);
 
             this.newTORA = obstacle.getDistanceFromThreshold() + displacedThreshold - temporaryThreshold - stripEnd;
@@ -147,7 +147,7 @@ public class Runway {
         StringBuilder breakdown = new StringBuilder();
 
         if (!obstacles.isEmpty()) {
-            Obstacle obstacle = obstacles.get(0);
+            Obstacle obstacle = obstacles.getFirst();
             breakdown.append("Calculation Breakdown:\n");
 
             if (landingOver || landingToward) {
@@ -187,7 +187,7 @@ public class Runway {
         return name;
     }
     public void setName(String name) throws Exception{
-        if(!isValidName(name)){
+        if(isNameInvalid(name)){
             throw new Exception("Invalid name");
         }
         else this.name = name;
@@ -245,23 +245,15 @@ public class Runway {
     public int getNewLDA() {
         return newLDA;
     }
-    public int getBlastProtectionValue() {
-        return blastProtectionValue;
-    }
+
     public void setBlastProtectionValue(int BPV) {
         blastProtectionValue = BPV;
     }
-    public void setStopway(int stopway){
-        this.stopway = stopway;
-    }
-    public void setClearway(int clearway){
-        this.clearway = clearway;
-    }
+
     public int getStopway(){
         return stopway;
     }
     public int getClearway(){
         return clearway;
     }
-
 }

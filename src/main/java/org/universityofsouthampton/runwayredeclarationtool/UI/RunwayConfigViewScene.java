@@ -1,10 +1,5 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -25,8 +20,17 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.universityofsouthampton.runwayredeclarationtool.MainApplication.secondaryStage;
+
 public class RunwayConfigViewScene extends BaseScene {
   private Runway currentRunway; // currently viewed runway
+
   private final Airport airport; // Airport associated with the current runway
 
   public RunwayConfigViewScene(MainApplication app, Airport airport, Runway runway) {
@@ -63,7 +67,13 @@ public class RunwayConfigViewScene extends BaseScene {
 
     Button backButton = new Button();
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-    backButton.setOnAction(e -> app.displayAirportListScene());
+    backButton.setOnAction(e -> {
+      app.displayAirportListScene();
+
+      if (secondaryStage != null) {
+        secondaryStage.close();
+      }
+    });
 
     Button exportButton = new Button("Export");
     styleButton(exportButton, MaterialDesign.MDI_EXPORT, "Export");
@@ -71,7 +81,7 @@ public class RunwayConfigViewScene extends BaseScene {
 
     Button viewsButton = new Button("2D Views");
     styleButton(viewsButton, MaterialDesign.MDI_EXPORT, "2D Views");
-    viewsButton.setOnAction(e -> app.displayViewsScene(currentRunway));
+    viewsButton.setOnAction(e -> app.displayViewsSceneBeta(currentRunway));
 
     return new ArrayList<>(Arrays.asList(obstacleUpdateButton,runwayUpdateButton,backButton,exportButton,viewsButton));
   }
@@ -251,7 +261,7 @@ public class RunwayConfigViewScene extends BaseScene {
           airport.removeRunway(currentRunway);
           currentRunway = new Runway(degree,direction,stopway,clearway,TORA,dispThresh);
           if (!deletedRunway.getObstacles().isEmpty()) {
-            Obstacle movedObstacle = deletedRunway.getObstacles().get(0);
+            Obstacle movedObstacle = deletedRunway.getObstacles().getFirst();
             currentRunway.addObstacle(movedObstacle);
           }
           airport.getRunways().add(currentRunway);
@@ -275,5 +285,4 @@ public class RunwayConfigViewScene extends BaseScene {
     promptWindow.getChildren().addAll(promptWindow.addButtons());
     dialogGenerator(promptWindow, "Configure Runway");
   }
-
 }

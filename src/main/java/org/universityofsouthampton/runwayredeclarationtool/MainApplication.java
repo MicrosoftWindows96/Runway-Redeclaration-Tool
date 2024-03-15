@@ -7,8 +7,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.kordamp.ikonli.javafx.IkonResolver;
-import org.kordamp.ikonli.materialdesign.MaterialDesignIkonHandler;
 import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
@@ -16,7 +14,6 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
-import javax.swing.text.View;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -127,23 +124,66 @@ public class MainApplication extends Application {
         return obstacles;
     }
 
-    public void displayViewsScene(Runway runway) {
-        ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this,runway);
-        root.getChildren().setAll(background, viewSelectionScene);
+    public static Stage secondaryStage;
+
+    public void displayViewsSceneBeta(Runway runway) {
+        Stage primaryStage = (Stage) root.getScene().getWindow();
+
+        if (secondaryStage == null) {
+            secondaryStage = new Stage();
+        }
+
+        ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this, runway);
+        viewSelectionScene.setSecondaryStage(secondaryStage);
+
+        Scene scene = new Scene(viewSelectionScene, 300, 600);
+        secondaryStage.setTitle("Runway View Selection");
+        secondaryStage.setScene(scene);
+
+        // Position the secondary stage next to the main window
+        secondaryStage.setX(primaryStage.getX() + primaryStage.getWidth());
+        secondaryStage.setY(primaryStage.getY());
+
+        secondaryStage.show();
     }
 
     public void display2DsideViewScene(Runway runway) {
-        SideViewScene sideViewScene = new SideViewScene(this,runway);
-        root.getChildren().setAll(background, sideViewScene);
+        if (secondaryStage == null) {
+            secondaryStage = new Stage();
+            secondaryStage.setTitle("2D Side View");
+        }
+        SideViewScene sideViewScene = new SideViewScene(this, runway);
+        sideViewScene.setSecondaryStage(secondaryStage);
+        Scene sideViewSceneScene = new Scene(sideViewScene, 300, 600);
+        secondaryStage.setScene(sideViewSceneScene);
+        secondaryStage.show();
     }
 
+
+
     public void display2DtopDownViewScene(Runway runway) {
-        TopDownScene topDownScene = new TopDownScene(this,runway);
-        root.getChildren().setAll(background, topDownScene);
+        if (secondaryStage == null) {
+            secondaryStage = new Stage();
+            secondaryStage.setTitle("2D Side View");
+        }
+
+        TopDownScene topDownScene = new TopDownScene(this, runway);
+        topDownScene.setSecondaryStage(secondaryStage);
+        Scene topDownSceneScene = new Scene(topDownScene, 300, 600);
+        secondaryStage.setScene(topDownSceneScene);
+        secondaryStage.show();
     }
 
     public void display2DbothViewScene(Runway runway) {
-        BothViewScene bothViewScene = new BothViewScene(this,runway);
-        root.getChildren().setAll(background, bothViewScene);
+        if (secondaryStage == null) {
+            secondaryStage = new Stage();
+            secondaryStage.setTitle("2D Side View");
+        }
+
+        BothViewScene bothViewScene = new BothViewScene(this, runway);
+        bothViewScene.setSecondaryStage(secondaryStage);
+        Scene bothViewSceneScene = new Scene(bothViewScene, 300, 600);
+        secondaryStage.setScene(bothViewSceneScene);
+        secondaryStage.show();
     }
 }

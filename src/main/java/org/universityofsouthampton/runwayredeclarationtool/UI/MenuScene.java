@@ -72,7 +72,7 @@ public class MenuScene extends BaseScene {
     Button loginButton = new Button();
     styleButton(loginButton, MaterialDesign.MDI_KEY, "Login");
     loginButton.setOnAction(e -> {
-      if ("admin".equals(usernameInput.getText()) && "password".equals(passwordInput.getText())) {
+      if ("".equals(usernameInput.getText()) && "".equals(passwordInput.getText())) {
         app.displayAirportListScene();
         loginStage.close();
       } else {

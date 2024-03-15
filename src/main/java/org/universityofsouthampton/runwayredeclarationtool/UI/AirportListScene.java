@@ -1,8 +1,5 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -22,6 +19,10 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class AirportListScene extends BaseScene {
 
@@ -144,13 +145,7 @@ public class AirportListScene extends BaseScene {
                 runwayInfo.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 
                 Button configureButton = new Button("Configure");
-                configureButton.setOnAction(e -> {
-                    if (runway.getObstacles().size() == 0) { // If there's no obstacles, no need to configure BPV
-                        app.displayRunwayConfigScene(airport,runway);
-                    } else {
-                        promptSetBPV(airport,runway);
-                    }
-                });
+                configureButton.setOnAction(e -> app.displayRunwayConfigScene(airport,runway));
                 styleButton(configureButton, MaterialDesign.MDI_SETTINGS, "Configure");
 
                 Button deleteRunwayButton = new Button("Delete");

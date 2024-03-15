@@ -1,31 +1,29 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
-import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class SideViewScene extends BaseScene {
 
-    private Runway currentRunway; // currently viewed runway
-    private ArrayList<Obstacle> obstacles;
-    private Obstacle currentObstacle;
+    private final Runway currentRunway; // currently viewed runway
+    private final ArrayList<Obstacle> obstacles;
 
     public SideViewScene(MainApplication app, Runway runway) {
         this.app = app;
@@ -55,7 +53,6 @@ public class SideViewScene extends BaseScene {
 
         // Add topLayout to the top of the BorderPane
         borderPane.setTop(topLayout);
-        VBox bottom = new VBox();
 
         // Add canvas
         Canvas runwayCanvas = new Canvas(800, 200); // Set the size as needed
@@ -74,7 +71,7 @@ public class SideViewScene extends BaseScene {
 
     private void setObstacles(){
         if (obstacles != null){
-            currentObstacle = obstacles.getFirst();
+            Obstacle currentObstacle = obstacles.getFirst();
         }
     }
 
@@ -100,9 +97,8 @@ public class SideViewScene extends BaseScene {
 
             // b. Threshold indicators
             double thresholdWidth = 5;
-            double thresholdHeight = runwayHeight;
 
-            // d. Displaced thresholds (example values)
+        // d. Displaced thresholds (example values)
             double displacedThresholdOffset = (double) currentRunway.getDisplacedThreshold() /6; // Displacement from the start of the runway
 
             // e. Stopway/Clearway (example values)
@@ -135,8 +131,8 @@ public class SideViewScene extends BaseScene {
 
             // b. Draw threshold indicators
             gc.setFill(Color.WHITE);
-            gc.fillRect(runwayStartX, runwayStartY, thresholdWidth, thresholdHeight);
-            gc.fillRect(runwayStartX + runwayWidth - thresholdWidth, runwayStartY, thresholdWidth, thresholdHeight);
+            gc.fillRect(runwayStartX, runwayStartY, thresholdWidth, runwayHeight);
+            gc.fillRect(runwayStartX + runwayWidth - thresholdWidth, runwayStartY, thresholdWidth, runwayHeight);
 
             // c. Draw threshold designators
             gc.setFill(Color.BLACK);
@@ -145,7 +141,7 @@ public class SideViewScene extends BaseScene {
 
             // d. Displaced threshold representation
             gc.setFill(Color.BLACK);
-            gc.fillRect(runwayStartX + displacedThresholdOffset, runwayStartY, thresholdWidth, thresholdHeight);
+            gc.fillRect(runwayStartX + displacedThresholdOffset, runwayStartY, thresholdWidth, runwayHeight);
 
             // e. Draw Stopway/Clearway
             gc.setFill(Color.LIGHTGRAY);
@@ -182,12 +178,28 @@ public class SideViewScene extends BaseScene {
 
 
     }
+
+    private Stage secondaryStage;
+
+    public void setSecondaryStage(Stage stage) {
+        this.secondaryStage = stage;
+    }
+
+
     @Override
     ArrayList<Button> addButtons() {
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
-        backButton.setOnAction(e -> app.displayViewsScene(currentRunway));
+        backButton.setOnAction(e -> {
+            if (secondaryStage != null) {
+                ViewSelectionScene viewSelectionScene = new ViewSelectionScene(app, currentRunway);
+                Scene viewScene = new Scene(viewSelectionScene, secondaryStage.getScene().getWidth(), secondaryStage.getScene().getHeight());
+                secondaryStage.setScene(viewScene);
+                viewSelectionScene.setSecondaryStage(secondaryStage);
+            }
+        });
 
-        return new ArrayList<>(Arrays.asList(backButton));
+
+        return new ArrayList<>(List.of(backButton));
     }
 }

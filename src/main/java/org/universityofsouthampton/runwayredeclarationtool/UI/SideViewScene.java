@@ -5,6 +5,7 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -69,15 +70,25 @@ public class SideViewScene extends BaseScene {
         Canvas runwayCanvas = new Canvas(800, 200);
         drawRunway(runwayCanvas);
 
-        borderPane.setBottom(runwayCanvas);
+        Pane cityPane = new Pane();
+        cityPane.setPrefSize(800, 50);
+        cityPane.setOpacity(0.3);
+        Image cityImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/city.png")), 800, 50, true, true);
+        BackgroundImage cityBackground = new BackgroundImage(cityImage,
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
+                new BackgroundPosition(Side.LEFT, 0, false, Side.TOP, 0, false),
+                BackgroundSize.DEFAULT);
+        cityPane.setBackground(new Background(cityBackground));
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(runwayCanvas, cityPane);
+        StackPane.setAlignment(cityPane, Pos.TOP_CENTER);
+
+        borderPane.setBottom(stackPane);
 
         animationOverlay = new Pane();
         animationOverlay.setPrefSize(800, 200);
-
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(runwayCanvas, animationOverlay);
-
-        borderPane.setBottom(stackPane);
+        stackPane.getChildren().add(animationOverlay);
 
         animatePlane();
 
@@ -100,7 +111,7 @@ public class SideViewScene extends BaseScene {
 
         double startingAltitude = 0;
 
-        double runwayEndX = 100; // Needs changing to be in line with calculations!
+        double runwayEndX = 100;
 
         plane.setTranslateX(animationOverlay.getPrefWidth());
         plane.setTranslateY(startingAltitude);

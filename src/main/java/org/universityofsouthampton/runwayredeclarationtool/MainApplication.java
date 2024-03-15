@@ -3,6 +3,7 @@ package org.universityofsouthampton.runwayredeclarationtool;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -50,6 +51,9 @@ public class MainApplication extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Runway Redeclaration Tool");
+
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo.jpg"))));
+
         primaryStage.show();
     }
 
@@ -156,6 +160,8 @@ public class MainApplication extends Application {
 
         secondaryStage.setX(primaryStage.getX() + primaryStage.getWidth());
         secondaryStage.setY(primaryStage.getY());
+
+        secondaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo.jpg"))));
 
         secondaryStage.show();
     }

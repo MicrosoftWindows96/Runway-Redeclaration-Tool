@@ -1,5 +1,7 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
@@ -23,12 +26,17 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class SideViewScene extends BaseScene {
 
     private final Runway currentRunway;
     private final ArrayList<Obstacle> obstacles;
     private final Pane animationOverlay;
+    private final Pane cloudLayer = new Pane();
+    private final double iconSize = 24;
+    private final double speed = 1.0;
+    private final Random random = new Random();
 
     public SideViewScene(MainApplication app, Runway runway) {
         this.app = app;
@@ -38,6 +46,9 @@ public class SideViewScene extends BaseScene {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0, 1200.0);
         borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
+        cloudLayer.setPrefSize(800, 200);
+        createPattern();
+        animatePattern();
 
         Text title = new Text("Side View");
         title.setFont(Font.font("Arial", 24));
@@ -64,7 +75,7 @@ public class SideViewScene extends BaseScene {
         animationOverlay.setPrefSize(800, 200);
 
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(runwayCanvas, animationOverlay);
+        stackPane.getChildren().addAll(cloudLayer, runwayCanvas, animationOverlay);
 
         borderPane.setBottom(stackPane);
 
@@ -103,6 +114,53 @@ public class SideViewScene extends BaseScene {
         transition.setToY(30);
 
         transition.play();
+    }
+
+    private void createPattern() {
+        cloudLayer.getChildren().clear();
+
+        double areaWidth = cloudLayer.getPrefWidth();
+        double areaHeight = cloudLayer.getPrefHeight();
+        int maxCloudSize = 48;
+        int minCloudSize = 24;
+
+        int numberOfClouds = 50;
+
+        for (int i = 0; i < numberOfClouds; i++) {
+            double x = random.nextDouble() * areaWidth;
+            double y = random.nextDouble() * areaHeight;
+
+            int size = random.nextInt(maxCloudSize - minCloudSize + 1) + minCloudSize;
+
+            var cloud = createCloudIcon(x, y, size);
+            cloudLayer.getChildren().add(cloud);
+        }
+    }
+
+
+
+    private FontIcon createCloudIcon(double x, double y, int size) {
+        FontIcon cloudIcon = FontIcon.of(MaterialDesign.MDI_CLOUD, size);
+        cloudIcon.setFill(javafx.scene.paint.Color.WHITE);
+        cloudIcon.setLayoutX(x - size / 2.0);
+        cloudIcon.setLayoutY(y - size / 2.0);
+        return cloudIcon;
+    }
+
+    private void animatePattern() {
+        Timeline cloudTimeline = new Timeline(new KeyFrame(Duration.millis(100), e -> {
+            for (var node : cloudLayer.getChildren()) {
+                if (node instanceof FontIcon icon && ((FontIcon) node).getIconCode() == MaterialDesign.MDI_CLOUD) {
+                    icon.setLayoutX(icon.getLayoutX() + speed);
+                    if (icon.getLayoutX() > cloudLayer.getPrefWidth()) {
+                        icon.setLayoutX(-iconSize);
+                        icon.setLayoutY(random.nextDouble() * cloudLayer.getPrefHeight());
+                    }
+                }
+            }
+        }));
+        cloudTimeline.setCycleCount(Timeline.INDEFINITE);
+        cloudTimeline.play();
     }
 
 

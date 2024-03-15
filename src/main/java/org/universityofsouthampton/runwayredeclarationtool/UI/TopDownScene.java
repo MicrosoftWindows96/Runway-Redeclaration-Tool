@@ -29,7 +29,7 @@ public class TopDownScene extends BaseScene {
         this.currentRunway = runway;
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0,1200.0);
-        borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
+        borderPane.setBackground(Background.fill(Color.rgb(201, 233, 246)));
 
 
         Text title = new Text("Top Down View");

@@ -89,7 +89,7 @@ public class RunwayConfigViewScene extends BaseScene {
     });
 
     Button exportButton = new Button("Export");
-    styleButton(exportButton, MaterialDesign.MDI_EXPORT, "Export");
+    styleButton(exportButton, MaterialDesign.MDI_UPLOAD, "Export");
     exportButton.setOnAction(e -> exportCalculationBreakdown());
 
     Button viewsButton = new Button("Render");

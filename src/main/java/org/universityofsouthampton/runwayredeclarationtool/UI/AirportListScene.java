@@ -107,7 +107,7 @@ public class AirportListScene extends BaseScene {
             }
         });
 
-        return new ArrayList<>(Arrays.asList(modifyButton, addAirport, deleteButton, importXMLButton,exportXMLButton, backButton));
+        return new ArrayList<>(Arrays.asList(addAirport, deleteButton, modifyButton, importXMLButton,exportXMLButton, backButton));
     }
 
     private void updateList() { // Method updates the display of airports on the left of the screen

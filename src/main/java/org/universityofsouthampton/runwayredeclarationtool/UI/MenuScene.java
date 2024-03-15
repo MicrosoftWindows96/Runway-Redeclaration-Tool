@@ -1,15 +1,9 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -17,6 +11,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MenuScene extends BaseScene {
 
@@ -44,11 +41,11 @@ public class MenuScene extends BaseScene {
   ArrayList<Button> addButtons() {
 
     Button login = new Button(); // Button to open the Login prompt
-    styleButton(login, MaterialDesign.MDI_LOGIN, "Login");
+    styleButton(login, MaterialDesign.MDI_LOGIN_VARIANT, "Login");
     login.setOnAction(e -> promptLogin());
 
     Button quit = new Button(); // Button to close the Application
-    styleButton(quit, MaterialDesign.MDI_EXIT_TO_APP, "Quit");
+    styleButton(quit, MaterialDesign.MDI_CLOSE, "Quit");
     quit.setOnAction(e -> System.exit(0));
 
     return new ArrayList<>(Arrays.asList(login, quit));

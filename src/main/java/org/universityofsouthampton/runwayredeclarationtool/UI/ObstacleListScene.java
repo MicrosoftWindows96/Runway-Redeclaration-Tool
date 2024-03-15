@@ -1,13 +1,9 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -18,6 +14,9 @@ import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ObstacleListScene extends BaseScene {
 
@@ -108,7 +107,7 @@ public class ObstacleListScene extends BaseScene {
         createButton.setOnAction(e -> promptCreateObstacle());
         
         Button editButton = new Button();
-        styleButton(editButton, MaterialDesign.MDI_WRENCH,"Configure");
+        styleButton(editButton, MaterialDesign.MDI_WRENCH,"Modify");
         editButton.setOnAction(e -> {
             if (this.selectedObstacle != null) {
                 promptEditObstacle();
@@ -118,7 +117,7 @@ public class ObstacleListScene extends BaseScene {
         });
 
         Button deleteButton = new Button();
-        styleButton(deleteButton, MaterialDesign.MDI_DELETE, "Delete");
+        styleButton(deleteButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
         deleteButton.setOnAction(e -> {
             if (this.selectedObstacle == null) {
                 System.out.println("Nothing Selected!");
@@ -144,7 +143,7 @@ public class ObstacleListScene extends BaseScene {
         });
 
         return new ArrayList<>(
-            Arrays.asList(addButton, removeButton, createButton, editButton, deleteButton, backButton));
+            Arrays.asList(addButton, removeButton, createButton, deleteButton, editButton, backButton));
     }
 
     private void updateObstaclesList() {

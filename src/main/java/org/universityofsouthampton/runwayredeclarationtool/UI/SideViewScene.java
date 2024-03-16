@@ -33,12 +33,15 @@ public class SideViewScene extends BaseScene {
 
     private final Runway currentRunway;
     private final ArrayList<Obstacle> obstacles;
-    private Obstacle currentObstacle;
     private final Pane animationOverlay;
     private final Pane cloudLayer = new Pane();
     private final double iconSize = 24;
     private final double speed = 1.0;
     private final Random random = new Random();
+    private double TORA;
+    private double TODA;
+    private double ASDA ;
+    private double LDA ;
 
     public SideViewScene(MainApplication app, Runway runway) {
         this.app = app;
@@ -199,10 +202,10 @@ public class SideViewScene extends BaseScene {
         double stopwayWidth = (double) currentRunway.getStopway() / 6;
         double clearwayWidth = (double) currentRunway.getClearway() / 6;
 
-        double TORA = (double) currentRunway.getTORA() / 6;
-        double TODA = (TORA + currentRunway.getClearway());
-        double ASDA = (TORA + currentRunway.getStopway());
-        double LDA = (double) currentRunway.getLDA() / 6;
+        this.TORA = (double) currentRunway.getTORA() / 6;
+        this.TODA = (double) currentRunway.getTODA() / 6;
+        this.ASDA = (double) currentRunway.getASDA() / 6;
+        this.LDA = (double) currentRunway.getLDA() / 6;
 
         gc.setFill(Color.DARKGRAY);
         gc.fillRect(runwayStartX, runwayStartY, runwayWidth, runwayHeight);
@@ -241,24 +244,41 @@ public class SideViewScene extends BaseScene {
             gc.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
 
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";
-            gc.fillText(obstacleText, obstacleX + 15, runwayStartY - runwayHeight - 5);
+            gc.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight - 5);
 
             gc.setStroke(Color.BLACK);
 //            gc.strokeLine(runwayStartX, runwayStartY + 20, runwayStartX + TORA, runwayStartY + 20); // slope line
 
+
+            this.TORA = (double) currentRunway.getNewTORA() / 6;
+            this.TODA = (double) currentRunway.getNewTODA() / 6;
+            this.ASDA = (double) currentRunway.getNewASDA() / 6;
+            this.LDA = (double) currentRunway.getNewLDA() / 6;
+
         }
 
-        String toraText = "TORA: " + currentRunway.getTORA() + "m";
-        gc.fillText(toraText, runwayStartX + runwayWidth, runwayStartY + 20);
+        //indicate distances
+        gc.setStroke(Color.LIGHTPINK);
+        gc.strokeLine(runwayStartX, runwayStartY + 15, runwayStartX + this.TORA, runwayStartY + 15); // TORA line
+        gc.setStroke(Color.YELLOW);
+        gc.strokeLine(runwayStartX, runwayStartY + 30, runwayStartX + this.TODA, runwayStartY + 30); // TODA line
+        gc.setStroke(Color.LIGHTGREEN);
+        gc.strokeLine(runwayStartX, runwayStartY + 45, runwayStartX + this.ASDA, runwayStartY + 45); // ASDA line
+        gc.setStroke(Color.BLUE);
+        gc.strokeLine(runwayStartX, runwayStartY + 60, runwayStartX + this.LDA, runwayStartY + 60); // LDA line
 
-        String todaText = "TODA: " + currentRunway.getTODA() + "m";
-        gc.fillText(todaText, runwayStartX + runwayWidth, runwayStartY + 35);
 
-        String asdaText = "ASDA: " + currentRunway.getASDA() + "m";
-        gc.fillText(asdaText, runwayStartX + runwayWidth, runwayStartY + 50);
+        String toraText = "TORA: " + this.TORA * 6 + "m";
+        gc.fillText(toraText, runwayStartX + this.TORA, runwayStartY + 20);
 
-        String ldaText = "LDA: " + currentRunway.getLDA() + "m";
-        gc.fillText(ldaText, runwayStartX + runwayWidth, runwayStartY + 65);
+        String todaText = "TODA: " + this.TODA * 6+ "m";
+        gc.fillText(todaText, runwayStartX + this.TODA, runwayStartY + 35);
+
+        String asdaText = "ASDA: " + this.ASDA * 6+ "m";
+        gc.fillText(asdaText, runwayStartX + this.ASDA, runwayStartY + 50);
+
+        String ldaText = "LDA:" + this.LDA * 6+ "m";
+        gc.fillText(ldaText, runwayStartX + this.LDA, runwayStartY + 65);
 
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 

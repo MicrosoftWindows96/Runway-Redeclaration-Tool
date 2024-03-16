@@ -53,7 +53,9 @@ public class SideViewScene extends BaseScene {
         this.currentRunway = runway;
         this.obstacles = runway.getObstacles();
         this.RESA = (double) 240 /6;
-        this.obstacle = obstacles.getFirst();
+        if (!obstacles.isEmpty()) {
+            this.obstacle = obstacles.getFirst();
+        }
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0, 1200.0);
         borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
@@ -321,7 +323,7 @@ public class SideViewScene extends BaseScene {
         }
 
         gc.setFill(Color.BLACK);
-        if (obstacle.getDistanceFromThreshold() < (1000 /6)) {
+        if (!obstacles.isEmpty() && obstacle.getDistanceFromThreshold() < (1000 /6)) {
             //indicate distances
             gc.setStroke(Color.LIGHTPINK);
             gc.strokeLine(RESADistance, runwayStartY + 15, RESADistance + this.TORA, runwayStartY + 15); // TORA line

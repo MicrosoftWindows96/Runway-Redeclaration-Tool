@@ -274,7 +274,7 @@ public class SideViewScene extends BaseScene {
             this.ASDA = (double) currentRunway.getNewASDA() / 6;
             this.LDA = (double) currentRunway.getNewLDA() / 6;
 
-            if (obstacle.getDistanceFromThreshold() < (1000 /6)) {
+            if (obstacle.getDistanceFromThreshold() < 1000 ) {
                 // Original diagonal line points
                 double startX = obstacleX + obstacleWidth; // Top-right corner of the obstacle
                 double startY = obstacleY; // Top-right corner of the obstacle
@@ -307,7 +307,7 @@ public class SideViewScene extends BaseScene {
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
 
 
-            } else if (obstacle.getDistanceFromThreshold() >= (1000 /6)) {
+            } else if (obstacle.getDistanceFromThreshold() >= 1000) {
                 // Original opposite diagonal line points
                 double oppositeStartX = obstacleX + obstacleWidth - (obstacleHeight * 50 );
                 double oppositeStartY = obstacleY + obstacleHeight;
@@ -349,7 +349,7 @@ public class SideViewScene extends BaseScene {
         }
 
         gc.setFill(Color.BLACK);
-        if (!obstacles.isEmpty() && obstacle.getDistanceFromThreshold() < (1000 /6)) {
+        if (!obstacles.isEmpty() && obstacle.getDistanceFromThreshold() < 1000 ) {
             //indicate distances
             gc.setStroke(Color.LIGHTPINK);
             gc.strokeLine(RESADistance, runwayStartY + 15, RESADistance + this.TORA, runwayStartY + 15); // TORA line
@@ -396,14 +396,19 @@ public class SideViewScene extends BaseScene {
             gc.fillText(ldaText, runwayStartX + this.LDA, runwayStartY + 65);
         }
 
+
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 
         String leftRunwayName = currentRunway.getLogicalRunway1();
         gc.fillText(leftRunwayName, runwayStartX - 25, runwayStartY - 25);
+        // f. Indicate take-off/landing direction
+        gc.fillText("Take-off/Landing →", runwayStartX - 25, runwayStartY - 40); // Adjust text position as needed
 
         String rightRunwayName = currentRunway.getLogicalRunway2();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayWidth - stringWidth + 25, runwayStartY - 25);
+        gc.fillText("← Take-off/Landing", runwayStartX + runwayWidth - stringWidth - 75, runwayStartY - 40); // Adjust text position as needed
+
     }
 
     private Stage secondaryStage;
@@ -428,4 +433,5 @@ public class SideViewScene extends BaseScene {
 
         return new ArrayList<>(List.of(backButton));
     }
+
 }

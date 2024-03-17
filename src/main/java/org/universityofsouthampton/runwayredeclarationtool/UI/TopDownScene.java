@@ -154,9 +154,7 @@ public class TopDownScene extends BaseScene {
             this.LDA = (double) currentRunway.getNewLDA() / 6;
 
             if (obstacle.getDistanceFromThreshold() < (1000 /6)) {
-
-                double endX = obstacleX + (obstacleHeight * 50 ); // Bottom-left corner of the obstacle
-                this.slopeDistance = endX;
+                this.slopeDistance = obstacleX + ((double) obstacle.getHeight() /6 * 50);
 
                 // RESA
                 gc.setFill(Color.ORANGE);
@@ -279,10 +277,13 @@ public class TopDownScene extends BaseScene {
 
         String leftRunwayName = currentRunway.getLogicalRunway1();
         gc.fillText(leftRunwayName, runwayStartX, centerLineY - 25);
+        gc.fillText("Take-off/Landing →", runwayStartX, centerLineY - 40); // Adjust text position as needed
+
 
         String rightRunwayName = currentRunway.getLogicalRunway2();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);
+        gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth -100, centerLineY - 40); // Adjust text position as needed
 
     }
 

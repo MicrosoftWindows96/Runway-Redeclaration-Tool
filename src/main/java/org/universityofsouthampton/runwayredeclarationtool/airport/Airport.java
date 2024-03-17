@@ -5,26 +5,13 @@ import java.util.ArrayList;
 public class Airport {
     private String airportName;
     private String code;
+    private final ArrayList<ParallelRunways> parallelRunwaySets; // The sets of parallel runways
     private final ArrayList<Runway> runways;
     public Airport(String name, String code){
         airportName = name;
         runways = new ArrayList<>();
+        parallelRunwaySets = new ArrayList<>();
         this.code = code;
-    }
-
-    public ArrayList<Integer> getParallelRunways() { // Method to get any parallel runways
-        int numberOfRunways = runways.size();
-        ArrayList<Integer> parallelRunwayIndex = new ArrayList<>();
-
-        for (int i = 0; i < numberOfRunways; i++) {
-            for (int j = i + 1; j < numberOfRunways; j++) {
-                if (runways.get(i).equals(runways.get(j))) {
-                    parallelRunwayIndex.add(i);
-                    parallelRunwayIndex.add(j);
-                }
-            }
-        }
-        return parallelRunwayIndex;
     }
 
     public void addRunway (Runway runway){
@@ -32,6 +19,29 @@ public class Airport {
     }
     public void removeRunway (Runway deleteRunway) {
         runways.remove(deleteRunway);
+    }
+
+    public void addNewRunway (Runway runway1, Runway runway2) { // Logic for adding runway to parallel runways
+        if (parallelRunwaySets.size() == 0) {
+            makeNewParallelRunwaySet(runway1,runway2);
+        } else {
+            for (ParallelRunways pRunway : parallelRunwaySets) { // Check every existing set if there's any matching conventions if not, add a new SET!
+                pRunway.checkRunways(runway1,runway2);
+                if (pRunway.checkParallelRunway(runway1) || pRunway.checkParallelRunway(runway2) &&
+                    pRunway.getLogicalRunways().size() == 3) {
+                    break; // TERMINATE ADDING RUNWAY AS PARALLEL RUNWAY SET IS FULL
+                } else if (pRunway.equals(parallelRunwaySets.getLast())) {
+                    makeNewParallelRunwaySet(runway1,runway2);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void makeNewParallelRunwaySet(Runway runway1, Runway runway2) {
+        ParallelRunways newSet = new ParallelRunways(); // New set of parallel runways
+        newSet.checkRunways(runway1,runway2);
+        parallelRunwaySets.add(newSet);
     }
 
     // setter + getter methods
@@ -44,5 +54,9 @@ public class Airport {
     public ArrayList<Runway> getRunways(){
         return this.runways;
     }
+    public ArrayList<ParallelRunways> getParallelRunwaySets() {
+        return this.parallelRunwaySets;
+    }
+
 }
 

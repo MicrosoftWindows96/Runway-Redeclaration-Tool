@@ -22,6 +22,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
+import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.Random;
 
 public class SideViewScene extends BaseScene {
 
+    private final ParallelRunways runwayManager;
     private final Runway currentRunway;
     private final ArrayList<Obstacle> obstacles;
     private Obstacle obstacle;
@@ -48,10 +50,11 @@ public class SideViewScene extends BaseScene {
     private double slopeDistance;
     private double RESADistance;
 
-    public SideViewScene(MainApplication app, Runway runway) {
+    public SideViewScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
-        this.currentRunway = runway;
-        this.obstacles = runway.getObstacles();
+        this.currentRunway = runwayManager.getFstRunway();
+        this.runwayManager = runwayManager;
+        this.obstacles = currentRunway.getObstacles();
         this.RESA = (double) 240 /6;
         if (!obstacles.isEmpty()) {
             this.obstacle = obstacles.getFirst();
@@ -398,10 +401,10 @@ public class SideViewScene extends BaseScene {
 
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 
-        String leftRunwayName = currentRunway.getLogicalRunway1();
+        String leftRunwayName = runwayManager.getDegree1() + runwayManager.getFstRunway().getDirection();
         gc.fillText(leftRunwayName, runwayStartX - 25, runwayStartY - 25);
 
-        String rightRunwayName = currentRunway.getLogicalRunway2();
+        String rightRunwayName = runwayManager.getDegree2() + runwayManager.getSndRunway().getDirection();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayWidth - stringWidth + 25, runwayStartY - 25);
     }
@@ -418,7 +421,7 @@ public class SideViewScene extends BaseScene {
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
         backButton.setOnAction(e -> {
             if (secondaryStage != null) {
-                ViewSelectionScene viewSelectionScene = new ViewSelectionScene(app, currentRunway);
+                ViewSelectionScene viewSelectionScene = new ViewSelectionScene(app, runwayManager);
                 Scene viewScene = new Scene(viewSelectionScene, 300, 600);
                 secondaryStage.setScene(viewScene);
                 secondaryStage.show();

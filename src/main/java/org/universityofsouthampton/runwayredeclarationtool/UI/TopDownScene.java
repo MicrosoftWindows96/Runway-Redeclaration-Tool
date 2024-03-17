@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
+import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.List;
 
 public class TopDownScene extends BaseScene {
 
+    private final ParallelRunways runwayManager;
     private final Runway currentRunway;
     private double TORA;
     private double TODA;
@@ -31,14 +33,14 @@ public class TopDownScene extends BaseScene {
     private final ArrayList<Obstacle> obstacles;
     private Obstacle obstacle;
     private double RESA;
-
     private double slopeDistance;
     private double RESADistance;
 
-    public TopDownScene(MainApplication app, Runway runway) {
+    public TopDownScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
-        this.currentRunway = runway;
-        this.obstacles = runway.getObstacles();
+        this.currentRunway = runwayManager.getFstRunway();
+        this.runwayManager = runwayManager;
+        this.obstacles = currentRunway.getObstacles();
         this.RESA = (double) 240 /6;
         if (!obstacles.isEmpty()) {
             this.obstacle = obstacles.getFirst();
@@ -252,35 +254,35 @@ public class TopDownScene extends BaseScene {
             String ldaText = "LDA:" + this.LDA * 6+ "m";
             gc.fillText(ldaText, runwayStartX + this.LDA, centerLineY - 20 + 90);
         }
-//
-//        //indicate distances
-//        gc.setStroke(Color.LIGHTPINK);
-//        gc.strokeLine(runwayStartX, centerLineY - 20 + 40, runwayStartX + this.TORA, centerLineY - 20 + 40); // TORA line
-//        gc.setStroke(Color.YELLOW);
-//        gc.strokeLine(runwayStartX, centerLineY - 20 + 55, runwayStartX + this.TODA, centerLineY - 20 + 55); // TODA line
-//        gc.setStroke(Color.LIGHTGREEN);
-//        gc.strokeLine(runwayStartX, centerLineY - 20 + 70, runwayStartX + this.ASDA, centerLineY - 20 + 70); // ASDA line
-//        gc.setStroke(Color.BLUE);
-//        gc.strokeLine(runwayStartX, centerLineY - 20 + 85, runwayStartX + this.LDA, centerLineY - 20 + 85); // LDA line
-//
-//        String toraText = "TORA: " + this.TORA * 6 + "m";
-//        gc.fillText(toraText, runwayStartX + this.TORA, centerLineY - 20 + 45);
-//
-//        String todaText = "TODA: " + this.TODA * 6+ "m";
-//        gc.fillText(todaText, runwayStartX + this.TODA, centerLineY - 20 + 60);
-//
-//        String asdaText = "ASDA: " + this.ASDA * 6+ "m";
-//        gc.fillText(asdaText, runwayStartX + this.ASDA, centerLineY - 20 + 75);
-//
-//        String ldaText = "LDA:" + this.LDA * 6+ "m";
-//        gc.fillText(ldaText, runwayStartX + this.LDA, centerLineY - 20 + 90);
+
+        //indicate distances
+        gc.setStroke(Color.LIGHTPINK);
+        gc.strokeLine(runwayStartX, centerLineY - 20 + 40, runwayStartX + this.TORA, centerLineY - 20 + 40); // TORA line
+        gc.setStroke(Color.YELLOW);
+        gc.strokeLine(runwayStartX, centerLineY - 20 + 55, runwayStartX + this.TODA, centerLineY - 20 + 55); // TODA line
+        gc.setStroke(Color.LIGHTGREEN);
+        gc.strokeLine(runwayStartX, centerLineY - 20 + 70, runwayStartX + this.ASDA, centerLineY - 20 + 70); // ASDA line
+        gc.setStroke(Color.BLUE);
+        gc.strokeLine(runwayStartX, centerLineY - 20 + 85, runwayStartX + this.LDA, centerLineY - 20 + 85); // LDA line
+
+        String toraText = "TORA: " + this.TORA * 6 + "m";
+        gc.fillText(toraText, runwayStartX + this.TORA, centerLineY - 20 + 45);
+
+        String todaText = "TODA: " + this.TODA * 6+ "m";
+        gc.fillText(todaText, runwayStartX + this.TODA, centerLineY - 20 + 60);
+
+        String asdaText = "ASDA: " + this.ASDA * 6+ "m";
+        gc.fillText(asdaText, runwayStartX + this.ASDA, centerLineY - 20 + 75);
+
+        String ldaText = "LDA:" + this.LDA * 6+ "m";
+        gc.fillText(ldaText, runwayStartX + this.LDA, centerLineY - 20 + 90);
 
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 
-        String leftRunwayName = currentRunway.getLogicalRunway1();
+        String leftRunwayName = runwayManager.getDegree1() + runwayManager.getFstRunway().getDirection();
         gc.fillText(leftRunwayName, runwayStartX, centerLineY - 25);
 
-        String rightRunwayName = currentRunway.getLogicalRunway2();
+        String rightRunwayName = runwayManager.getDegree2() + runwayManager.getSndRunway().getDirection();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);
 
@@ -298,7 +300,7 @@ public class TopDownScene extends BaseScene {
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
         backButton.setOnAction(e -> {
             if (secondaryStage != null) {
-                ViewSelectionScene viewSelectionScene = new ViewSelectionScene(app, currentRunway);
+                ViewSelectionScene viewSelectionScene = new ViewSelectionScene(app, runwayManager);
                 Scene viewScene = new Scene(viewSelectionScene, 300, 600);
                 secondaryStage.setScene(viewScene);
                 secondaryStage.show();

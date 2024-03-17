@@ -17,7 +17,7 @@ import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
-import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
+//import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
 import java.io.File;
@@ -73,7 +73,7 @@ public class AirportListScene extends BaseScene {
         addAirport.setOnAction(e -> {
             promptAddAirport();
             updateList();
-            app.updateXMLs();
+//            app.updateXMLs();
         });
 
         Button backButton = new Button("Log Out"); // Button to return to the login screen
@@ -85,7 +85,7 @@ public class AirportListScene extends BaseScene {
         deleteButton.setOnAction(e -> {
             importedAirports.remove(selectedAirport);
             updateList();
-            app.updateXMLs();
+//            app.updateXMLs();
             updateAirportInfo(null);
         });
 
@@ -95,7 +95,7 @@ public class AirportListScene extends BaseScene {
 
         Button exportXMLButton = new Button("Export"); // Button to Export into a xml file the current airport list contents
         styleButton(exportXMLButton, MaterialDesign.MDI_UPLOAD, "Export");
-        exportXMLButton.setOnAction(e -> exportAirportsToXML());
+//        exportXMLButton.setOnAction(e -> exportAirportsToXML());
 
         Button modifyButton = new Button("Modify"); // Button to edit a selected airport
         styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
@@ -142,18 +142,18 @@ public class AirportListScene extends BaseScene {
 
             VBox runwaysInfoBox = new VBox(5);
             runwaysInfoBox.setPadding(new Insets(5, 0, 5, 10));
-            for (var runway : airport.getRunways()) {
-                Text runwayInfo = new Text("Runway: " + runway.getName() + runway.getDirection() + " - Length: " + runway.getTORA() + "m, Obstacles: " + runway.getObstacles().size());
+            for (var pRunwaySet : airport.getParallelRunwaySets()) { // FOR EACH parallel runway set
+                Text runwayInfo = new Text("Degrees: " + pRunwaySet.getDegree1() + "/" + pRunwaySet.getDegree2() + " - Parallel Runways: " + pRunwaySet.getLogicalRunways().size());
                 runwayInfo.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 
                 Button configureButton = new Button();
-                configureButton.setOnAction(e -> app.displayRunwayConfigScene(airport,runway));
+                configureButton.setOnAction(e -> app.displayRunwayConfigScene(airport,pRunwaySet));
                 styleButton(configureButton, MaterialDesign.MDI_LOGIN, "Access");
 
                 Button deleteRunwayButton = new Button("Delete");
                 deleteRunwayButton.setOnAction(e -> {
-                    airport.getRunways().remove(runway);
-                    app.updateXMLs();
+                    airport.getParallelRunwaySets().remove(pRunwaySet);
+//                    app.updateXMLs();
                     updateAirportInfo(airport);
                 });
                 styleButton(deleteRunwayButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
@@ -192,15 +192,15 @@ public class AirportListScene extends BaseScene {
         }
     }
 
-    private void exportAirportsToXML() { // Function to export airport xml file of current contents to local files
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Airport XML File");
-        File file = fileChooser.showSaveDialog(null);
-        if (file != null) {
-            exportXML exporter = new exportXML(importedAirports, new ArrayList<>(), file);
-            exporter.writeXML();
-        }
-    }
+//    private void exportAirportsToXML() { // Function to export airport xml file of current contents to local files
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Save Airport XML File");
+//        File file = fileChooser.showSaveDialog(null);
+//        if (file != null) {
+//            exportXML exporter = new exportXML(importedAirports, new ArrayList<>(), file);
+//            exporter.writeXML();
+//        }
+//    }
 
     public static String capitalize(String string) {
         char[] chars = string.toLowerCase().toCharArray();
@@ -236,7 +236,7 @@ public class AirportListScene extends BaseScene {
             }
             Airport newAirport = new Airport(name, code);
             app.addAirport(newAirport);
-            app.updateXMLs();
+//            app.updateXMLs();
             ((Stage) promptWindow.getScene().getWindow()).close();
         });
         promptWindow.getChildren().addAll(nameBox,codeBox,submitButton);
@@ -246,37 +246,60 @@ public class AirportListScene extends BaseScene {
 
     private void promptAddRunway() {
         PromptWindow promptWindow = new PromptWindow(app);
-        var degreeBox = promptWindow.addParameterField("Degree");
-        var directionBox = promptWindow.addParameterField("Direction (L, R, C)");
-        var stopwayBox = promptWindow.addParameterField("Stopway");
-        var clearwayBox = promptWindow.addParameterField("Clearway");
-        var TORAbox = promptWindow.addParameterField("TORA");
-        var dispThreshBox = promptWindow.addParameterField("Displaced Threshold:");
+        Text runways = new Text("Runway 1  ---  Runway 2");
+        runways.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+
+        var degreeBox1 = promptWindow.addParameterField("Degree 1");
+        var degreeBox2 = promptWindow.addParameterField("Degree 2");
+        var deBox = new HBox(10,degreeBox1,degreeBox2);
+
+        var stopwayBox1 = promptWindow.addParameterField("Stopway");
+        var stopwayBox2 = promptWindow.addParameterField("Stopway");
+        var sBox = new HBox(10,stopwayBox1,stopwayBox2);
+
+        var clearwayBox1 = promptWindow.addParameterField("Clearway");
+        var clearwayBox2 = promptWindow.addParameterField("Clearway");
+        var cBox = new HBox(10,clearwayBox1,clearwayBox2);
+
+        var TORAbox1 = promptWindow.addParameterField("TORA");
+        var TORAbox2 = promptWindow.addParameterField("TORA");
+        var tBox = new HBox(10,TORAbox1,TORAbox2);
+
+        var dispThreshBox1 = promptWindow.addParameterField("Displaced Threshold:");
+        var dispThreshBox2 = promptWindow.addParameterField("Displaced Threshold:");
+        var diBox = new HBox(10,dispThreshBox1,dispThreshBox2);
 
         // Implement addButton
         Button submitButton = new Button("Add");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
         submitButton.setOnAction(e -> {
-            String degree = promptWindow.getInput(degreeBox);
-            String direction = promptWindow.getInput(directionBox);
-            String name = degree + direction;
+            String degree1 = promptWindow.getInput(degreeBox1);
+            String degree2 = promptWindow.getInput(degreeBox2);
             // Try making a runway object and check for any illegal parameters
-            if (!name.matches("\\d{2}[LCR]")) {
-                showErrorDialog("Invalid runway name. The name must consist of two digits followed by L, C, or R.");
+            if (!degree1.matches("\\d{2}") || !degree2.matches("\\d{2}")) {
+                showErrorDialog("Invalid runway name. The name must be a valid degree.");
             } else {
                 try {
-                    int stopway = Integer.parseInt(promptWindow.getInput(stopwayBox));
-                    int clearway = Integer.parseInt(promptWindow.getInput(clearwayBox));
-                    int TORA = Integer.parseInt(promptWindow.getInput(TORAbox));
-                    int dispThresh = Integer.parseInt(promptWindow.getInput(dispThreshBox));
+                    int stopway1 = Integer.parseInt(promptWindow.getInput(stopwayBox1));
+                    int clearway1 = Integer.parseInt(promptWindow.getInput(clearwayBox1));
+                    int TORA1 = Integer.parseInt(promptWindow.getInput(TORAbox1));
+                    int dispThresh1 = Integer.parseInt(promptWindow.getInput(dispThreshBox1));
 
-                    if (stopway < 0 || clearway < 0 || TORA < 0 || dispThresh < 0) {
-                        throw new IllegalArgumentException("Invalid measurements for runway.");
+                    int stopway2 = Integer.parseInt(promptWindow.getInput(stopwayBox2));
+                    int clearway2 = Integer.parseInt(promptWindow.getInput(clearwayBox2));
+                    int TORA2 = Integer.parseInt(promptWindow.getInput(TORAbox2));
+                    int dispThresh2 = Integer.parseInt(promptWindow.getInput(dispThreshBox2));
+
+                    if (stopway1 < 0 || clearway1 < 0 || TORA1 < 0 || dispThresh1 < 0 ||
+                        stopway2 < 0 || clearway2 < 0 || TORA2 < 0 || dispThresh2 < 0) {
+                        throw new IllegalArgumentException("Invalid measurements for runways.");
                     }
                     // If Runway valid, add object to application and close window
-                    Runway testRunway = new Runway(degree,direction,stopway,clearway,TORA,dispThresh);
-                    selectedAirport.getRunways().add(testRunway);
-                    app.updateXMLs();
+                    Runway testRunway1 = new Runway(degree1,stopway1,clearway1,TORA1,dispThresh1);
+                    Runway testRunway2 = new Runway(degree2,stopway2,clearway2,TORA2,dispThresh2);
+
+                    selectedAirport.addNewRunway(testRunway1,testRunway2);
+//                    app.updateXMLs();
                     updateAirportInfo(selectedAirport);
                     Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
@@ -288,10 +311,10 @@ public class AirportListScene extends BaseScene {
                 }
             }
         });
-        promptWindow.getChildren().addAll(degreeBox,directionBox,stopwayBox,clearwayBox,
-            TORAbox,dispThreshBox,submitButton);
+        promptWindow.getChildren().addAll(runways,deBox,sBox,cBox,
+            tBox,diBox,submitButton);
         promptWindow.getChildren().addAll(promptWindow.addButtons());
-        dialogGenerator(promptWindow, "Add NEW Runway");
+        dialogGenerator(promptWindow, "Add NEW Runways");
     }
 
     private void promptModifyAirport(Airport airport) {
@@ -305,7 +328,7 @@ public class AirportListScene extends BaseScene {
             airport.setAirportName(promptWindow.getInput(nameBox));
             airport.setAirportCode(promptWindow.getInput(codeBox));
             updateList();
-            app.updateXMLs();
+//            app.updateXMLs();
             updateAirportInfo(airport);
             Stage stage = (Stage) promptWindow.getScene().getWindow();
             stage.close();

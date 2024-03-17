@@ -1,48 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:element name="Models">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="Airport" maxOccurs="unbounded">
+        <xs:element name="Airport">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Runway" minOccurs="0">
+              <xs:element name="Runways">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="LogicalRunway" maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="Runway" maxOccurs="unbounded">
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element name="direction" type="xs:string"/>
-                          <xs:element name="stopway" type="xs:integer"/>
-                          <xs:element name="clearway" type="xs:integer"/>
-                          <xs:element name="TORA" type="xs:integer"/>
-                          <xs:element name="dispThresh" type="xs:integer"/>
-                          <xs:element name="Obstacles" minOccurs="0">
+                          <xs:element name="ParallelRunways">
                             <xs:complexType>
                               <xs:sequence>
-                                <xs:element name="Obstacle" minOccurs="0" maxOccurs="unbounded">
+                                <xs:element name="ParallelRunway" maxOccurs="3">
                                   <xs:complexType>
                                     <xs:sequence>
-                                      <xs:element name="Height" type="xs:integer"/>
-                                      <xs:element name="DistThreshold" type="xs:integer"/>
-                                      <xs:element name="DistCent" type="xs:integer"/>
+                                      <xs:element name="LogicalRunway" maxOccurs="2">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="stopway" type="xs:integer"/>
+                                            <xs:element name="clearway" type="xs:integer"/>
+                                            <xs:element name="TORA" type="xs:integer"/>
+                                            <xs:element name="dispThresh" type="xs:integer"/>
+                                          </xs:sequence>
+                                          <xs:attribute name="degree" type="xs:string" use="required"/>
+                                        </xs:complexType>
+                                      </xs:element>
                                     </xs:sequence>
-                                    <xs:attribute name="name" type="xs:string" use="required"/>
                                   </xs:complexType>
                                 </xs:element>
                               </xs:sequence>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
-                        <xs:attribute name="degree" type="xs:string" use="required"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
-            <xs:attribute name="name" type="xs:string" use="required"/>
             <xs:attribute name="code" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>

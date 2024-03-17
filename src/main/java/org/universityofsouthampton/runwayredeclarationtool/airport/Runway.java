@@ -8,13 +8,11 @@ import java.util.ArrayList;
 public class Runway {
 
     private String name; // Runway name
-    private final String direction; // Runway direction
-    String logicalRunway1, logicalRunway2;
+    private String direction; // Runway direction
     private final int TORA; // Take-Off Run Available (same as length of runway)
     private final int TODA; // Take-Off Distance Available
     private final int ASDA; // Accelerate-Stop Distance Available
     private final int LDA; // Landing Distance Available
-
     private int newTORA; // Calculated Take-Off Run Available
     private int newTODA; // Calculated Take-Off Distance Available
     private int newASDA; // Calculated Accelerate-Stop Distance Available
@@ -23,7 +21,7 @@ public class Runway {
     private final ArrayList<Obstacle> obstacles; // ArrayList of Obstacles
     private final int RESA = 240; // Runway End Safety Area
     private final int ALS = 50; // Approach Landing Surface
-    private final int stripEnd = 60;
+    private final int stripEnd = 60; // Strip End Value
     private int blastProtectionValue;
     private boolean landingOver;
     private boolean landingToward;
@@ -32,9 +30,8 @@ public class Runway {
     private final int stopway;
     private final int clearway;
 
-    public Runway(String name,String direction, int stopway, int clearway, int TORA, int displacedThreshold){
+    public Runway(String name, int stopway, int clearway, int TORA, int displacedThreshold){
         this.name = name;
-        this.direction = direction;
         this.stopway = stopway;
         this.clearway = clearway;
         this.TORA = TORA;
@@ -57,9 +54,9 @@ public class Runway {
     }
 
 
-    // Validators for the runway object
+    // Validators for the runway object (_ is a placeholder for no direction, it's a single runway.)
     public boolean isNameInvalid(String name){  // Checks name credentials
-        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])([LRC])?$";
+        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])([LRC_])?$";
         return !name.matches(regex);
     }
     public boolean checkValidParameters(){ // Checks parameters
@@ -72,7 +69,7 @@ public class Runway {
     // Removing obstacle AND adding obstacle changes calculation conditions
     public void addObstacle(Obstacle obstacle) {
         if (obstacle == null || this.obstacles.size() == 1) {
-            throw new IllegalArgumentException("Invalid obstacle");
+            throw new IllegalArgumentException("Invalid obstacle" + "# of obstacles: " + obstacles.size());
         }
         this.obstacles.add(obstacle);
         if (obstacle.getDistanceFromThreshold() <= 500) {
@@ -193,37 +190,17 @@ public class Runway {
     public String getName() {
         return name;
     }
-    public void setName(String name) throws Exception{
-        if(isNameInvalid(name)){
-            throw new Exception("Invalid name");
-        }
-        else this.name = name;
-        setLogicalRunways(name);
-    }
-    public String getDirection() {
-        return this.direction;
-    }
-    public void setLogicalRunways(String runwayName) {
-        int runwayNumber = Integer.parseInt(runwayName);
-
-        int oppositeRunwayNumber = runwayNumber + 18;
-        if (oppositeRunwayNumber > 36) {
-            oppositeRunwayNumber -= 36;
-        }
-
-        // Convert back to strings, ensuring they are formatted with leading zeros if necessary
-        logicalRunway1 = String.format("%02d", runwayNumber);
-        logicalRunway2 = String.format("%02d", oppositeRunwayNumber);
-    }
-    public String getLogicalRunway1() {
-        return logicalRunway1;
-    }
-
-    public String getLogicalRunway2() {
-        return logicalRunway2;
+    public void setName(String name) {
+        this.name = name;
     }
     public int getTORA() {
         return TORA;
+    }
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+    public String getDirection() {
+        return direction;
     }
     public int getTODA() {
         return TODA;
@@ -252,11 +229,9 @@ public class Runway {
     public int getNewLDA() {
         return newLDA;
     }
-
     public void setBlastProtectionValue(int BPV) {
         blastProtectionValue = BPV;
     }
-
     public int getStopway(){
         return stopway;
     }
@@ -264,7 +239,4 @@ public class Runway {
         return clearway;
     }
 
-    public int getBlastProtectionValue(){
-        return blastProtectionValue;
-    }
 }

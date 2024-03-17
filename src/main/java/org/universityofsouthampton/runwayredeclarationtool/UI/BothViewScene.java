@@ -3,6 +3,7 @@ package org.universityofsouthampton.runwayredeclarationtool.UI;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.ParallelCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
@@ -23,11 +25,13 @@ import java.util.List;
 
 public class BothViewScene extends BaseScene {
 
+    private final ParallelRunways runwayManager;
     private final Runway currentRunway;
 
-    public BothViewScene(MainApplication app, Runway runway) {
+    public BothViewScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
-        this.currentRunway = runway;
+        this.currentRunway = runwayManager.getFstRunway();
+        this.runwayManager = runwayManager;
         BorderPane borderPane = new BorderPane();
         borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
 
@@ -52,9 +56,9 @@ public class BothViewScene extends BaseScene {
 
 
         Canvas topViewCanvas = new Canvas(800, 200);
-        new TopDownScene(app, currentRunway).drawRunway(topViewCanvas);
+        new TopDownScene(app, runwayManager).drawRunway(topViewCanvas);
         Canvas sideViewCanvas = new Canvas(800, 200);
-        new SideViewScene(app, currentRunway).drawRunway(sideViewCanvas);
+        new SideViewScene(app, runwayManager).drawRunway(sideViewCanvas);
 
         viewSplitPane.getItems().addAll(topViewCanvas, sideViewCanvas);
 
@@ -75,7 +79,7 @@ public class BothViewScene extends BaseScene {
         styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
         backButton.setOnAction(e -> {
             if (secondaryStage != null) {
-                ViewSelectionScene viewSelectionScene = new ViewSelectionScene(app, currentRunway);
+                ViewSelectionScene viewSelectionScene = new ViewSelectionScene(app, runwayManager);
                 Scene viewScene = new Scene(viewSelectionScene, 300, 600);
                 secondaryStage.setScene(viewScene);
                 secondaryStage.show();

@@ -1,5 +1,12 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import static org.universityofsouthampton.runwayredeclarationtool.MainApplication.secondaryStage;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -11,38 +18,35 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
+import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static org.universityofsouthampton.runwayredeclarationtool.MainApplication.secondaryStage;
-
 public class RunwayConfigViewScene extends BaseScene {
-  private Runway currentRunway;
 
+  private final ParallelRunways runwayManager; // This stores the list of parallel runways
+  private Runway currentRunway;
   private final Airport airport;
 
-  public RunwayConfigViewScene(MainApplication app, Airport airport, Runway runway) {
+  public RunwayConfigViewScene(MainApplication app, Airport airport, ParallelRunways runwayManager) {
     this.app = app;
     this.airport = airport;
-    this.currentRunway = runway;
+    this.runwayManager = runwayManager;
+    currentRunway = runwayManager.getFstRunway();
     currentRunway.runCalculations();
 
     setPadding(new Insets(20));
     setSpacing(10);
 
-    getChildren().add(createTitleSection(runway));
+    getChildren().add(createTitleSection(currentRunway));
     getChildren().add(createParameterSection());
     getChildren().add(drawRunway());
     getChildren().add(calculatedParameterSection());
@@ -54,6 +58,26 @@ public class RunwayConfigViewScene extends BaseScene {
     buttonBox.setAlignment(Pos.CENTER);
     buttonBox.getChildren().addAll(addButtons());
     getChildren().add(buttonBox);
+
+    Button oppositeButton = new Button("Opposite"); // Goes to opposite runway direction
+    styleButton(oppositeButton, MaterialDesign.MDI_RECYCLE, "Opposite");
+    oppositeButton.setOnAction(e -> {
+      runwayManager.swapRunways();
+      app.displayRunwayConfigScene(airport,runwayManager);
+    });
+
+    Button nextButton = new Button("Next"); // Goes to next parallel runway
+    styleButton(nextButton, MaterialDesign.MDI_ARROW_ALL, "Next");
+    nextButton.setOnAction(e -> {
+      runwayManager.nextCurrentRunway();
+      app.displayRunwayConfigScene(airport,runwayManager);
+    });
+
+    HBox buttonBox2 = new HBox(10);
+    buttonBox2.setAlignment(Pos.CENTER);
+    buttonBox2.getChildren().addAll(nextButton,oppositeButton);
+    getChildren().add(buttonBox2);
+
   }
 
   @Override
@@ -61,8 +85,7 @@ public class RunwayConfigViewScene extends BaseScene {
     Button obstacleUpdateButton = new Button();
     styleButton(obstacleUpdateButton, MaterialDesign.MDI_SETTINGS, "Obstacles");
     obstacleUpdateButton.setOnAction(e -> {
-      app.displayObstacleListScene(airport, currentRunway);
-
+      app.displayObstacleListScene(airport, runwayManager);
       if (secondaryStage != null) {
         secondaryStage.close();
       }
@@ -94,7 +117,7 @@ public class RunwayConfigViewScene extends BaseScene {
 
     Button viewsButton = new Button("Render");
     styleButton(viewsButton, MaterialDesign.MDI_VIEW_AGENDA, "Render");
-    viewsButton.setOnAction(e -> app.displayViewsSceneBeta(currentRunway));
+    viewsButton.setOnAction(e -> app.displayViewsSceneBeta(runwayManager));
 
     return new ArrayList<>(Arrays.asList(runwayUpdateButton, obstacleUpdateButton, viewsButton, exportButton, backButton));
   }
@@ -241,48 +264,60 @@ public class RunwayConfigViewScene extends BaseScene {
   // PROMPT METHODS:
   private void promptEditRunway() {
     PromptWindow promptWindow = new PromptWindow(app);
-    var degreeBox = promptWindow.editParameterField("Degree",currentRunway.getName());
-    var directionBox = promptWindow.editParameterField("Direction (L, R, C)",currentRunway.getDirection());
-    var stopwayBox = promptWindow.editParameterField("Stopway",Integer.toString(currentRunway.getStopway()));
-    var clearwayBox = promptWindow.editParameterField("Clearway",Integer.toString(currentRunway.getClearway()));
-    var TORAbox = promptWindow.editParameterField("TORA",Integer.toString(currentRunway.getTORA()));
-    var dispThreshBox = promptWindow.editParameterField("Displaced Threshold:",Integer.toString(currentRunway.getDisplacedThreshold()));
+    Text runways = new Text("Runway 1  ---  Runway 2");
+    runways.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+
+    var degreeBox1 = promptWindow.editParameterField("Degree 1",runwayManager.getFstRunway().getName());
+    var degreeBox2 = promptWindow.editParameterField("Degree 2",runwayManager.getSndRunway().getName());
+    var deBox = new HBox(10,degreeBox1,degreeBox2);
+
+    var stopwayBox1 = promptWindow.editParameterField("Stopway",Integer.toString(runwayManager.getFstRunway().getStopway()));
+    var stopwayBox2 = promptWindow.editParameterField("Stopway",Integer.toString(runwayManager.getSndRunway().getStopway()));
+    var sBox = new HBox(10,stopwayBox1,stopwayBox2);
+
+    var clearwayBox1 = promptWindow.editParameterField("Clearway",Integer.toString(runwayManager.getFstRunway().getClearway()));
+    var clearwayBox2 = promptWindow.editParameterField("Clearway",Integer.toString(runwayManager.getSndRunway().getClearway()));
+    var cBox = new HBox(10,clearwayBox1,clearwayBox2);
+
+    var TORAbox1 = promptWindow.editParameterField("TORA",Integer.toString(runwayManager.getFstRunway().getTORA()));
+    var TORAbox2 = promptWindow.editParameterField("TORA",Integer.toString(runwayManager.getSndRunway().getTORA()));
+    var tBox = new HBox(10,TORAbox1,TORAbox2);
+
+    var dispThreshBox1 = promptWindow.editParameterField("Displaced Threshold:",Integer.toString(runwayManager.getFstRunway().getDisplacedThreshold()));
+    var dispThreshBox2 = promptWindow.editParameterField("Displaced Threshold:",Integer.toString(runwayManager.getSndRunway().getDisplacedThreshold()));
+    var diBox = new HBox(10,dispThreshBox1,dispThreshBox2);
 
     // Implement addButton
     Button submitButton = new Button("Add");
     styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
     submitButton.setOnAction(e -> {
-      String degree = promptWindow.getInput(degreeBox);
-      String direction = promptWindow.getInput(directionBox);
-      String name = degree + direction;
+      String degree1 = promptWindow.getInput(degreeBox1);
+      String degree2 = promptWindow.getInput(degreeBox2);
       // Try making a runway object and check for any illegal parameters
-      if (!name.matches("\\d{2}[LCR]")) {
-        showErrorDialog("Invalid runway name. The name must consist of two digits followed by L, C, or R.");
+      if (!degree1.matches("\\d{2}") || !degree2.matches("\\d{2}")) {
+        showErrorDialog("Invalid runway name. The name must be a valid degree.");
       } else {
         try {
-          int stopway = Integer.parseInt(promptWindow.getInput(stopwayBox));
-          int clearway = Integer.parseInt(promptWindow.getInput(clearwayBox));
-          int TORA = Integer.parseInt(promptWindow.getInput(TORAbox));
-          int dispThresh = Integer.parseInt(promptWindow.getInput(dispThreshBox));
+          int stopway1 = Integer.parseInt(promptWindow.getInput(stopwayBox1));
+          int clearway1 = Integer.parseInt(promptWindow.getInput(clearwayBox1));
+          int TORA1 = Integer.parseInt(promptWindow.getInput(TORAbox1));
+          int dispThresh1 = Integer.parseInt(promptWindow.getInput(dispThreshBox1));
 
-          if (stopway < 0 || clearway < 0 || TORA < 0 || dispThresh < 0) {
-            throw new IllegalArgumentException("Invalid measurements for runway.");
+          int stopway2 = Integer.parseInt(promptWindow.getInput(stopwayBox2));
+          int clearway2 = Integer.parseInt(promptWindow.getInput(clearwayBox2));
+          int TORA2 = Integer.parseInt(promptWindow.getInput(TORAbox2));
+          int dispThresh2 = Integer.parseInt(promptWindow.getInput(dispThreshBox2));
+
+          if (stopway1 < 0 || clearway1 < 0 || TORA1 < 0 || dispThresh1 < 0 ||
+              stopway2 < 0 || clearway2 < 0 || TORA2 < 0 || dispThresh2 < 0) {
+            throw new IllegalArgumentException("Invalid measurements for runways.");
           }
 
-          // If Runway valid, replace object to application and close window
-          Runway deletedRunway = currentRunway;
-          airport.removeRunway(currentRunway);
-          currentRunway = new Runway(degree,direction,stopway,clearway,TORA,dispThresh);
-          if (!deletedRunway.getObstacles().isEmpty()) {
-            Obstacle movedObstacle = deletedRunway.getObstacles().getFirst();
-            currentRunway.addObstacle(movedObstacle);
-          }
-          airport.getRunways().add(currentRunway);
-          app.updateXMLs();
-          if (!currentRunway.getObstacles().isEmpty()) {
-            currentRunway.runCalculations();
-          }
-          app.displayRunwayConfigScene(airport,currentRunway);
+          Runway testRunway1 = new Runway(degree1,stopway1,clearway1,TORA1,dispThresh1);
+          Runway testRunway2 = new Runway(degree2,stopway2,clearway2,TORA2,dispThresh2);
+          runwayManager.replaceRunways(runwayManager.getCurrentRunways(),new Pair<>(testRunway1,testRunway2));
+
+          app.displayRunwayConfigScene(airport,runwayManager);
           Stage stage = (Stage) promptWindow.getScene().getWindow();
           stage.close();
 
@@ -293,9 +328,10 @@ public class RunwayConfigViewScene extends BaseScene {
         }
       }
     });
-    promptWindow.getChildren().addAll(degreeBox,directionBox,stopwayBox,clearwayBox,
-        TORAbox,dispThreshBox,submitButton);
+    promptWindow.getChildren().addAll(runways,deBox,sBox,cBox,
+        tBox,diBox,submitButton);
     promptWindow.getChildren().addAll(promptWindow.addButtons());
-    dialogGenerator(promptWindow, "Configure Runway");
+    dialogGenerator(promptWindow, "Add NEW Runways");
   }
+
 }

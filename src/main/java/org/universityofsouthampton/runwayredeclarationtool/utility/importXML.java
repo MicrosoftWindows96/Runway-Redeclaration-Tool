@@ -74,13 +74,12 @@ public class importXML {
 
                         // Get Object Parameters
                         String degree = logicalRunwayElement.getAttribute("degree");
-                        String direction = logicalRunwayElement.getElementsByTagName("direction").item(0).getTextContent();
                         int stopway = Integer.parseInt(logicalRunwayElement.getElementsByTagName("stopway").item(0).getTextContent());
                         int clearway = Integer.parseInt(logicalRunwayElement.getElementsByTagName("clearway").item(0).getTextContent());
                         int TORA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TORA").item(0).getTextContent());
                         int dispThresh = Integer.parseInt(logicalRunwayElement.getElementsByTagName("dispThresh").item(0).getTextContent());
 
-                        Runway runway = new Runway(degree,direction,stopway,clearway,TORA,dispThresh);
+                        Runway runway = new Runway(degree,stopway,clearway,TORA,dispThresh);
 
                         // Get the "Obstacles" Element
                         Element obstaclesElement = (Element) logicalRunwayElement.getElementsByTagName("Obstacles").item(0);

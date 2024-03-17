@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
@@ -19,9 +20,11 @@ import java.util.Arrays;
 
 public class ViewSelectionScene extends BaseScene {
     private final Runway currentRunway;
-    public ViewSelectionScene(MainApplication app, Runway runway) {
+    private final ParallelRunways runwayManager;
+    public ViewSelectionScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
-        this.currentRunway = runway;
+        this.currentRunway = runwayManager.getFstRunway();
+        this.runwayManager = runwayManager;
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0,1200.0);
         borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
@@ -59,15 +62,15 @@ public class ViewSelectionScene extends BaseScene {
 
         Button sideViewButton = new Button();
         styleButton(sideViewButton, MaterialDesign.MDI_LOGIN, "Side");
-        sideViewButton.setOnAction(e -> app.display2DsideViewScene(currentRunway));
+        sideViewButton.setOnAction(e -> app.display2DsideViewScene(runwayManager));
 
         Button topDownViewButton = new Button();
         styleButton(topDownViewButton, MaterialDesign.MDI_LOGIN, "Aerial");
-        topDownViewButton.setOnAction(e -> app.display2DtopDownViewScene(currentRunway));
+        topDownViewButton.setOnAction(e -> app.display2DtopDownViewScene(runwayManager));
 
         Button bothViewButton = new Button();
         styleButton(bothViewButton, MaterialDesign.MDI_LOGIN, "Both");
-        bothViewButton.setOnAction(e -> app.display2DbothViewScene(currentRunway));
+        bothViewButton.setOnAction(e -> app.display2DbothViewScene(runwayManager));
 
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_CLOSE, "Close");

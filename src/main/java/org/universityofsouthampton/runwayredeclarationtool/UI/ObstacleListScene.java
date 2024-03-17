@@ -13,6 +13,7 @@ import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
+import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
@@ -26,19 +27,21 @@ public class ObstacleListScene extends BaseScene {
     private Obstacle selectedObstacle; // Obstacle that's currently in the selection box
     private final Airport currentAirport; // Airport that was selected to access its properties
     private final Runway currentRunway; // Runway selected to access it's properties
+    private final ParallelRunways runwayManager; // This stores the list of parallel runways
 
-    public ObstacleListScene(MainApplication app, Airport airport, Runway runway) {
+    public ObstacleListScene(MainApplication app, Airport airport, ParallelRunways runwaySet) {
         this.app = app;
         this.currentAirport = airport;
-        this.currentRunway = runway;
+        this.runwayManager = runwaySet;
+        this.currentRunway = runwaySet.getCurrentRunways().getKey();
         this.otherObstacles = app.getObstacles();
         setAlignment(Pos.TOP_CENTER);
         setPadding(new Insets(20));
         setSpacing(10);
 
         // Initialise selectedObstacle if there's a pre-determined obstacle in the runway
-        if (!runway.getObstacles().isEmpty()) {
-            selectedObstacle = runway.getObstacles().get(0);
+        if (!currentRunway.getObstacles().isEmpty()) {
+            selectedObstacle = currentRunway.getObstacles().get(0);
         }
 
         var title = new Text("Obstacle Update");
@@ -46,7 +49,7 @@ public class ObstacleListScene extends BaseScene {
         title.setStyle("-fx-fill: #333;");
         VBox.setMargin(title, new Insets(10, 0, 20, 0));
 
-        Text title2 = new Text("List of Obstacles in " + airport.getAirportCode() + "-" + runway.getName() + runway.getDirection());
+        Text title2 = new Text("List of Obstacles in " + airport.getAirportCode() + "-" + currentRunway.getName() + currentRunway.getDirection());
         title.setFont(Font.font("Arial", 20));
 
         Text title3 = new Text("Other obstacles ")  ;
@@ -79,9 +82,9 @@ public class ObstacleListScene extends BaseScene {
                     this.otherObstacles.add(existingObstacle);
 
                     // update runway object
-                    currentRunway.removeObstacle(existingObstacle);
+                    runwayManager.removeObstacle(existingObstacle);
                 }
-                currentRunway.addObstacle(selectedObstacle);
+                runwayManager.placeObstacle(selectedObstacle);
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
             }
@@ -94,9 +97,9 @@ public class ObstacleListScene extends BaseScene {
                 System.out.println("Nothing Selected or not in current obstacles!");
             } else {
                 this.otherObstacles.add(this.selectedObstacle);
-                this.currentRunway.removeObstacle(this.selectedObstacle);
+                runwayManager.removeObstacle(selectedObstacle);
                 if (!currentRunway.getObstacles().isEmpty()) {
-                    currentRunway.removeObstacle(selectedObstacle);
+                    runwayManager.removeObstacle(selectedObstacle);
                 }
                 updateObstaclesList();
             }
@@ -124,7 +127,7 @@ public class ObstacleListScene extends BaseScene {
             } else if  (this.currentRunway.getObstacles().isEmpty() || !this.currentRunway.getObstacles().contains(this.selectedObstacle)) {
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
-                app.updateXMLs();
+//                app.updateXMLs();
             } else {
                 System.out.println("Obstacle is in current obstacles!");
             }
@@ -135,8 +138,8 @@ public class ObstacleListScene extends BaseScene {
         backButton.setOnAction(e -> {
             // If theres no selected obstacles go back
             if (currentRunway.getObstacles().isEmpty()) {
-                app.displayRunwayConfigScene(currentAirport,currentRunway);
-                app.updateXMLs();
+                app.displayRunwayConfigScene(currentAirport,runwayManager);
+//                app.updateXMLs();
             } else {
                 promptSetBPV();
             }
@@ -201,7 +204,7 @@ public class ObstacleListScene extends BaseScene {
                     int distFromThre = Integer.parseInt(distFromThreName);
                     int distFromCent = Integer.parseInt(distFromCentname);
 
-                    if (height <= 0 || distFromThre <= 0 || distFromCent <= 0) {
+                    if (height <= 0 || distFromCent <= 0) {
                         throw new IllegalArgumentException("Invalid measurements for obstacle");
                     }
                     // Add to other obstacles
@@ -246,7 +249,7 @@ public class ObstacleListScene extends BaseScene {
                     int distFromThre = Integer.parseInt(distFromThreName);
                     int distFromCent = Integer.parseInt(distFromCentname);
 
-                    if (height <= 0 || distFromThre <= 0 || distFromCent <= 0) {
+                    if (height <= 0 || distFromCent <= 0) {
                         throw new IllegalArgumentException("Invalid measurements for obstacle");
                     }
                     // replace the obstacle in runway object
@@ -294,10 +297,10 @@ public class ObstacleListScene extends BaseScene {
                         throw new IllegalArgumentException("Invalid measurements for Blast Protection Value");
                     }
                     // update the runway object to run calculations to display in the config runway scene
-                    currentRunway.setBlastProtectionValue(BPVInt);
-                    currentRunway.runCalculations();
-                    app.displayRunwayConfigScene(currentAirport,currentRunway);
-                    app.updateXMLs();
+                    runwayManager.setBPV(BPVInt);
+                    runwayManager.runCalcOnBothRunways();
+                    app.displayRunwayConfigScene(currentAirport,runwayManager);
+//                    app.updateXMLs();
                     Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
 

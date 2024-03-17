@@ -13,8 +13,9 @@ import org.controlsfx.control.Notifications;
 import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
+import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
-import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
+//import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
 import java.io.File;
@@ -39,11 +40,12 @@ public class MainApplication extends Application {
         background = AnimatedPatternBackground.getInstance();
         root.getChildren().add(background);
 
-        importXML airportXML = new importXML(new File(AIRPORTS_XML_PATH));
-        airports = airportXML.makeAirportsXML();
+//        importXML airportXML = new importXML(new File(AIRPORTS_XML_PATH));
+//        airports = airportXML.makeAirportsXML();
         importXML obstacleXML = new importXML(new File(OBSTACLES_XML_PATH));
         obstacles = obstacleXML.makeObstaclesXML();
 
+        initialiseAirports();
         displayMenu();
         playBackgroundMusic();
 
@@ -56,6 +58,23 @@ public class MainApplication extends Application {
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo.jpg"))));
 
         primaryStage.show();
+    }
+
+    private void initialiseAirports() {
+        airports = new ArrayList<>();
+        Airport Heathrow = new Airport("Heathrow","LHR");
+        Runway r3 = new Runway("09",0,0,3902,306);
+        Runway r4 = new Runway("27",78,0,3884,0);
+        Heathrow.addNewRunway(r3,r4);
+        Runway r1 = new Runway("09",0,0,3660,307);
+        Runway r2 = new Runway("27",0,0,3660,0);
+        Heathrow.addNewRunway(r1,r2);
+
+        Runway r5 = new Runway("08",0,0,3700,0);
+        Runway r6 = new Runway("26",0,0,3700,100);
+        Heathrow.addNewRunway(r5,r6);
+
+        airports.add(Heathrow);
     }
 
     public void displayMenu() {
@@ -86,8 +105,8 @@ public class MainApplication extends Application {
         launch(args);
     }
 
-    public void displayObstacleListScene(Airport airport, Runway runway) {
-        ObstacleListScene obstacleListScene = new ObstacleListScene(this, airport, runway);
+    public void displayObstacleListScene(Airport airport, ParallelRunways runwaySet) {
+        ObstacleListScene obstacleListScene = new ObstacleListScene(this, airport, runwaySet);
         root.getChildren().setAll(background, obstacleListScene);
     }
 
@@ -96,21 +115,21 @@ public class MainApplication extends Application {
         root.getChildren().setAll(background, airportListScene);
     }
 
-    public void displayRunwayConfigScene(Airport airport, Runway runway) {
-        RunwayConfigViewScene runwayConfigScene = new RunwayConfigViewScene(this,airport, runway);
+    public void displayRunwayConfigScene(Airport airport,  ParallelRunways runwaySet) {
+        RunwayConfigViewScene runwayConfigScene = new RunwayConfigViewScene(this,airport, runwaySet);
         root.getChildren().setAll(background, runwayConfigScene);
     }
 
-    public void updateXMLs() { // Method to update XMl files in the resources folder
-        exportXML airportXML = new exportXML(airports, obstacles, new File(AIRPORTS_XML_PATH));
-        airportXML.buildAirportsXML();
-
-        exportXML obstacleXML = new exportXML(airports, obstacles, new File(OBSTACLES_XML_PATH));
-        obstacleXML.buildObstaclesXML();
-
-        showNotification("System", "Airports and obstacles updated");
-        System.out.println("XML files successfully updated!");
-    }
+//    public void updateXMLs() { // Method to update XMl files in the resources folder
+//        exportXML airportXML = new exportXML(airports, obstacles, new File(AIRPORTS_XML_PATH));
+//        airportXML.buildAirportsXML();
+//
+//        exportXML obstacleXML = new exportXML(airports, obstacles, new File(OBSTACLES_XML_PATH));
+//        obstacleXML.buildObstaclesXML();
+//
+//        showNotification("System", "Airports and obstacles updated");
+//        System.out.println("XML files successfully updated!");
+//    }
 
     public void showNotification(String text, String text2) {
         Notifications.create()
@@ -126,13 +145,13 @@ public class MainApplication extends Application {
     public void mergeAirport(ArrayList<Airport> newAirports) { // Adds to arraylist from user's imported file
         airports.addAll(newAirports);
         showNotification("System", "Airports merged");
-        updateXMLs();
+//        updateXMLs();
     }
 
     public void addAirport(Airport airport) {
         airports.add(airport);
         showNotification("System", "Airport added");
-        updateXMLs();
+//        updateXMLs();
     }
 
     public ArrayList<Airport> getAirports() {
@@ -145,7 +164,7 @@ public class MainApplication extends Application {
 
     public static Stage secondaryStage;
 
-    public void displayViewsSceneBeta(Runway runway) {
+    public void displayViewsSceneBeta(ParallelRunways runwayManager) {
         Stage primaryStage = (Stage) root.getScene().getWindow();
 
         if (secondaryStage == null) {
@@ -153,7 +172,7 @@ public class MainApplication extends Application {
             secondaryStage.setResizable(false);
         }
 
-        ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this, runway);
+        ViewSelectionScene viewSelectionScene = new ViewSelectionScene(this, runwayManager);
         viewSelectionScene.setSecondaryStage(secondaryStage);
 
         Scene scene = new Scene(viewSelectionScene, 300, 600);
@@ -169,12 +188,12 @@ public class MainApplication extends Application {
         secondaryStage.show();
     }
 
-    public void display2DsideViewScene(Runway runway) {
+    public void display2DsideViewScene(ParallelRunways runwayManager) {
         if (secondaryStage == null) {
             secondaryStage = new Stage();
             secondaryStage.setTitle("2D Side View");
         }
-        SideViewScene sideViewScene = new SideViewScene(this, runway);
+        SideViewScene sideViewScene = new SideViewScene(this, runwayManager);
         sideViewScene.setSecondaryStage(secondaryStage);
         Scene sideViewSceneScene = new Scene(sideViewScene, 800, 600);
         secondaryStage.setScene(sideViewSceneScene);
@@ -183,26 +202,26 @@ public class MainApplication extends Application {
 
 
 
-    public void display2DtopDownViewScene(Runway runway) {
+    public void display2DtopDownViewScene(ParallelRunways runwayManager) {
         if (secondaryStage == null) {
             secondaryStage = new Stage();
             secondaryStage.setTitle("2D Side View");
         }
 
-        TopDownScene topDownScene = new TopDownScene(this, runway);
+        TopDownScene topDownScene = new TopDownScene(this, runwayManager);
         topDownScene.setSecondaryStage(secondaryStage);
         Scene topDownSceneScene = new Scene(topDownScene, 800, 600);
         secondaryStage.setScene(topDownSceneScene);
         secondaryStage.show();
     }
 
-    public void display2DbothViewScene(Runway runway) {
+    public void display2DbothViewScene(ParallelRunways runwayManager) {
         if (secondaryStage == null) {
             secondaryStage = new Stage();
             secondaryStage.setTitle("2D Side View");
         }
 
-        BothViewScene bothViewScene = new BothViewScene(this, runway);
+        BothViewScene bothViewScene = new BothViewScene(this, runwayManager);
         bothViewScene.setSecondaryStage(secondaryStage);
         Scene bothViewSceneScene = new Scene(bothViewScene, 800, 600);
         secondaryStage.setScene(bothViewSceneScene);

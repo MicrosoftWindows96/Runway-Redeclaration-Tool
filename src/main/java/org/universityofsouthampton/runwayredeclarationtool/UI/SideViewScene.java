@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -59,7 +60,7 @@ public class SideViewScene extends BaseScene {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0, 1200.0);
         borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
-        cloudLayer.setPrefSize(800, 200);
+        cloudLayer.setPrefSize(800, 130);
         createPattern();
         animatePattern();
 
@@ -71,6 +72,17 @@ public class SideViewScene extends BaseScene {
         VBox buttons = new VBox(10);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(addButtons());
+
+        VBox distanceInfoBox = new VBox();
+        distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
+        distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
+        distanceInfoBox.setSpacing(1); // Spacing between labels
+        Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
+        Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
+        Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
+        Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
+        distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+
 
         VBox rightButtons = new VBox();
         rightButtons.setAlignment(Pos.TOP_CENTER);
@@ -90,7 +102,7 @@ public class SideViewScene extends BaseScene {
 
         VBox topLayout = new VBox();
         topLayout.setAlignment(Pos.TOP_CENTER);
-        topLayout.getChildren().addAll(cloudLayer, title, buttons);
+        topLayout.getChildren().addAll(cloudLayer, title, buttons, distanceInfoBox);
         BorderPane.setMargin(topLayout, new Insets(10));
 
         borderPane.setTop(topLayout);

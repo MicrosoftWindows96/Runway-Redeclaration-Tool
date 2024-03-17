@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -62,7 +63,7 @@ public class SideViewScene extends BaseScene {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0, 1200.0);
         borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
-        cloudLayer.setPrefSize(800, 200);
+        cloudLayer.setPrefSize(800, 130);
         createPattern();
         animatePattern();
 
@@ -74,6 +75,17 @@ public class SideViewScene extends BaseScene {
         VBox buttons = new VBox(10);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(addButtons());
+
+        VBox distanceInfoBox = new VBox();
+        distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
+        distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
+        distanceInfoBox.setSpacing(1); // Spacing between labels
+        Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
+        Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
+        Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
+        Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
+        distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+
 
         VBox rightButtons = new VBox();
         rightButtons.setAlignment(Pos.TOP_CENTER);
@@ -93,7 +105,7 @@ public class SideViewScene extends BaseScene {
 
         VBox topLayout = new VBox();
         topLayout.setAlignment(Pos.TOP_CENTER);
-        topLayout.getChildren().addAll(cloudLayer, title, buttons);
+        topLayout.getChildren().addAll(cloudLayer, title, buttons, distanceInfoBox);
         BorderPane.setMargin(topLayout, new Insets(10));
 
         borderPane.setTop(topLayout);
@@ -277,7 +289,7 @@ public class SideViewScene extends BaseScene {
             this.ASDA = (double) currentRunway.getNewASDA() / 6;
             this.LDA = (double) currentRunway.getNewLDA() / 6;
 
-            if (obstacle.getDistanceFromThreshold() < (1000 /6)) {
+            if (obstacle.getDistanceFromThreshold() < 1000 ) {
                 // Original diagonal line points
                 double startX = obstacleX + obstacleWidth; // Top-right corner of the obstacle
                 double startY = obstacleY; // Top-right corner of the obstacle
@@ -310,7 +322,7 @@ public class SideViewScene extends BaseScene {
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
 
 
-            } else if (obstacle.getDistanceFromThreshold() >= (1000 /6)) {
+            } else if (obstacle.getDistanceFromThreshold() >= 1000) {
                 // Original opposite diagonal line points
                 double oppositeStartX = obstacleX + obstacleWidth - (obstacleHeight * 50 );
                 double oppositeStartY = obstacleY + obstacleHeight;
@@ -352,7 +364,7 @@ public class SideViewScene extends BaseScene {
         }
 
         gc.setFill(Color.BLACK);
-        if (!obstacles.isEmpty() && obstacle.getDistanceFromThreshold() < (1000 /6)) {
+        if (!obstacles.isEmpty() && obstacle.getDistanceFromThreshold() < 1000 ) {
             //indicate distances
             gc.setStroke(Color.LIGHTPINK);
             gc.strokeLine(RESADistance, runwayStartY + 15, RESADistance + this.TORA, runwayStartY + 15); // TORA line
@@ -399,14 +411,19 @@ public class SideViewScene extends BaseScene {
             gc.fillText(ldaText, runwayStartX + this.LDA, runwayStartY + 65);
         }
 
+
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 
         String leftRunwayName = runwayManager.getDegree1() + runwayManager.getFstRunway().getDirection();
         gc.fillText(leftRunwayName, runwayStartX - 25, runwayStartY - 25);
+        // f. Indicate take-off/landing direction
+        gc.fillText("Take-off/Landing →", runwayStartX - 25, runwayStartY - 40); // Adjust text position as needed
 
         String rightRunwayName = runwayManager.getDegree2() + runwayManager.getSndRunway().getDirection();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayWidth - stringWidth + 25, runwayStartY - 25);
+        gc.fillText("← Take-off/Landing", runwayStartX + runwayWidth - stringWidth - 75, runwayStartY - 40); // Adjust text position as needed
+
     }
 
     private Stage secondaryStage;
@@ -431,4 +448,5 @@ public class SideViewScene extends BaseScene {
 
         return new ArrayList<>(List.of(backButton));
     }
+
 }

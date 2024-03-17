@@ -263,4 +263,8 @@ public class Runway {
     public int getClearway(){
         return clearway;
     }
+
+    public int getBlastProtectionValue(){
+        return blastProtectionValue;
+    }
 }

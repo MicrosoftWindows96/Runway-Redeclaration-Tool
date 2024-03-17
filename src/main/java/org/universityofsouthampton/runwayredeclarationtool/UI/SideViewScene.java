@@ -72,12 +72,30 @@ public class SideViewScene extends BaseScene {
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(addButtons());
 
+        VBox rightButtons = new VBox();
+        rightButtons.setAlignment(Pos.TOP_CENTER);
+        rightButtons.setSpacing(10); // Set spacing between buttons
+        rightButtons.setPadding(new Insets(10)); // Set padding around the VBox
+
+        Button button1 = new Button("Landing Over");
+        Button button2 = new Button("Landing Toward");
+        Button button3 = new Button("Take-Off Toward");
+        Button button4 = new Button("Take-Off Away");
+
+        rightButtons.getChildren().addAll(button1, button2, button3,button4);
+
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS); // This will allow the spacer to grow, pushing the buttons to the top
+        rightButtons.getChildren().add(spacer);
+
         VBox topLayout = new VBox();
         topLayout.setAlignment(Pos.TOP_CENTER);
         topLayout.getChildren().addAll(cloudLayer, title, buttons);
         BorderPane.setMargin(topLayout, new Insets(10));
 
         borderPane.setTop(topLayout);
+
+        borderPane.setRight(rightButtons);
 
         Canvas runwayCanvas = new Canvas(800, 200);
         drawRunway(runwayCanvas);
@@ -278,9 +296,13 @@ public class SideViewScene extends BaseScene {
 
                 this.slopeDistance = endX;
 
-                        // RESA
+                // RESA
                 gc.setFill(Color.ORANGE);
                 gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
+
+                // Blast (currently 0)
+//                gc.setFill(Color.BLUE);
+//                gc.fillRect(obstacleX + obstacleWidth + ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
 
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
 
@@ -310,6 +332,10 @@ public class SideViewScene extends BaseScene {
                 // RESA
                 gc.setFill(Color.ORANGE);
                 gc.fillRect(obstacleX - this.RESA, runwayStartY, this.RESA, runwayHeight);
+
+                // Blast (currently is 0)
+//                gc.setFill(Color.BLUE);
+//                gc.fillRect(obstacleX - ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
 
 
             }

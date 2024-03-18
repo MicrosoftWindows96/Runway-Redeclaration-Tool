@@ -185,26 +185,33 @@ public class SideViewScene extends BaseScene {
 
         double startingXPosition;
         double endingXPosition;
+        double startingYPosition;
         double altitude = 30;
 
         switch (operation) {
             case "Land Over":
+                startingYPosition = 0;
                 startingXPosition = -plane.getFitWidth();
                 endingXPosition = RESADistance + 100;
                 plane.setScaleX(-1);
                 break;
             case "Land Toward":
+                startingYPosition = 0;
                 startingXPosition = animationOverlay.getPrefWidth();
                 endingXPosition = slopeDistance - 100;
                 plane.setScaleX(1);
                 break;
             case "Takeoff Toward":
+                startingYPosition = 30;
+                altitude = 0;
                 startingXPosition = slopeDistance - 200;
                 endingXPosition = animationOverlay.getPrefWidth();
                 plane.setScaleX(-1);
                 break;
             case "Takeoff Away":
-                startingXPosition = 0;
+                startingYPosition = 30;
+                startingXPosition = animationOverlay.getPrefWidth() - 150;
+                altitude = 0;
                 endingXPosition = -plane.getFitWidth();
                 plane.setScaleX(1);
                 break;
@@ -218,7 +225,7 @@ public class SideViewScene extends BaseScene {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(5), plane);
         transition.setFromX(startingXPosition);
         transition.setToX(endingXPosition);
-        transition.setFromY(0);
+        transition.setFromY(startingYPosition);
         transition.setToY(altitude);
 
         currentTransition = transition;

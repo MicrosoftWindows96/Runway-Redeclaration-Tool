@@ -170,23 +170,25 @@ public class SideViewScene extends BaseScene {
     private void animatePlane() {
         ImageView plane = createPlaneImage();
 
+        double startingXPosition = animationOverlay.getPrefWidth();
+        plane.setTranslateX(startingXPosition);
+
+        double endingXPosition = RESADistance;
+
         double startingAltitude = 0;
-
-        double runwayEndX = 100;
-
-        plane.setTranslateX(animationOverlay.getPrefWidth());
         plane.setTranslateY(startingAltitude);
 
         animationOverlay.getChildren().add(plane);
 
         TranslateTransition transition = new TranslateTransition(Duration.seconds(5), plane);
-        transition.setFromX(animationOverlay.getPrefWidth());
-        transition.setToX(runwayEndX);
+        transition.setFromX(startingXPosition);
+        transition.setToX(endingXPosition);
         transition.setFromY(startingAltitude);
         transition.setToY(30);
 
         transition.play();
     }
+
 
     private void createPattern() {
         cloudLayer.getChildren().clear();

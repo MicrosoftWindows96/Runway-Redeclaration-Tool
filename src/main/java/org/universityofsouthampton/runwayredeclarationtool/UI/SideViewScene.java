@@ -104,10 +104,14 @@ public class SideViewScene extends BaseScene {
         rightButtons.setSpacing(10); // Set spacing between buttons
         rightButtons.setPadding(new Insets(10)); // Set padding around the VBox
 
-        Button button1 = new Button("Landing Over");
-        Button button2 = new Button("Landing Toward");
-        Button button3 = new Button("Take-Off Toward");
-        Button button4 = new Button("Take-Off Away");
+        Button button1 = new Button();
+        styleButton(button1, MaterialDesign.MDI_NUMERIC_1_BOX, "L Over");  // Land Over
+        Button button2 = new Button();
+        styleButton(button2, MaterialDesign.MDI_NUMERIC_2_BOX, "L Toward"); // Land Toward
+        Button button3 = new Button();
+        styleButton(button3, MaterialDesign.MDI_NUMERIC_3_BOX, "T Toward"); // Takeoff Toward
+        Button button4 = new Button();
+        styleButton(button4, MaterialDesign.MDI_NUMERIC_4_BOX, "T Away"); // Takeoff Away
 
         rightButtons.getChildren().addAll(button1, button2, button3,button4);
 

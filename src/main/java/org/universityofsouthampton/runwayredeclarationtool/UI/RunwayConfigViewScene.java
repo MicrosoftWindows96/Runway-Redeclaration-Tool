@@ -67,6 +67,9 @@ public class RunwayConfigViewScene extends BaseScene {
     oppositeButton.setOnAction(e -> {
       runwayManager.swapRunways();
       app.displayRunwayConfigScene(airport,runwayManager);
+      if (secondaryStage != null) {
+        secondaryStage.close();
+      }
     });
 
     Button nextButton = new Button(); // Goes to next parallel runway
@@ -74,6 +77,9 @@ public class RunwayConfigViewScene extends BaseScene {
     nextButton.setOnAction(e -> {
       runwayManager.nextCurrentRunway();
       app.displayRunwayConfigScene(airport,runwayManager);
+      if (secondaryStage != null) {
+        secondaryStage.close();
+      }
     });
 
     HBox buttonBox2 = new HBox(10);

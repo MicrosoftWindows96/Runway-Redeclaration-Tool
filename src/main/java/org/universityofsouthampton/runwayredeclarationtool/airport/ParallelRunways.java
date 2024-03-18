@@ -73,7 +73,7 @@ public class ParallelRunways {
     switch (logicalRunways.size()) {
       case 0 -> nameDirection(pair,"_"); // Don't give any direction indicator
       case 1 -> {
-        nameDirection(logicalRunways.getFirst(),"L"); // Establish L and R for 2 runways
+        nameDirection(logicalRunways.get(0),"L"); // Establish L and R for 2 runways
         nameDirection(pair,"R");
       }
       case 2 -> nameDirection(pair,"C"); // Add the Centre runway for 3 runways
@@ -143,11 +143,11 @@ public class ParallelRunways {
     var runway2 = oldPair.getValue();
     deleteRunways(oldPair);
     if (!runway1.getObstacles().isEmpty()) {
-      Obstacle movedObstacle1 = runway1.getObstacles().getFirst();
+      Obstacle movedObstacle1 = runway1.getObstacles().get(0);
       newPair.getKey().addObstacle(movedObstacle1);
     }
     if (!runway2.getObstacles().isEmpty()) {
-      Obstacle movedObstacle2 = runway2.getObstacles().getFirst();
+      Obstacle movedObstacle2 = runway2.getObstacles().get(0);
       newPair.getValue().addObstacle(movedObstacle2);
     }
     updateLogicalRunways(newPair.getKey(),newPair.getValue());

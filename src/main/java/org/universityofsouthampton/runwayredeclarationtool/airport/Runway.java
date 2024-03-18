@@ -101,8 +101,8 @@ public class Runway {
     public void runCalculations() { // Only call when blast protection value is set
         if (!obstacles.isEmpty()) {
             System.out.println("Running calculations...");
-            this.calculateLDA(obstacles.getFirst());
-            this.calculateTORA_ASDA_TODA(obstacles.getFirst());
+            this.calculateLDA(obstacles.get(0));
+            this.calculateTORA_ASDA_TODA(obstacles.get(0));
         } else {
             System.out.println("No obstacle present!");
         }
@@ -151,7 +151,7 @@ public class Runway {
         StringBuilder breakdown = new StringBuilder();
 
         if (!obstacles.isEmpty()) {
-            Obstacle obstacle = obstacles.getFirst();
+            Obstacle obstacle = obstacles.get(0);
             breakdown.append("Calculation Breakdown:\n");
 
             if (landingOver || landingToward) {

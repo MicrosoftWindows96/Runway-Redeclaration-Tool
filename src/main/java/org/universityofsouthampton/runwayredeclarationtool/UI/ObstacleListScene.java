@@ -127,7 +127,7 @@ public class ObstacleListScene extends BaseScene {
             } else if  (this.currentRunway.getObstacles().isEmpty() || !this.currentRunway.getObstacles().contains(this.selectedObstacle)) {
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
-//                app.updateXMLs();
+                app.updateXMLs();
             } else {
                 System.out.println("Obstacle is in current obstacles!");
             }
@@ -139,7 +139,7 @@ public class ObstacleListScene extends BaseScene {
             // If theres no selected obstacles go back
             if (currentRunway.getObstacles().isEmpty()) {
                 app.displayRunwayConfigScene(currentAirport,runwayManager);
-//                app.updateXMLs();
+                app.updateXMLs();
             } else {
                 promptSetBPV();
             }
@@ -300,7 +300,7 @@ public class ObstacleListScene extends BaseScene {
                     runwayManager.setBPV(BPVInt);
                     runwayManager.runCalcOnBothRunways();
                     app.displayRunwayConfigScene(currentAirport,runwayManager);
-//                    app.updateXMLs();
+                    app.updateXMLs();
                     Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
 

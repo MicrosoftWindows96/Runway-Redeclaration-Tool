@@ -1,5 +1,8 @@
 package org.universityofsouthampton.runwayredeclarationtool;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Objects;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,17 +13,20 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.universityofsouthampton.runwayredeclarationtool.UI.*;
+import org.universityofsouthampton.runwayredeclarationtool.UI.AirportListScene;
+import org.universityofsouthampton.runwayredeclarationtool.UI.AnimatedPatternBackground;
+import org.universityofsouthampton.runwayredeclarationtool.UI.BothViewScene;
+import org.universityofsouthampton.runwayredeclarationtool.UI.MenuScene;
+import org.universityofsouthampton.runwayredeclarationtool.UI.ObstacleListScene;
+import org.universityofsouthampton.runwayredeclarationtool.UI.RunwayConfigViewScene;
+import org.universityofsouthampton.runwayredeclarationtool.UI.SideViewScene;
+import org.universityofsouthampton.runwayredeclarationtool.UI.TopDownScene;
+import org.universityofsouthampton.runwayredeclarationtool.UI.ViewSelectionScene;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
-import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
-//import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
+import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Class that handles the scene changes (Controller)
@@ -40,11 +46,6 @@ public class MainApplication extends Application {
         background = AnimatedPatternBackground.getInstance();
         root.getChildren().add(background);
 
-//        importXML airportXML = new importXML(new File(AIRPORTS_XML_PATH));
-//        airports = airportXML.makeAirportsXML();
-        importXML obstacleXML = new importXML(new File(OBSTACLES_XML_PATH));
-        obstacles = obstacleXML.makeObstaclesXML();
-
         initialiseAirports();
         displayMenu();
         playBackgroundMusic();
@@ -61,20 +62,10 @@ public class MainApplication extends Application {
     }
 
     private void initialiseAirports() {
-        airports = new ArrayList<>();
-        Airport Heathrow = new Airport("Heathrow","LHR");
-        Runway r3 = new Runway("09",0,0,3902,306);
-        Runway r4 = new Runway("27",78,0,3884,0);
-        Heathrow.addNewRunway(r3,r4);
-        Runway r1 = new Runway("09",0,0,3660,307);
-        Runway r2 = new Runway("27",0,0,3660,0);
-        Heathrow.addNewRunway(r1,r2);
-
-        Runway r5 = new Runway("08",0,0,3700,0);
-        Runway r6 = new Runway("26",0,0,3700,100);
-        Heathrow.addNewRunway(r5,r6);
-
-        airports.add(Heathrow);
+        importXML airportXML = new importXML(new File(AIRPORTS_XML_PATH));
+        airports = airportXML.makeAirportsXML();
+        importXML obstacleXML = new importXML(new File(OBSTACLES_XML_PATH));
+        obstacles = obstacleXML.makeObstaclesXML();
     }
 
     public void displayMenu() {
@@ -120,16 +111,16 @@ public class MainApplication extends Application {
         root.getChildren().setAll(background, runwayConfigScene);
     }
 
-//    public void updateXMLs() { // Method to update XMl files in the resources folder
-//        exportXML airportXML = new exportXML(airports, obstacles, new File(AIRPORTS_XML_PATH));
-//        airportXML.buildAirportsXML();
-//
-//        exportXML obstacleXML = new exportXML(airports, obstacles, new File(OBSTACLES_XML_PATH));
-//        obstacleXML.buildObstaclesXML();
-//
-//        showNotification("System", "Airports and obstacles updated");
-//        System.out.println("XML files successfully updated!");
-//    }
+    public void updateXMLs() { // Method to update XMl files in the resources folder
+        exportXML airportXML = new exportXML(airports, obstacles, new File(AIRPORTS_XML_PATH));
+        airportXML.buildAirportsXML();
+
+        exportXML obstacleXML = new exportXML(airports, obstacles, new File(OBSTACLES_XML_PATH));
+        obstacleXML.buildObstaclesXML();
+
+        showNotification("System", "Airports and obstacles updated");
+        System.out.println("XML files successfully updated!");
+    }
 
     public void showNotification(String text, String text2) {
         Notifications.create()
@@ -145,13 +136,13 @@ public class MainApplication extends Application {
     public void mergeAirport(ArrayList<Airport> newAirports) { // Adds to arraylist from user's imported file
         airports.addAll(newAirports);
         showNotification("System", "Airports merged");
-//        updateXMLs();
+        updateXMLs();
     }
 
     public void addAirport(Airport airport) {
         airports.add(airport);
         showNotification("System", "Airport added");
-//        updateXMLs();
+        updateXMLs();
     }
 
     public ArrayList<Airport> getAirports() {

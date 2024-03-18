@@ -4,33 +4,37 @@
   <xs:element name="Models">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="Airport">
+        <xs:element name="Airport" maxOccurs="unbounded">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Runways">
+              <xs:element name="Runways" minOccurs="0">
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="Runway" maxOccurs="unbounded">
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element name="ParallelRunways">
+                          <xs:element name="LogicalRunways" maxOccurs="3">
                             <xs:complexType>
                               <xs:sequence>
-                                <xs:element name="ParallelRunway" maxOccurs="3">
+                                <xs:element name="LogicalRunway" maxOccurs="2">
                                   <xs:complexType>
                                     <xs:sequence>
-                                      <xs:element name="LogicalRunway" maxOccurs="2">
+                                      <xs:element name="stopway" type="xs:integer"/>
+                                      <xs:element name="clearway" type="xs:integer"/>
+                                      <xs:element name="TORA" type="xs:integer"/>
+                                      <xs:element name="dispThresh" type="xs:integer"/>
+                                      <xs:element name="Obstacle" minOccurs="0" maxOccurs="1">
                                         <xs:complexType>
                                           <xs:sequence>
-                                            <xs:element name="stopway" type="xs:integer"/>
-                                            <xs:element name="clearway" type="xs:integer"/>
-                                            <xs:element name="TORA" type="xs:integer"/>
-                                            <xs:element name="dispThresh" type="xs:integer"/>
+                                            <xs:element name="Height" type="xs:integer"/>
+                                            <xs:element name="DistThreshold" type="xs:integer"/>
+                                            <xs:element name="DistCent" type="xs:integer"/>
                                           </xs:sequence>
-                                          <xs:attribute name="degree" type="xs:string" use="required"/>
+                                          <xs:attribute name="name" type="xs:string" use="required"/>
                                         </xs:complexType>
                                       </xs:element>
                                     </xs:sequence>
+                                    <xs:attribute name="degree" type="xs:string" use="required"/>
                                   </xs:complexType>
                                 </xs:element>
                               </xs:sequence>

@@ -17,7 +17,7 @@ import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
-//import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
+import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
 import java.io.File;
@@ -73,7 +73,7 @@ public class AirportListScene extends BaseScene {
         addAirport.setOnAction(e -> {
             promptAddAirport();
             updateList();
-//            app.updateXMLs();
+            app.updateXMLs();
         });
 
         Button backButton = new Button("Log Out"); // Button to return to the login screen
@@ -85,7 +85,7 @@ public class AirportListScene extends BaseScene {
         deleteButton.setOnAction(e -> {
             importedAirports.remove(selectedAirport);
             updateList();
-//            app.updateXMLs();
+            app.updateXMLs();
             updateAirportInfo(null);
         });
 
@@ -95,7 +95,7 @@ public class AirportListScene extends BaseScene {
 
         Button exportXMLButton = new Button("Export"); // Button to Export into a xml file the current airport list contents
         styleButton(exportXMLButton, MaterialDesign.MDI_UPLOAD, "Export");
-//        exportXMLButton.setOnAction(e -> exportAirportsToXML());
+        exportXMLButton.setOnAction(e -> exportAirportsToXML());
 
         Button modifyButton = new Button("Modify"); // Button to edit a selected airport
         styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
@@ -137,7 +137,7 @@ public class AirportListScene extends BaseScene {
             airportName.setFont(Font.font("Arial", FontWeight.BOLD, 16));
             Text airportCode = new Text("Code: " + airport.getAirportCode());
             airportCode.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-            Text numRunways = new Text("Number of Runways: " + airport.getRunways().size());
+            Text numRunways = new Text("Number of Parallel Runway Sets: " + airport.getParallelRunwaySets().size());
             numRunways.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
 
             VBox runwaysInfoBox = new VBox(5);
@@ -153,7 +153,7 @@ public class AirportListScene extends BaseScene {
                 Button deleteRunwayButton = new Button("Delete");
                 deleteRunwayButton.setOnAction(e -> {
                     airport.getParallelRunwaySets().remove(pRunwaySet);
-//                    app.updateXMLs();
+                    app.updateXMLs();
                     updateAirportInfo(airport);
                 });
                 styleButton(deleteRunwayButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
@@ -192,15 +192,15 @@ public class AirportListScene extends BaseScene {
         }
     }
 
-//    private void exportAirportsToXML() { // Function to export airport xml file of current contents to local files
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("Save Airport XML File");
-//        File file = fileChooser.showSaveDialog(null);
-//        if (file != null) {
-//            exportXML exporter = new exportXML(importedAirports, new ArrayList<>(), file);
-//            exporter.writeXML();
-//        }
-//    }
+    private void exportAirportsToXML() { // Function to export airport xml file of current contents to local files
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Airport XML File");
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            exportXML exporter = new exportXML(importedAirports, new ArrayList<>(), file);
+            exporter.writeXML();
+        }
+    }
 
     public static String capitalize(String string) {
         char[] chars = string.toLowerCase().toCharArray();
@@ -236,7 +236,7 @@ public class AirportListScene extends BaseScene {
             }
             Airport newAirport = new Airport(name, code);
             app.addAirport(newAirport);
-//            app.updateXMLs();
+            app.updateXMLs();
             ((Stage) promptWindow.getScene().getWindow()).close();
         });
         promptWindow.getChildren().addAll(nameBox,codeBox,submitButton);
@@ -299,7 +299,7 @@ public class AirportListScene extends BaseScene {
                     Runway testRunway2 = new Runway(degree2,stopway2,clearway2,TORA2,dispThresh2);
 
                     selectedAirport.addNewRunway(testRunway1,testRunway2);
-//                    app.updateXMLs();
+                    app.updateXMLs();
                     updateAirportInfo(selectedAirport);
                     Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
@@ -328,7 +328,7 @@ public class AirportListScene extends BaseScene {
             airport.setAirportName(promptWindow.getInput(nameBox));
             airport.setAirportCode(promptWindow.getInput(codeBox));
             updateList();
-//            app.updateXMLs();
+            app.updateXMLs();
             updateAirportInfo(airport);
             Stage stage = (Stage) promptWindow.getScene().getWindow();
             stage.close();

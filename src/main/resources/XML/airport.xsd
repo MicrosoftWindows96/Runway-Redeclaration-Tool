@@ -12,7 +12,6 @@
                                         <xs:element name="LogicalRunway" maxOccurs="unbounded" minOccurs="0">
                                             <xs:complexType>
                                                 <xs:sequence>
-
                                                     <xs:element name="TORA" type="xs:integer"/>
                                                     <xs:element name="TODA" type="xs:integer"/>
                                                     <xs:element name="ASDA" type="xs:integer"/>

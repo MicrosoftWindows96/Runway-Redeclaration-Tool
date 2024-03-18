@@ -47,71 +47,80 @@ public class importXML {
 
     public ArrayList<Airport> makeAirportsXML() {
         try {
-            // Collect Airport nodes
-            NodeList airportNodes = root.getElementsByTagName("Airport");
+            // Get all Airport elements
+            NodeList airportList = root.getElementsByTagName("Airport");
 
-            // Loop through each "Airport" element
-            for (int i = 0; i < airportNodes.getLength(); i++) {
-                Element airportElement = (Element) airportNodes.item(i);
+            for (int i = 0; i < airportList.getLength(); i++) {
+                Element airportElement = (Element) airportList.item(i);
 
-                // Get Object parameters
+                // Retrieve attributes of Airport element
+                String airportCode = airportElement.getAttribute("code");
                 String airportName = airportElement.getAttribute("name");
-                String codeName = airportElement.getAttribute("code");
+                System.out.println(airportName + " " + airportCode);
+                Airport airport = new Airport(airportName,airportCode);
 
-                // New airport object to be added to the arraylist
-                Airport airport = new Airport(airportName,codeName);
+                // Get the "Runways" element
+                Element runwaysElement = (Element) airportElement.getElementsByTagName("Runways").item(0);
 
-                // Get the "Runway" element
-                Element runwayElement = (Element) airportElement.getElementsByTagName("Runway").item(0);
+                if (runwaysElement != null) {
+                    // Get all the "Runway" elements in the "Runways" element
+                    NodeList runwayList = runwaysElement.getElementsByTagName("Runway");
 
-                if (runwayElement != null) {
+                    for (int j = 0; j < runwayList.getLength(); j++) {
+                        Element runwayElement = (Element) runwayList.item(j);
 
-                    // Collect Logical Runway nodes
-                    NodeList logicalRunwayNodes = runwayElement.getElementsByTagName("LogicalRunway");
+                        // Get all the "LogicalRunways" elements in the "ParallelRunways" element
+                        NodeList logicalRunwaysList = runwayElement.getElementsByTagName("LogicalRunways");
 
-                    for (int j = 0; j < logicalRunwayNodes.getLength(); j++ ) {
-                        Element logicalRunwayElement = (Element) logicalRunwayNodes.item(j);
+                        for (int k = 0; k < logicalRunwaysList.getLength(); k ++) {
+                            Element logicalRunwaysElement = (Element) logicalRunwaysList.item(k);
 
-                        // Get Object Parameters
-                        String degree = logicalRunwayElement.getAttribute("degree");
-                        int stopway = Integer.parseInt(logicalRunwayElement.getElementsByTagName("stopway").item(0).getTextContent());
-                        int clearway = Integer.parseInt(logicalRunwayElement.getElementsByTagName("clearway").item(0).getTextContent());
-                        int TORA = Integer.parseInt(logicalRunwayElement.getElementsByTagName("TORA").item(0).getTextContent());
-                        int dispThresh = Integer.parseInt(logicalRunwayElement.getElementsByTagName("dispThresh").item(0).getTextContent());
-
-                        Runway runway = new Runway(degree,stopway,clearway,TORA,dispThresh);
-
-                        // Get the "Obstacles" Element
-                        Element obstaclesElement = (Element) logicalRunwayElement.getElementsByTagName("Obstacles").item(0);
-
-                        if (obstaclesElement != null) {
-                            // Collect all "Obstacle" Element is not null
-                            NodeList obstacleNodes = obstaclesElement.getElementsByTagName("Obstacle");
-
-                            for (int k = 0; k < obstacleNodes.getLength(); k ++) {
-                                Element obstacleElement = (Element) obstacleNodes.item(k);
-
-                                // Get Obstacle Object parameters
-                                String obstacleName = obstacleElement.getAttribute("name");
-                                int height = Integer.parseInt(logicalRunwayElement.getElementsByTagName("Height").item(0).getTextContent());
-                                int distThreshold = Integer.parseInt(logicalRunwayElement.getElementsByTagName("DistThreshold").item(0).getTextContent());
-                                int distCent = Integer.parseInt(logicalRunwayElement.getElementsByTagName("DistCent").item(0).getTextContent());
-
-                                Obstacle obstacle = new Obstacle(obstacleName,height,distThreshold,distCent);
-                                runway.addObstacle(obstacle);
-
-                            }
+                            // Get ALL the "LogicalRunway" elements in each "LogicalRunways"
+                            NodeList logicalRunwayList = logicalRunwaysElement.getElementsByTagName("LogicalRunway");
+                            Runway runway1 = makeRunwayObject((Element) logicalRunwayList.item(0));
+                            Runway runway2 = makeRunwayObject((Element) logicalRunwayList.item(1));
+                            airport.addNewRunway(runway1,runway2);
                         }
-                        airport.addRunway(runway);
                     }
                 }
-                // Add newly constructed airport object to arrayList
                 importedAirports.add(airport);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return importedAirports;
+    }
+
+    // Since there's a pair of runway objects can call this method twice!
+    public Runway makeRunwayObject(Element logicalRunwayElement) {
+        // Retrieve data for LogicalRunway
+        String degree = logicalRunwayElement.getAttribute("degree");
+        System.out.println("Degree: " + degree);
+        int stopway = Integer.parseInt(
+            logicalRunwayElement.getElementsByTagName("stopway").item(0).getTextContent());
+        int clearway = Integer.parseInt(
+            logicalRunwayElement.getElementsByTagName("clearway").item(0).getTextContent());
+        int tora = Integer.parseInt(
+            logicalRunwayElement.getElementsByTagName("TORA").item(0).getTextContent());
+        int dispThresh = Integer.parseInt(
+            logicalRunwayElement.getElementsByTagName("dispThresh").item(0).getTextContent());
+
+        // Make runway object
+        Runway runway = new Runway(degree,stopway,clearway,tora,dispThresh);
+
+        // Check for Obstacle Element
+        Element obstacleElement = (Element) logicalRunwayElement.getElementsByTagName("Obstacle").item(0);
+        if (obstacleElement != null) {
+            String name = obstacleElement.getAttribute("name");
+            int height = Integer.parseInt(
+                obstacleElement.getElementsByTagName("Height").item(0).getTextContent());
+            int distThreshold = Integer.parseInt(
+                obstacleElement.getElementsByTagName("DistThreshold").item(0).getTextContent());
+            int distCent = Integer.parseInt(
+                obstacleElement.getElementsByTagName("DistCent").item(0).getTextContent());
+            runway.addObstacle(new Obstacle(name,height,distThreshold,distCent));
+        }
+        return runway;
     }
 
     public ArrayList<Obstacle> makeObstaclesXML() {

@@ -170,7 +170,7 @@ public class Runway {
                 breakdown.append("\nTake-Off Run Available (TORA), Take-Off Distance Available (TODA), Accelerate-Stop Distance Available (ASDA) calculation:\n");
                 if (takeoffToward) {
                     breakdown.append("Taking off toward the obstacle.\n");
-                    breakdown.append("New TORA = Distance from Threshold to Obstacle + Displaced Threshold - Displaced Threshold - Strip End\n");
+                    breakdown.append("New TORA = Distance from Threshold to Obstacle + Displaced Threshold - RESA - Strip End\n");
                     breakdown.append("New TORA = ").append(obstacle.getDistanceFromThreshold()).append(" + ").append(displacedThreshold).append(" - ").append(RESA).append(" - ").append(stripEnd).append("\n");
                 } else {
                     breakdown.append("Taking off away from the obstacle.\n");
@@ -237,6 +237,10 @@ public class Runway {
     }
     public int getClearway(){
         return clearway;
+    }
+
+    public int getRESA(){
+        return RESA;
     }
 
 }

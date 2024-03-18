@@ -48,7 +48,6 @@ public class RunwayConfigViewScene extends BaseScene {
 
     getChildren().add(createTitleSection(currentRunway));
     getChildren().add(createParameterSection());
-    getChildren().add(drawRunway());
     getChildren().add(calculatedParameterSection());
     if (!currentRunway.getObstacles().isEmpty()) {
       getChildren().add(createCalculationBreakdownSection());
@@ -178,51 +177,6 @@ public class RunwayConfigViewScene extends BaseScene {
     parameterSection.getChildren().add(setUpParameters());
 
     return parameterSection;
-  }
-
-  private VBox drawRunway() {
-    Group runwayDiagram = new Group();
-    runwayDiagram.getChildren().addAll(createRunwayLine(), createRunwayLabels());
-    VBox runwaySection = new VBox(runwayDiagram);
-    runwaySection.setPadding(new Insets(10, 0, 10, 0));
-    runwaySection.setAlignment(Pos.CENTER);
-    return runwaySection;
-  }
-
-  private Line createRunwayLine() {
-    return new Line(50, 150, 750, 150) {{
-      setStroke(Color.GRAY);
-      setStrokeWidth(10);
-    }};
-  }
-
-  private Group createRunwayLabels() {
-    Text toraLabel = new Text("TORA: " + currentRunway.getTORA());
-    toraLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
-    toraLabel.setX(50);
-    toraLabel.setY(130);
-
-    Text todaLabel = new Text("TODA: " + currentRunway.getTODA());
-    todaLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
-    todaLabel.setX(150);
-    todaLabel.setY(130);
-
-    Text asdaLabel = new Text("ASDA: " + currentRunway.getASDA());
-    asdaLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
-    asdaLabel.setX(250);
-    asdaLabel.setY(130);
-
-    Text ldaLabel = new Text("LDA: " + currentRunway.getLDA());
-    ldaLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
-    ldaLabel.setX(350);
-    ldaLabel.setY(130);
-
-    Text displacedThresholdLabel = new Text("Displaced Threshold: " + currentRunway.getDisplacedThreshold());
-    displacedThresholdLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
-    displacedThresholdLabel.setX(450);
-    displacedThresholdLabel.setY(130);
-
-    return new Group(toraLabel, todaLabel, asdaLabel, ldaLabel, displacedThresholdLabel);
   }
 
   private VBox calculatedParameterSection() {

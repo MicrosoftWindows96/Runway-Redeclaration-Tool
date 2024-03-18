@@ -7,6 +7,7 @@ import javafx.scene.ParallelCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
@@ -17,6 +18,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
@@ -27,11 +29,13 @@ public class BothViewScene extends BaseScene {
 
     private final ParallelRunways runwayManager;
     private final Runway currentRunway;
+    private final ArrayList<Obstacle> obstacles;
 
     public BothViewScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
         this.currentRunway = runwayManager.getFstRunway();
         this.runwayManager = runwayManager;
+        this.obstacles = currentRunway.getObstacles();
         BorderPane borderPane = new BorderPane();
         borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
 
@@ -44,9 +48,31 @@ public class BothViewScene extends BaseScene {
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(addButtons());
 
+        VBox distanceInfoBox = new VBox();
+
+        if (obstacles.isEmpty()) {
+            distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
+            distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
+            distanceInfoBox.setSpacing(1); // Spacing between labels
+            Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
+            Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
+            Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
+            Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
+            distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+        } else {
+            distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
+            distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
+            distanceInfoBox.setSpacing(1); // Spacing between labels
+            Label toraLabel = new Label("TORA: " + currentRunway.getNewTORA() + "m");
+            Label todaLabel = new Label("TODA: " + currentRunway.getNewTODA() + "m");
+            Label asdaLabel = new Label("ASDA: " + currentRunway.getNewASDA() + "m");
+            Label ldaLabel = new Label("LDA: " + currentRunway.getNewLDA() + "m");
+            distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+        }
+
         VBox topLayout = new VBox();
         topLayout.setAlignment(Pos.TOP_CENTER);
-        topLayout.getChildren().addAll(title, buttons);
+        topLayout.getChildren().addAll(title, buttons,distanceInfoBox);
         BorderPane.setMargin(topLayout, new Insets(10));
 
         borderPane.setTop(topLayout);

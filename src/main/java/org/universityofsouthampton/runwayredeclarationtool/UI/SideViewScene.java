@@ -77,14 +77,26 @@ public class SideViewScene extends BaseScene {
         buttons.getChildren().addAll(addButtons());
 
         VBox distanceInfoBox = new VBox();
-        distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
-        distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
-        distanceInfoBox.setSpacing(1); // Spacing between labels
-        Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
-        Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
-        Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
-        Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
-        distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+
+        if (obstacles.isEmpty()) {
+            distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
+            distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
+            distanceInfoBox.setSpacing(1); // Spacing between labels
+            Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
+            Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
+            Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
+            Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
+            distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+        } else {
+            distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
+            distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
+            distanceInfoBox.setSpacing(1); // Spacing between labels
+            Label toraLabel = new Label("TORA: " + currentRunway.getNewTORA() + "m");
+            Label todaLabel = new Label("TODA: " + currentRunway.getNewTODA() + "m");
+            Label asdaLabel = new Label("ASDA: " + currentRunway.getNewASDA() + "m");
+            Label ldaLabel = new Label("LDA: " + currentRunway.getNewLDA() + "m");
+            distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+        }
 
 
         VBox rightButtons = new VBox();

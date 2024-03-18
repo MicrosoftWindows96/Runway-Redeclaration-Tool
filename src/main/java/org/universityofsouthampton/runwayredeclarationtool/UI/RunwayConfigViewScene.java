@@ -1,12 +1,5 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import static org.universityofsouthampton.runwayredeclarationtool.MainApplication.secondaryStage;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -26,9 +19,16 @@ import javafx.util.Pair;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
-import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.universityofsouthampton.runwayredeclarationtool.MainApplication.secondaryStage;
 
 public class RunwayConfigViewScene extends BaseScene {
 
@@ -69,8 +69,8 @@ public class RunwayConfigViewScene extends BaseScene {
       app.displayRunwayConfigScene(airport,runwayManager);
     });
 
-    Button nextButton = new Button("Next"); // Goes to next parallel runway
-    styleButton(nextButton, MaterialDesign.MDI_ARROW_ALL, "Next");
+    Button nextButton = new Button(); // Goes to next parallel runway
+    styleButton(nextButton, MaterialDesign.MDI_ARROW_ALL, "Switch");
     nextButton.setOnAction(e -> {
       runwayManager.nextCurrentRunway();
       app.displayRunwayConfigScene(airport,runwayManager);

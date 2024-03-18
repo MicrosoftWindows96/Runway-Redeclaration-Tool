@@ -106,17 +106,21 @@ public class SideViewScene extends BaseScene {
 
         Button button1 = new Button();
         styleButton(button1, MaterialDesign.MDI_NUMERIC_1_BOX, "L Over");  // Land Over
+        button1.setOnAction(e -> animatePlane("Land Over"));
         Button button2 = new Button();
         styleButton(button2, MaterialDesign.MDI_NUMERIC_2_BOX, "L Toward"); // Land Toward
+        button2.setOnAction(e -> animatePlane("Land Toward"));
         Button button3 = new Button();
         styleButton(button3, MaterialDesign.MDI_NUMERIC_3_BOX, "T Toward"); // Takeoff Toward
+        button3.setOnAction(e -> animatePlane("Takeoff Toward"));
         Button button4 = new Button();
         styleButton(button4, MaterialDesign.MDI_NUMERIC_4_BOX, "T Away"); // Takeoff Away
+        button4.setOnAction(e -> animatePlane("Takeoff Away"));
 
         rightButtons.getChildren().addAll(button1, button2, button3,button4);
 
         Region spacer = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS); // This will allow the spacer to grow, pushing the buttons to the top
+        VBox.setVgrow(spacer, Priority.ALWAYS);
         rightButtons.getChildren().add(spacer);
 
         VBox topLayout = new VBox();
@@ -151,7 +155,7 @@ public class SideViewScene extends BaseScene {
         animationOverlay.setPrefSize(800, 200);
         stackPane.getChildren().add(animationOverlay);
 
-        animatePlane();
+        //animatePlane();
 
         this.getChildren().add(borderPane);
     }
@@ -166,25 +170,58 @@ public class SideViewScene extends BaseScene {
         return planeImageView;
     }
 
+    private ImageView currentPlane;
+    private TranslateTransition currentTransition;
 
-    private void animatePlane() {
+    private void animatePlane(String operation) {
+        if (currentTransition != null && currentPlane != null) {
+            currentTransition.stop();
+            animationOverlay.getChildren().remove(currentPlane);
+        }
+
         ImageView plane = createPlaneImage();
-
-        double startingXPosition = animationOverlay.getPrefWidth();
-        plane.setTranslateX(startingXPosition);
-
-        double endingXPosition = RESADistance;
-
-        double startingAltitude = 0;
-        plane.setTranslateY(startingAltitude);
-
+        currentPlane = plane;
         animationOverlay.getChildren().add(plane);
+
+        double startingXPosition;
+        double endingXPosition;
+        double altitude = 30;
+
+        switch (operation) {
+            case "Land Over":
+                startingXPosition = -plane.getFitWidth();
+                endingXPosition = RESADistance + 100;
+                plane.setScaleX(-1);
+                break;
+            case "Land Toward":
+                startingXPosition = animationOverlay.getPrefWidth();
+                endingXPosition = slopeDistance - 100;
+                plane.setScaleX(1);
+                break;
+            case "Takeoff Toward":
+                startingXPosition = slopeDistance - 200;
+                endingXPosition = animationOverlay.getPrefWidth();
+                plane.setScaleX(-1);
+                break;
+            case "Takeoff Away":
+                startingXPosition = 0;
+                endingXPosition = -plane.getFitWidth();
+                plane.setScaleX(1);
+                break;
+            default:
+                return;
+        }
+
+        plane.setTranslateX(startingXPosition);
+        plane.setTranslateY(altitude);
 
         TranslateTransition transition = new TranslateTransition(Duration.seconds(5), plane);
         transition.setFromX(startingXPosition);
         transition.setToX(endingXPosition);
-        transition.setFromY(startingAltitude);
-        transition.setToY(30);
+        transition.setFromY(0);
+        transition.setToY(altitude);
+
+        currentTransition = transition;
 
         transition.play();
     }

@@ -204,15 +204,15 @@ public class SideViewScene extends BaseScene {
             case "Takeoff Toward":
                 startingYPosition = 30;
                 altitude = 0;
-                startingXPosition = slopeDistance - 200;
-                endingXPosition = animationOverlay.getPrefWidth();
+                startingXPosition = slopeDistance - 100;
+                endingXPosition = animationOverlay.getPrefWidth() + 100;
                 plane.setScaleX(-1);
                 break;
             case "Takeoff Away":
                 startingYPosition = 30;
                 startingXPosition = animationOverlay.getPrefWidth() - 150;
                 altitude = 0;
-                endingXPosition = -plane.getFitWidth();
+                endingXPosition = -plane.getFitWidth() - 100;
                 plane.setScaleX(1);
                 break;
             default:

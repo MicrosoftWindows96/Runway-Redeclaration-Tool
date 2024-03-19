@@ -305,12 +305,12 @@ public class TopDownScene extends BaseScene {
 
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 
-        String leftRunwayName = runwayManager.getDegree1() + runwayManager.getFstRunway().getDirection();
+        String leftRunwayName = runwayManager.getFstRunway().getName() + runwayManager.getFstRunway().getDirection();
         gc.fillText(leftRunwayName, runwayStartX, centerLineY - 25);
         gc.fillText("Take-off/Landing →", runwayStartX, centerLineY - 40); // Adjust text position as needed
 
 
-        String rightRunwayName = runwayManager.getDegree2() + runwayManager.getSndRunway().getDirection();
+        String rightRunwayName = runwayManager.getSndRunway().getName() + runwayManager.getSndRunway().getDirection();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);
         gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth -100, centerLineY - 40); // Adjust text position as needed

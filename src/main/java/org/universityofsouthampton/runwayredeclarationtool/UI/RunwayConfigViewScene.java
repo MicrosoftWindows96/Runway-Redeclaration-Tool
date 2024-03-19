@@ -177,6 +177,7 @@ public class RunwayConfigViewScene extends BaseScene {
   private Text createTitleSection(Runway runway) {
     Text title = new Text("Runway: " + airport.getAirportCode() + " -- " + runway.getName() + runway.getDirection());
     title.setFont(Font.font("Arial", 20));
+    title.setStroke(Color.WHITE);
     return title;
   }
 
@@ -230,6 +231,15 @@ public class RunwayConfigViewScene extends BaseScene {
     displacedThresholdLabel.setFont(Font.font("Arial", Font.getDefault().getSize()));
     displacedThresholdLabel.setX(450);
     displacedThresholdLabel.setY(130);
+
+    // if dark mode true
+    if (app.isDarkMode()) {
+      toraLabel.setFill(Color.WHITE);
+      todaLabel.setFill(Color.WHITE);
+      asdaLabel.setFill(Color.WHITE);
+      ldaLabel.setFill(Color.WHITE);
+      displacedThresholdLabel.setFill(Color.WHITE);
+    }
 
     return new Group(toraLabel, todaLabel, asdaLabel, ldaLabel, displacedThresholdLabel);
   }

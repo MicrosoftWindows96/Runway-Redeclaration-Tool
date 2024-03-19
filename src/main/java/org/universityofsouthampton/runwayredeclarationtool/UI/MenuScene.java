@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -17,6 +18,8 @@ import java.util.Arrays;
 
 public class MenuScene extends BaseScene {
 
+  private MainApplication app;
+
   public MenuScene(MainApplication app) {
     this.app = app;
     this.setAlignment(Pos.TOP_CENTER);
@@ -26,15 +29,31 @@ public class MenuScene extends BaseScene {
     var title = new Text("Runway Re-declaration Tool");
     title.setFont(Font.font("Arial", 24));
     title.setStyle("-fx-fill: #333;");
+    title.setStroke(Color.WHITE);
     VBox.setMargin(title, new Insets(10, 0, 10, 0));
+
+    VBox darkMode = new VBox(10);
+    darkMode.setAlignment(Pos.TOP_RIGHT);
+    Button darkModeToggle = new Button();
+    styleDarkButton(darkModeToggle, MaterialDesign.MDI_WEATHER_NIGHT, "");
+    darkModeToggle.setOnAction(e -> toggleDarkMode());
+    darkModeToggle.setLayoutX(20);
+    darkModeToggle.setLayoutY(20);
+    darkMode.getChildren().add(darkModeToggle);
+    this.getChildren().add(darkMode);
 
     // Make the screen buttons
     VBox buttons = new VBox(10);
     buttons.setAlignment(Pos.CENTER);
     buttons.getChildren().addAll(addButtons());
 
+
     // Add nodes
     this.getChildren().addAll(title, buttons);
+  }
+
+  private void toggleDarkMode() {
+    app.toggleDarkMode();
   }
 
   @Override

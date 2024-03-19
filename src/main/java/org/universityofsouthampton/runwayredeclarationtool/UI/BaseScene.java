@@ -1,6 +1,5 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,6 +19,8 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+
+import java.util.ArrayList;
 
 
 /**
@@ -85,6 +86,17 @@ public abstract class BaseScene extends VBox {
     button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
     button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
     button.setPrefWidth(120);
+    button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
+    button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
+    button.setOnMouseClicked(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
+
+    styleIcon(button, icon, text);
+  }
+
+  void styleDarkButton(Button button, MaterialDesign icon, String text) {
+    button.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+    button.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+    button.setPrefWidth(10);
     button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));
     button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #333; -fx-text-fill: white;"));
     button.setOnMouseClicked(e -> button.setStyle("-fx-background-color: #555; -fx-text-fill: white;"));

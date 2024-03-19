@@ -1,7 +1,5 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import java.util.LinkedList;
-import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.layout.Pane;
@@ -11,6 +9,9 @@ import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
+import java.util.LinkedList;
+import java.util.Random;
+
 public class AnimatedPatternBackground extends Pane {
   private final Random random = new Random();
   private final Pane planeLayer = new Pane();
@@ -19,6 +20,7 @@ public class AnimatedPatternBackground extends Pane {
   private final double speed = 1.0;
   //private final double planeSpeed = 4.0;
   private static AnimatedPatternBackground instance;
+  public boolean isDarkMode = false;
 
   public AnimatedPatternBackground(double initialWidth, double initialHeight) {
     this.setStyle("-fx-background-color: #c9e9f6;");
@@ -35,6 +37,25 @@ public class AnimatedPatternBackground extends Pane {
     createPattern();
     animatePattern();
     launchPlanes();
+  }
+
+  public void toggleDarkMode() {
+    isDarkMode = !isDarkMode;
+    if (isDarkMode) {
+      this.setStyle("-fx-background-color: #121212;"); // Dark background color
+      cloudLayer.getChildren().forEach(node -> {
+        if (node instanceof FontIcon) {
+          ((FontIcon) node).setFill(javafx.scene.paint.Color.LIGHTGRAY); // Lighter clouds for contrast
+        }
+      });
+    } else {
+      this.setStyle("-fx-background-color: #c9e9f6;"); // Original background color
+      cloudLayer.getChildren().forEach(node -> {
+        if (node instanceof FontIcon) {
+          ((FontIcon) node).setFill(javafx.scene.paint.Color.WHITE); // Original cloud color
+        }
+      });
+    }
   }
 
   private void createPattern() {

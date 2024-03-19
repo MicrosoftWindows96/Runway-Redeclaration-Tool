@@ -1,8 +1,5 @@
 package org.universityofsouthampton.runwayredeclarationtool;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Objects;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,20 +10,16 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.universityofsouthampton.runwayredeclarationtool.UI.AirportListScene;
-import org.universityofsouthampton.runwayredeclarationtool.UI.AnimatedPatternBackground;
-import org.universityofsouthampton.runwayredeclarationtool.UI.BothViewScene;
-import org.universityofsouthampton.runwayredeclarationtool.UI.MenuScene;
-import org.universityofsouthampton.runwayredeclarationtool.UI.ObstacleListScene;
-import org.universityofsouthampton.runwayredeclarationtool.UI.RunwayConfigViewScene;
-import org.universityofsouthampton.runwayredeclarationtool.UI.SideViewScene;
-import org.universityofsouthampton.runwayredeclarationtool.UI.TopDownScene;
-import org.universityofsouthampton.runwayredeclarationtool.UI.ViewSelectionScene;
+import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Class that handles the scene changes (Controller)
@@ -36,7 +29,7 @@ public class MainApplication extends Application {
     private static final String AIRPORTS_XML_PATH = "src/main/resources/XML/newAirports.xml";
     private static final String OBSTACLES_XML_PATH = "src/main/resources/XML/testObstacles.xml";
     private StackPane root; // The root node to hold the scenes
-    private AnimatedPatternBackground background;
+    private static AnimatedPatternBackground background;
     private ArrayList<Airport> airports; // Imported airports
     private ArrayList<Obstacle> obstacles; // Imported obstacles
 
@@ -217,5 +210,13 @@ public class MainApplication extends Application {
         Scene bothViewSceneScene = new Scene(bothViewScene, 800, 600);
         secondaryStage.setScene(bothViewSceneScene);
         secondaryStage.show();
+    }
+
+    public void toggleDarkMode() {
+        background.toggleDarkMode();
+    }
+
+    public boolean isDarkMode() {
+        return background.isDarkMode;
     }
 }

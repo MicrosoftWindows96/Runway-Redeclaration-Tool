@@ -194,31 +194,28 @@ public class ObstacleListScene extends BaseScene {
         TextField textFieldDistFromCent = (TextField) distFromCentBox.getChildren().get(1);
 
         // Set up validation
-        setupValidation(textFieldName, "^[A-Za-z0-9- ]+$");
-        setupValidation(textFieldHeight, "\\d+");
-        setupValidation(textFieldDistFromThre, "\\d+");
-        setupValidation(textFieldDistFromCent, "\\d+");
+        setupValidation(textFieldName, "^[A-Za-z0-9- ]+$", "Please enter a valid name. Alphanumeric and hyphens only.");
+        setupValidation(textFieldHeight, "\\d+", "Please enter a valid height. Positive integers only.");
+        setupValidation(textFieldDistFromThre, "\\d+", "Please enter a valid distance. Positive integers only.");
+        setupValidation(textFieldDistFromCent, "\\d+", "Please enter a valid distance. Positive integers only.");
 
         Button submitButton = new Button("Create");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
         submitButton.setOnAction(e -> {
-            if (validateInputs(new TextField[]{textFieldName, textFieldHeight, textFieldDistFromThre, textFieldDistFromCent})) {
+            String errorMessage = validateInputs(new TextField[]{textFieldName, textFieldHeight, textFieldDistFromThre, textFieldDistFromCent});
+            if (errorMessage.isEmpty()) {
                 String name = textFieldName.getText();
-                try {
-                    int height = Integer.parseInt(textFieldHeight.getText());
-                    int distFromThre = Integer.parseInt(textFieldDistFromThre.getText());
-                    int distFromCent = Integer.parseInt(textFieldDistFromCent.getText());
+                int height = Integer.parseInt(textFieldHeight.getText());
+                int distFromThre = Integer.parseInt(textFieldDistFromThre.getText());
+                int distFromCent = Integer.parseInt(textFieldDistFromCent.getText());
 
-                    Obstacle newObstacle = new Obstacle(name, height, distFromThre, distFromCent);
-                    otherObstacles.add(newObstacle);
-                    app.showNotification("Obstacle Created", "Obstacle " + name + " created successfully.");
-                    updateObstaclesList();
-                    ((Stage) promptWindow.getScene().getWindow()).close();
-                } catch (NumberFormatException ex) {
-                    showErrorDialog("Invalid input for obstacle measurements. Please enter valid integers.");
-                }
+                Obstacle newObstacle = new Obstacle(name, height, distFromThre, distFromCent);
+                otherObstacles.add(newObstacle);
+                app.showNotification("Obstacle Created", "Obstacle " + name + " created successfully.");
+                updateObstaclesList();
+                ((Stage) promptWindow.getScene().getWindow()).close();
             } else {
-                showErrorDialog("Please correct the highlighted fields before proceeding.");
+                showErrorDialog(errorMessage);
             }
         });
 
@@ -226,7 +223,9 @@ public class ObstacleListScene extends BaseScene {
         dialogGenerator(promptWindow, "Create Obstacle");
     }
 
-    private void setupValidation(TextField textField, String pattern) {
+    private void setupValidation(TextField textField, String pattern, String errorMessage) {
+        textField.getProperties().put("validationPattern", pattern);
+        textField.getProperties().put("errorMessage", errorMessage);
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches(pattern)) {
                 textField.setStyle("-fx-control-inner-background: red;");
@@ -236,19 +235,15 @@ public class ObstacleListScene extends BaseScene {
         });
     }
 
-    private boolean validateInputs(TextField[] textFields) {
-        boolean allValid = true;
+    private String validateInputs(TextField[] textFields) {
         for (TextField textField : textFields) {
-            String background = textField.getStyle();
-            if (background.contains("red")) {
-                allValid = false;
-                break;
+            String pattern = (String) textField.getProperties().get("validationPattern");
+            String errorMessage = (String) textField.getProperties().get("errorMessage");
+            if (!textField.getText().matches(pattern)) {
+                return errorMessage;
             }
         }
-        if (!allValid) {
-            showErrorDialog("Some inputs are invalid. Please check your inputs.");
-        }
-        return allValid;
+        return "";
     }
 
 
@@ -269,34 +264,31 @@ public class ObstacleListScene extends BaseScene {
         TextField textFieldDistFromCent = (TextField) distFromCentBox.getChildren().get(1);
 
         // Set up validation
-        setupValidation(textFieldName, "^[A-Za-z0-9- ]+$"); // Alphanumeric and hyphens only
-        setupValidation(textFieldHeight, "\\d+"); // Positive integers only
-        setupValidation(textFieldDistFromThre, "\\d+"); // Positive integers only
-        setupValidation(textFieldDistFromCent, "\\d+"); // Positive integers only
+        setupValidation(textFieldName, "^[A-Za-z0-9- ]+$", "Please enter a valid name. Alphanumeric and hyphens only.");
+        setupValidation(textFieldHeight, "\\d+", "Please enter a valid height. Positive integers only.");
+        setupValidation(textFieldDistFromThre, "\\d+", "Please enter a valid distance. Positive integers only.");
+        setupValidation(textFieldDistFromCent, "\\d+", "Please enter a valid distance. Positive integers only.");
 
         Button submitButton = new Button("Save Changes");
         styleButton(submitButton, MaterialDesign.MDI_CHECK, "Save");
         submitButton.setOnAction(e -> {
-            if (validateInputs(new TextField[]{textFieldName, textFieldHeight, textFieldDistFromThre, textFieldDistFromCent})) {
+            String errorMessage = validateInputs(new TextField[]{textFieldName, textFieldHeight, textFieldDistFromThre, textFieldDistFromCent});
+            if (errorMessage.isEmpty()) {
                 String name = textFieldName.getText();
-                try {
-                    int height = Integer.parseInt(textFieldHeight.getText());
-                    int distFromThre = Integer.parseInt(textFieldDistFromThre.getText());
-                    int distFromCent = Integer.parseInt(textFieldDistFromCent.getText());
+                int height = Integer.parseInt(textFieldHeight.getText());
+                int distFromThre = Integer.parseInt(textFieldDistFromThre.getText());
+                int distFromCent = Integer.parseInt(textFieldDistFromCent.getText());
 
-                    selectedObstacle.setName(name);
-                    selectedObstacle.setHeight(height);
-                    selectedObstacle.setDistanceFromThreshold(distFromThre);
-                    selectedObstacle.setDistanceFromCentreline(distFromCent);
+                selectedObstacle.setName(name);
+                selectedObstacle.setHeight(height);
+                selectedObstacle.setDistanceFromThreshold(distFromThre);
+                selectedObstacle.setDistanceFromCentreline(distFromCent);
 
-                    app.showNotification("Obstacle Updated", "Obstacle " + name + " updated successfully.");
-                    updateObstaclesList();
-                    ((Stage) promptWindow.getScene().getWindow()).close();
-                } catch (NumberFormatException ex) {
-                    showErrorDialog("Invalid input for obstacle measurements. Please enter valid integers.");
-                }
+                app.showNotification("Obstacle Updated", "Obstacle " + name + " updated successfully.");
+                updateObstaclesList();
+                ((Stage) promptWindow.getScene().getWindow()).close();
             } else {
-                showErrorDialog("Please correct the highlighted fields before proceeding.");
+                showErrorDialog(errorMessage);
             }
         });
 

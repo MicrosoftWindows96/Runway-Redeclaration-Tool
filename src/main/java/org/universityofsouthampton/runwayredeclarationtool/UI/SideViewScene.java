@@ -62,7 +62,13 @@ public class SideViewScene extends BaseScene {
         }
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0, 1200.0);
-        borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
+
+        if (MainApplication.isDarkMode()) {
+            borderPane.setStyle("-fx-background-color: #121212;");
+        } else {
+            borderPane.setBackground(Background.fill(Color.rgb(201, 233, 246)));
+        }
+
         cloudLayer.setPrefSize(800, 130);
         createPattern();
         animatePattern();
@@ -70,6 +76,7 @@ public class SideViewScene extends BaseScene {
         Text title = new Text("Side View");
         title.setFont(Font.font("Arial", 24));
         title.setStyle("-fx-fill: #333;");
+        title.setStroke(Color.WHITE);
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
         VBox buttons = new VBox(10);
@@ -87,6 +94,13 @@ public class SideViewScene extends BaseScene {
             Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
             Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+            if (MainApplication.isDarkMode()) {
+                //set text color to white
+                toraLabel.setTextFill(Color.WHITE);
+                todaLabel.setTextFill(Color.WHITE);
+                asdaLabel.setTextFill(Color.WHITE);
+                ldaLabel.setTextFill(Color.WHITE);
+            }
         } else {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
@@ -96,6 +110,13 @@ public class SideViewScene extends BaseScene {
             Label asdaLabel = new Label("ASDA: " + currentRunway.getNewASDA() + "m");
             Label ldaLabel = new Label("LDA: " + currentRunway.getNewLDA() + "m");
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+            if (MainApplication.isDarkMode()) {
+                //set text color to white
+                toraLabel.setTextFill(Color.WHITE);
+                todaLabel.setTextFill(Color.WHITE);
+                asdaLabel.setTextFill(Color.WHITE);
+                ldaLabel.setTextFill(Color.WHITE);
+            }
         }
 
 
@@ -288,7 +309,12 @@ public class SideViewScene extends BaseScene {
 
     public void drawRunway(Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        Color skyColor = Color.rgb(201,233,246);
+        Color skyColor;
+        if (MainApplication.isDarkMode()) {
+            skyColor = Color.rgb(18, 18, 18);
+        } else {
+            skyColor = Color.rgb(201,233,246);
+        }
         gc.setFill(skyColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -330,7 +356,12 @@ public class SideViewScene extends BaseScene {
 
         Font labelFont = Font.font("Arial", 14);
         gc.setFont(labelFont);
-        gc.setFill(Color.BLACK);
+        // if dark mode
+        if (MainApplication.isDarkMode()) {
+            gc.setFill(Color.WHITE);
+        } else {
+            gc.setFill(Color.BLACK);
+        }
 
         if (!obstacles.isEmpty()) {
             double obstacleX = runwayStartX + ((double) obstacle.getDistanceFromThreshold() / 6);
@@ -344,7 +375,7 @@ public class SideViewScene extends BaseScene {
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";
             gc.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight - 5);
 
-            gc.setFill(Color.BLACK);
+            //gc.setFill(Color.BLACK);
             this.TORA = (double) currentRunway.getNewTORA() / 6;
             this.TODA = (double) currentRunway.getNewTODA() / 6;
             this.ASDA = (double) currentRunway.getNewASDA() / 6;
@@ -451,7 +482,14 @@ public class SideViewScene extends BaseScene {
             gc.setFill(Color.RED);
             gc.fillRect(runwayStartX + displacedThresholdOffset, runwayStartY, thresholdWidth, runwayHeight);
         }
-        gc.setFill(Color.BLACK);
+
+        if (MainApplication.isDarkMode()) {
+            gc.setFill(Color.WHITE);
+
+        } else {
+            gc.setFill(Color.BLACK);
+        }
+
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 
         String leftRunwayName = runwayManager.getDegree1() + runwayManager.getFstRunway().getDirection();

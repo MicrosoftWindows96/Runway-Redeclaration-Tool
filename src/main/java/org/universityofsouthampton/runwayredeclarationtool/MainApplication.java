@@ -216,7 +216,7 @@ public class MainApplication extends Application {
         background.toggleDarkMode();
     }
 
-    public boolean isDarkMode() {
+    public static boolean isDarkMode() {
         return background.isDarkMode;
     }
 }

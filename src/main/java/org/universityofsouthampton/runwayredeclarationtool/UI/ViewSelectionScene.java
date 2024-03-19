@@ -27,12 +27,17 @@ public class ViewSelectionScene extends BaseScene {
         this.runwayManager = runwayManager;
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0,1200.0);
-        borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
+        if (MainApplication.isDarkMode()) {
+            borderPane.setStyle("-fx-background-color: #121212;");
+        } else {
+            borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
+        }
 
 
         Text title = new Text("Top Down View");
         title.setFont(Font.font("Arial", 24));
         title.setStyle("-fx-fill: #333;");
+        title.setStroke(Color.WHITE);
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
         VBox buttons = new VBox(10);

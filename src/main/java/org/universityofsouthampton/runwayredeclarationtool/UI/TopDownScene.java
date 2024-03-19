@@ -55,7 +55,7 @@ public class TopDownScene extends BaseScene {
         }
 
 
-        Text title = new Text("Top Down View");
+        Text title = new Text("Aerial View");
         title.setFont(Font.font("Arial", 24));
         title.setStyle("-fx-fill: #333;");
         title.setStroke(Color.WHITE);
@@ -172,7 +172,11 @@ public class TopDownScene extends BaseScene {
 
         Font labelFont = Font.font("Arial", 14);
         gc.setFont(labelFont);
-        gc.setFill(Color.BLACK);
+        if (MainApplication.isDarkMode()) {
+            gc.setFill(Color.WHITE);
+        } else {
+            gc.setFill(Color.BLACK);
+        }
 
         // b. Draw threshold indicators
         if (!obstacles.isEmpty()) {
@@ -183,13 +187,13 @@ public class TopDownScene extends BaseScene {
             double obstacleY = centerLineY + fromCentreline; // Adjust Y position to place on top of the runway
             double obstacleWidth = 10;
 
-            gc.setFill(Color.BLACK);
+            //gc.setFill(Color.BLACK);
             gc.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
 
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";
             gc.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight - 5);
 
-            gc.setStroke(Color.BLACK);
+            //gc.setStroke(Color.BLACK);
 //            gc.strokeLine(runwayStartX, runwayStartY + 20, runwayStartX + TORA, runwayStartY + 20); // slope line
 
 
@@ -275,8 +279,12 @@ public class TopDownScene extends BaseScene {
             gc.fillRect(runwayStartX + displacedThresholdOffset, runwayStartY, thresholdWidth, runwayHeight);
         }
 
-        gc.setFill(Color.BLACK);
-
+        //gc.setFill(Color.BLACK);
+        if (MainApplication.isDarkMode()) {
+            gc.setFill(Color.WHITE);
+        } else {
+            gc.setFill(Color.BLACK);
+        }
 
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 

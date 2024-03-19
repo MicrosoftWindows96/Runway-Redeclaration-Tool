@@ -48,12 +48,17 @@ public class TopDownScene extends BaseScene {
         }
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1200.0,1200.0);
-        borderPane.setBackground(Background.fill(Color.rgb(201, 233, 246)));
+        if (MainApplication.isDarkMode()) {
+            borderPane.setStyle("-fx-background-color: #121212;");
+        } else {
+            borderPane.setBackground(Background.fill(Color.rgb(201, 233, 246)));
+        }
 
 
         Text title = new Text("Top Down View");
         title.setFont(Font.font("Arial", 24));
         title.setStyle("-fx-fill: #333;");
+        title.setStroke(Color.WHITE);
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
         VBox buttons = new VBox(10);
@@ -71,6 +76,13 @@ public class TopDownScene extends BaseScene {
             Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
             Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+            if (MainApplication.isDarkMode()) {
+                //set text color to white
+                toraLabel.setTextFill(Color.WHITE);
+                todaLabel.setTextFill(Color.WHITE);
+                asdaLabel.setTextFill(Color.WHITE);
+                ldaLabel.setTextFill(Color.WHITE);
+            }
         } else {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
@@ -80,6 +92,13 @@ public class TopDownScene extends BaseScene {
             Label asdaLabel = new Label("ASDA: " + currentRunway.getNewASDA() + "m");
             Label ldaLabel = new Label("LDA: " + currentRunway.getNewLDA() + "m");
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
+            if (MainApplication.isDarkMode()) {
+                //set text color to white
+                toraLabel.setTextFill(Color.WHITE);
+                todaLabel.setTextFill(Color.WHITE);
+                asdaLabel.setTextFill(Color.WHITE);
+                ldaLabel.setTextFill(Color.WHITE);
+            }
         }
 
 

@@ -201,8 +201,12 @@ public class SideViewScene extends BaseScene {
         }
 
         ImageView plane = createPlaneImage();
+        if (MainApplication.isDarkMode()) {
+            plane.setEffect(new javafx.scene.effect.ColorAdjust(0, 0, 1, 0));
+        }
         currentPlane = plane;
         animationOverlay.getChildren().add(plane);
+
 
         double startingXPosition;
         double endingXPosition;
@@ -369,7 +373,7 @@ public class SideViewScene extends BaseScene {
             double obstacleHeight = (double) obstacle.getHeight() / 6;
             double obstacleY = runwayStartY - obstacleHeight;
 
-            gc.setFill(Color.BLACK);
+            //gc.setFill(Color.BLACK);
             gc.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
 
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";

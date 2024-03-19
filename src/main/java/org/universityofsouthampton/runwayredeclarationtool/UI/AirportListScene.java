@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -211,7 +212,7 @@ public class AirportListScene extends BaseScene {
             if (!found && Character.isLetter(chars[i])) {
                 chars[i] = Character.toUpperCase(chars[i]);
                 found = true;
-            } else if (Character.isWhitespace(chars[i]) || chars[i]=='.' || chars[i]=='\'') { // You can add other chars here
+            } else if (Character.isWhitespace(chars[i]) || chars[i]=='.' || chars[i]=='\'') {
                 found = false;
             }
         }
@@ -251,56 +252,64 @@ public class AirportListScene extends BaseScene {
         Text runways = new Text("Runway 1  ---  Runway 2");
         runways.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
-        var degreeBox1 = promptWindow.addParameterField("Degree 1");
-        var degreeBox2 = promptWindow.addParameterField("Degree 2");
-        var deBox = new HBox(10,degreeBox1,degreeBox2);
+        var degreeBox1 = promptWindow.addParameterField("Degree 1 (0-36)");
+        TextField textFieldDegree1 = (TextField) degreeBox1.getChildren().get(1);
+        var degreeBox2 = promptWindow.addParameterField("Degree 2 (0-36)");
+        TextField textFieldDegree2 = (TextField) degreeBox2.getChildren().get(1);
+        var deBox = new HBox(10, degreeBox1, degreeBox2);
 
-        var stopwayBox1 = promptWindow.addParameterField("Stopway");
-        var stopwayBox2 = promptWindow.addParameterField("Stopway");
-        var sBox = new HBox(10,stopwayBox1,stopwayBox2);
+        var stopwayBox1 = promptWindow.addParameterField("Stopway (m)");
+        TextField textFieldStopway1 = (TextField) stopwayBox1.getChildren().get(1);
+        var stopwayBox2 = promptWindow.addParameterField("Stopway (m)");
+        TextField textFieldStopway2 = (TextField) stopwayBox2.getChildren().get(1);
+        var sBox = new HBox(10, stopwayBox1, stopwayBox2);
 
-        var clearwayBox1 = promptWindow.addParameterField("Clearway");
-        var clearwayBox2 = promptWindow.addParameterField("Clearway");
-        var cBox = new HBox(10,clearwayBox1,clearwayBox2);
+        var clearwayBox1 = promptWindow.addParameterField("Clearway (m)");
+        TextField textFieldClearway1 = (TextField) clearwayBox1.getChildren().get(1);
+        var clearwayBox2 = promptWindow.addParameterField("Clearway (m)");
+        TextField textFieldClearway2 = (TextField) clearwayBox2.getChildren().get(1);
+        var cBox = new HBox(10, clearwayBox1, clearwayBox2);
 
-        var TORAbox1 = promptWindow.addParameterField("TORA");
-        var TORAbox2 = promptWindow.addParameterField("TORA");
-        var tBox = new HBox(10,TORAbox1,TORAbox2);
+        var TORAbox1 = promptWindow.addParameterField("TORA (m)");
+        TextField textFieldTORA1 = (TextField) TORAbox1.getChildren().get(1);
+        var TORAbox2 = promptWindow.addParameterField("TORA (m)");
+        TextField textFieldTORA2 = (TextField) TORAbox2.getChildren().get(1);
+        var tBox = new HBox(10, TORAbox1, TORAbox2);
 
-        var dispThreshBox1 = promptWindow.addParameterField("Displaced Threshold:");
-        var dispThreshBox2 = promptWindow.addParameterField("Displaced Threshold:");
-        var diBox = new HBox(10,dispThreshBox1,dispThreshBox2);
+        var dispThreshBox1 = promptWindow.addParameterField("Displaced Threshold (m)");
+        TextField textFieldDispThresh1 = (TextField) dispThreshBox1.getChildren().get(1);
+        var dispThreshBox2 = promptWindow.addParameterField("Displaced Threshold (m)");
+        TextField textFieldDispThresh2 = (TextField) dispThreshBox2.getChildren().get(1);
+        var diBox = new HBox(10, dispThreshBox1, dispThreshBox2);
 
-        // Implement addButton
+        setupValidation(textFieldDegree1, "\\d{2}");
+        setupValidation(textFieldDegree2, "\\d{2}");
+        setupValidation(textFieldStopway1, "\\d+");
+        setupValidation(textFieldStopway2, "\\d+");
+        setupValidation(textFieldClearway1, "\\d+");
+        setupValidation(textFieldClearway2, "\\d+");
+        setupValidation(textFieldTORA1, "\\d+");
+        setupValidation(textFieldTORA2, "\\d+");
+        setupValidation(textFieldDispThresh1, "\\d+");
+        setupValidation(textFieldDispThresh2, "\\d+");
+
         Button submitButton = new Button("Add");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
         submitButton.setOnAction(e -> {
-            String degree1 = promptWindow.getInput(degreeBox1);
-            String degree2 = promptWindow.getInput(degreeBox2);
-            // Try making a runway object and check for any illegal parameters
-            if (!degree1.matches("\\d{2}") || !degree2.matches("\\d{2}")) {
-                showErrorDialog("Invalid runway name. The name must be a valid degree.");
-            } else {
+            if (validateInputs(new TextField[]{textFieldDegree1, textFieldDegree2, textFieldStopway1, textFieldStopway2, textFieldClearway1, textFieldClearway2, textFieldTORA1, textFieldTORA2, textFieldDispThresh1, textFieldDispThresh2})) {
                 try {
-                    int stopway1 = Integer.parseInt(promptWindow.getInput(stopwayBox1));
-                    int clearway1 = Integer.parseInt(promptWindow.getInput(clearwayBox1));
-                    int TORA1 = Integer.parseInt(promptWindow.getInput(TORAbox1));
-                    int dispThresh1 = Integer.parseInt(promptWindow.getInput(dispThreshBox1));
+                    int stopway1 = Integer.parseInt(textFieldStopway1.getText());
+                    int clearway1 = Integer.parseInt(textFieldClearway1.getText());
+                    int TORA1 = Integer.parseInt(textFieldTORA1.getText());
+                    int dispThresh1 = Integer.parseInt(textFieldDispThresh1.getText());
 
-                    int stopway2 = Integer.parseInt(promptWindow.getInput(stopwayBox2));
-                    int clearway2 = Integer.parseInt(promptWindow.getInput(clearwayBox2));
-                    int TORA2 = Integer.parseInt(promptWindow.getInput(TORAbox2));
-                    int dispThresh2 = Integer.parseInt(promptWindow.getInput(dispThreshBox2));
+                    int stopway2 = Integer.parseInt(textFieldStopway2.getText());
+                    int clearway2 = Integer.parseInt(textFieldClearway2.getText());
+                    int TORA2 = Integer.parseInt(textFieldTORA2.getText());
+                    int dispThresh2 = Integer.parseInt(textFieldDispThresh2.getText());
 
-                    if (stopway1 < 0 || clearway1 < 0 || TORA1 < 0 || dispThresh1 < 0 ||
-                        stopway2 < 0 || clearway2 < 0 || TORA2 < 0 || dispThresh2 < 0) {
-                        throw new IllegalArgumentException("Invalid measurements for runways.");
-                    }
-                    // If Runway valid, add object to application and close window
-                    Runway testRunway1 = new Runway(degree1,stopway1,clearway1,TORA1,dispThresh1);
-                    Runway testRunway2 = new Runway(degree2,stopway2,clearway2,TORA2,dispThresh2);
-
-                    selectedAirport.addNewRunway(testRunway1,testRunway2);
+                    Runway testRunway1 = new Runway(textFieldDegree1.getText(), stopway1, clearway1, TORA1, dispThresh1);
+                    Runway testRunway2 = new Runway(textFieldDegree2.getText(), stopway2, clearway2, TORA2, dispThresh2);            selectedAirport.addNewRunway(testRunway1, testRunway2);
                     app.updateXMLs();
                     updateAirportInfo(selectedAirport);
                     Stage stage = (Stage) promptWindow.getScene().getWindow();
@@ -308,16 +317,50 @@ public class AirportListScene extends BaseScene {
 
                 } catch (NumberFormatException ex) {
                     showErrorDialog("Invalid input for runway measurements. Please enter valid integers.");
-                } catch (IllegalArgumentException ex) {
-                    showErrorDialog(ex.getMessage());
                 }
+            } else {
+                showErrorDialog("Please correct the highlighted fields before proceeding.");
             }
         });
-        promptWindow.getChildren().addAll(runways,deBox,sBox,cBox,
-            tBox,diBox,submitButton);
-        promptWindow.getChildren().addAll(promptWindow.addButtons());
+
+        promptWindow.getChildren().addAll(runways, deBox, sBox, cBox, tBox, diBox, submitButton);
         dialogGenerator(promptWindow, "Add NEW Runways");
     }
+
+    private void setupValidation(TextField textField, String pattern) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(pattern)) {
+                textField.setStyle("-fx-control-inner-background: red;");
+            } else {
+                textField.setStyle("-fx-control-inner-background: white;");
+            }
+        });
+    }
+
+    private boolean validateInputs(TextField[] textFields) {
+        boolean allValid = true;
+        for (TextField textField : textFields) {
+            String background = textField.getStyle();
+            if (background.contains("red")) {
+                allValid = false;
+                break;
+            }
+        }
+        if (!allValid) {
+            showErrorDialog("Some inputs are invalid. Please check your inputs.");
+        }
+        return allValid;
+    }
+
+
+    private void setFieldStyleInvalid(TextField field) {
+        field.setStyle("-fx-control-inner-background: #FFCCCC;");
+    }
+
+    private void setFieldStyleValid(TextField field) {
+        field.setStyle("-fx-control-inner-background: white;");
+    }
+
 
     private void promptModifyAirport(Airport airport) {
         PromptWindow promptWindow = new PromptWindow(app);

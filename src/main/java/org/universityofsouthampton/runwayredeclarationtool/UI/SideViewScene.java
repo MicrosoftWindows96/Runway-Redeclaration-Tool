@@ -185,7 +185,7 @@ public class SideViewScene extends BaseScene {
         Image planeImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plane.png")));
         ImageView planeImageView = new ImageView(planeImage);
 
-        planeImageView.setFitWidth(40);
+        planeImageView.setFitWidth(60);
         planeImageView.setPreserveRatio(true);
 
         return planeImageView;
@@ -211,7 +211,7 @@ public class SideViewScene extends BaseScene {
         double startingXPosition;
         double endingXPosition;
         double startingYPosition;
-        double altitude = 30;
+        double altitude = 20;
 
         switch (operation) {
             case "Land Over":
@@ -227,14 +227,14 @@ public class SideViewScene extends BaseScene {
                 plane.setScaleX(1);
                 break;
             case "Takeoff Toward":
-                startingYPosition = 30;
+                startingYPosition = 20;
                 altitude = 0;
                 startingXPosition = slopeDistance - 100;
                 endingXPosition = animationOverlay.getPrefWidth() + 100;
                 plane.setScaleX(-1);
                 break;
             case "Takeoff Away":
-                startingYPosition = 30;
+                startingYPosition = 20;
                 startingXPosition = animationOverlay.getPrefWidth() - 150;
                 altitude = 0;
                 endingXPosition = -plane.getFitWidth() - 100;

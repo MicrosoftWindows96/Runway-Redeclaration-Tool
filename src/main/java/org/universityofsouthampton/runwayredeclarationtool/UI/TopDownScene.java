@@ -116,13 +116,29 @@ public class TopDownScene extends BaseScene {
         this.getChildren().add(borderPane);
     }
 
+//    public void autoRotate(GraphicsContext gc, double rotation){
+//
+//        gc.rotate(rotation);
+//        if (rotation<45){gc.translate(120,-(rotation*12 + 7));}
+//        else if (rotation<90) {gc.translate(75,-(rotation*8 + 7));}
+//        else if (rotation<135) {gc.translate(30,-(rotation*4 + 7));}
+//        else if (rotation<180) {gc.translate(-5,-(rotation*6+1));}
+//        else if (rotation<225) {gc.translate(120,-(rotation*12 + 7));}
+//        else if (rotation<90) {gc.translate(120,-(rotation*12 + 7));}
+//        else if (rotation<135) {gc.translate(120,-(rotation*12 + 7));}
+//        else if (rotation<180) {gc.translate(120,-(rotation*12 + 7));}
+//        else if (rotation<225) {gc.translate(120,-(rotation*12 + 7));}
+//
+//    }
+
     public void drawRunway(Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         double centerLineY = canvas.getHeight() / 2;
-        double runwayLength = (double) currentRunway.getTORA() / 6;
+//        double runwayLength = (double) currentRunway.getTORA() / 6;
+        double runwayLength = 350;
         double runwayStartX = 100;
         double runwayStartY = centerLineY - 20;
         double runwayHeight = 40;
@@ -136,6 +152,7 @@ public class TopDownScene extends BaseScene {
         this.TODA = (double) currentRunway.getTODA() / 6;
         this.ASDA = (double) currentRunway.getASDA() / 6;
         this.LDA = (double) currentRunway.getLDA() / 6;
+//        autoRotate(gc,160);
 
         gc.setFill(Color.GRAY);
         gc.fillRect(runwayStartX, centerLineY - 20, runwayLength, 40);

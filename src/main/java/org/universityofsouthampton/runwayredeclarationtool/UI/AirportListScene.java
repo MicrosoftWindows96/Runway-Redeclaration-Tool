@@ -53,7 +53,7 @@ public class AirportListScene extends BaseScene {
         importedAirports = app.getAirports();
         updateList();
 
-        // Set infoBox's positionings
+        // Set infoBox's positioning
         infoBox.setPadding(new Insets(10));
         infoBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: #cccccc; -fx-border-width: 1; -fx-border-radius: 5;");
         updateAirportInfo(null);
@@ -227,13 +227,14 @@ public class AirportListScene extends BaseScene {
         var codeBox = promptWindow.addParameterField("Airport Code");
         TextField textFieldCode = (TextField) codeBox.getChildren().get(1);
 
-        setupValidation(textFieldName, "^[A-Za-z ]+$");
-        setupValidation(textFieldCode, "^[A-Za-z]{1,3}$");
+        setupValidation(textFieldName, "^[A-Za-z ]+$", "Please enter a valid airport name (Only letters and spaces)");
+        setupValidation(textFieldCode, "^[A-Za-z]{1,3}$", "Please enter a valid airport code (1-3 letters)");
 
         Button submitButton = new Button("Add Airport");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
         submitButton.setOnAction(e -> {
-            if (validateInputs(new TextField[]{textFieldName, textFieldCode})) {
+            String validationError = validateInputs(new TextField[]{textFieldName, textFieldCode});
+            if (validationError.isEmpty()) {
                 String name = capitalize(textFieldName.getText().trim());
                 String code = textFieldCode.getText().toUpperCase();
 
@@ -246,7 +247,7 @@ public class AirportListScene extends BaseScene {
                 app.updateXMLs();
                 ((Stage) promptWindow.getScene().getWindow()).close();
             } else {
-                showErrorDialog("Please correct the highlighted fields before proceeding.");
+                showErrorDialog(validationError);
             }
         });
 
@@ -291,22 +292,22 @@ public class AirportListScene extends BaseScene {
         TextField textFieldDispThresh2 = (TextField) dispThreshBox2.getChildren().get(1);
         var diBox = new HBox(10, dispThreshBox1, dispThreshBox2);
 
-        setupValidation(textFieldDegree1, "\\d{2}");
-        setupValidation(textFieldDegree2, "\\d{2}");
-        setupValidation(textFieldStopway1, "\\d+");
-        setupValidation(textFieldStopway2, "\\d+");
-        setupValidation(textFieldClearway1, "\\d+");
-        setupValidation(textFieldClearway2, "\\d+");
-        setupValidation(textFieldTORA1, "\\d+");
-        setupValidation(textFieldTORA2, "\\d+");
-        setupValidation(textFieldDispThresh1, "\\d+");
-        setupValidation(textFieldDispThresh2, "\\d+");
+        setupValidation(textFieldDegree1, "\\d{2}", "Please enter a valid degree (0-36) e.g. 09 not 9");
+        setupValidation(textFieldDegree2, "\\d{2}", "Please enter a valid degree (0-36) e.g. 09 not 9");
+        setupValidation(textFieldStopway1, "\\d+", "Please enter a valid stopway length (+ve integer)");
+        setupValidation(textFieldStopway2, "\\d+", "Please enter a valid stopway length (+ve integer)");
+        setupValidation(textFieldClearway1, "\\d+", "Please enter a valid clearway length (+ve integer)");
+        setupValidation(textFieldClearway2, "\\d+", "Please enter a valid clearway length (+ve integer)");
+        setupValidation(textFieldTORA1, "\\d+", "Please enter a valid TORA length (+ve integer)");
+        setupValidation(textFieldTORA2, "\\d+", "Please enter a valid TORA length (+ve integer)");
+        setupValidation(textFieldDispThresh1, "\\d+", "Please enter a valid displaced threshold length (+ve integer)");
+        setupValidation(textFieldDispThresh2, "\\d+", "Please enter a valid displaced threshold length (+ve integer)");
 
         Button submitButton = new Button("Add");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
         submitButton.setOnAction(e -> {
-            if (validateInputs(new TextField[]{textFieldDegree1, textFieldDegree2, textFieldStopway1, textFieldStopway2, textFieldClearway1, textFieldClearway2, textFieldTORA1, textFieldTORA2, textFieldDispThresh1, textFieldDispThresh2})) {
-                try {
+            String validationError = validateInputs(new TextField[]{textFieldDegree1, textFieldDegree2, textFieldStopway1, textFieldStopway2, textFieldClearway1, textFieldClearway2, textFieldTORA1, textFieldTORA2, textFieldDispThresh1, textFieldDispThresh2});
+            if (validationError.isEmpty()) {
                     int stopway1 = Integer.parseInt(textFieldStopway1.getText());
                     int clearway1 = Integer.parseInt(textFieldClearway1.getText());
                     int TORA1 = Integer.parseInt(textFieldTORA1.getText());
@@ -318,25 +319,24 @@ public class AirportListScene extends BaseScene {
                     int dispThresh2 = Integer.parseInt(textFieldDispThresh2.getText());
 
                     Runway testRunway1 = new Runway(textFieldDegree1.getText(), stopway1, clearway1, TORA1, dispThresh1);
-                    Runway testRunway2 = new Runway(textFieldDegree2.getText(), stopway2, clearway2, TORA2, dispThresh2);            selectedAirport.addNewRunway(testRunway1, testRunway2);
+                    Runway testRunway2 = new Runway(textFieldDegree2.getText(), stopway2, clearway2, TORA2, dispThresh2);
+                    selectedAirport.addNewRunway(testRunway1, testRunway2);
                     app.updateXMLs();
                     updateAirportInfo(selectedAirport);
                     Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
-
-                } catch (NumberFormatException ex) {
-                    showErrorDialog("Invalid input for runway measurements. Please enter valid integers.");
-                }
-            } else {
-                showErrorDialog("Please correct the highlighted fields before proceeding.");
-            }
-        });
+        } else {
+            showErrorDialog(validationError); // Show the first encountered validation error
+        }
+    });
 
         promptWindow.getChildren().addAll(runways, deBox, sBox, cBox, tBox, diBox, submitButton);
         dialogGenerator(promptWindow, "Add NEW Runways");
     }
 
-    private void setupValidation(TextField textField, String pattern) {
+    private void setupValidation(TextField textField, String pattern, String errorMessage) {
+        textField.getProperties().put("validationPattern", pattern);
+        textField.getProperties().put("errorMessage", errorMessage);
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches(pattern)) {
                 textField.setStyle("-fx-control-inner-background: red;");
@@ -346,28 +346,15 @@ public class AirportListScene extends BaseScene {
         });
     }
 
-    private boolean validateInputs(TextField[] textFields) {
-        boolean allValid = true;
+    private String validateInputs(TextField[] textFields) {
         for (TextField textField : textFields) {
-            String background = textField.getStyle();
-            if (background.contains("red")) {
-                allValid = false;
-                break;
+            String pattern = (String) textField.getProperties().get("validationPattern");
+            String errorMessage = (String) textField.getProperties().get("errorMessage");
+            if (!textField.getText().matches(pattern)) {
+                return errorMessage;
             }
         }
-        if (!allValid) {
-            showErrorDialog("Some inputs are invalid. Please check your inputs.");
-        }
-        return allValid;
-    }
-
-
-    private void setFieldStyleInvalid(TextField field) {
-        field.setStyle("-fx-control-inner-background: #FFCCCC;");
-    }
-
-    private void setFieldStyleValid(TextField field) {
-        field.setStyle("-fx-control-inner-background: white;");
+        return "";
     }
 
 

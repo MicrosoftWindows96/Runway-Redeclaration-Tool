@@ -193,8 +193,8 @@ public class TopDownScene extends BaseScene {
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";
             gc.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight - 5);
 
-            //gc.setStroke(Color.BLACK);
-//            gc.strokeLine(runwayStartX, runwayStartY + 20, runwayStartX + TORA, runwayStartY + 20); // slope line
+            // gc.setStroke(Color.BLACK);
+            // gc.strokeLine(runwayStartX, runwayStartY + 20, runwayStartX + TORA, runwayStartY + 20); // slope line
 
 
             this.TORA = (double) currentRunway.getNewTORA() / 6;
@@ -210,8 +210,8 @@ public class TopDownScene extends BaseScene {
                 gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
 
                 // Blast (currently 0)
-//                gc.setFill(Color.BLUE);
-//                gc.fillRect(obstacleX + obstacleWidth + ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
+                // gc.setFill(Color.BLUE);
+                // gc.fillRect(obstacleX + obstacleWidth + ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
 
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
 

@@ -210,8 +210,8 @@ public class TopDownScene extends BaseScene {
                 gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
 
                 // Blast (currently 0)
-//                gc.setFill(Color.BLUE);
-//                gc.fillRect(obstacleX + obstacleWidth + ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
+                // gc.setFill(Color.BLUE);
+                // gc.fillRect(obstacleX + obstacleWidth + ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
 
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
 

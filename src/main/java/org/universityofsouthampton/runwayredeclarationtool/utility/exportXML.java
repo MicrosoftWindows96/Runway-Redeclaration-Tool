@@ -60,20 +60,6 @@ public class exportXML {
     for (Airport airport : exportedAirports) {
       Element airportElement = createAirportElement(document,airport.getAirportName(),airport.getAirportCode());
 
-//      if (!airport.getRunways().isEmpty()) {
-//      Element runwayElement = document.createElement("Runway");
-//      airportElement.appendChild(runwayElement);
-//
-//        for (Runway runway : airport.getRunways()) {
-//          createRunwayElement(document,runwayElement, runway.getName(), runway.getDirection(),
-//              String.valueOf(runway.getStopway()),
-//              String.valueOf(runway.getClearway()),
-//              String.valueOf(runway.getTORA()),
-//              String.valueOf(runway.getDisplacedThreshold()),
-//              runway.getObstacles());
-//        }
-//      }
-
       if (!airport.getParallelRunwaySets().isEmpty()) {
         Element runwaysElement = document.createElement("Runways");
         airportElement.appendChild(runwaysElement);

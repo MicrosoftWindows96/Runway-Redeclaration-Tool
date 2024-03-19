@@ -9,7 +9,7 @@ public class Runway {
 
     private String name; // Runway name
     private String direction; // Runway direction
-    private final int TORA; // Take-Off Run Available (same as length of runway)
+    private int TORA; // Take-Off Run Available (same as length of runway)
     private final int TODA; // Take-Off Distance Available
     private final int ASDA; // Accelerate-Stop Distance Available
     private final int LDA; // Landing Distance Available
@@ -45,14 +45,12 @@ public class Runway {
         } else if (checkValidParameters()) {
             throw new IllegalArgumentException("Invalid distances!");
         }
-
         try {
             setName(name);
         } catch (Exception e){
             throw new IllegalArgumentException("Invalid runway name!");
         }
     }
-
 
     // Validators for the runway object (_ is a placeholder for no direction, it's a single runway.)
     public boolean isNameInvalid(String name){  // Checks name credentials
@@ -192,6 +190,9 @@ public class Runway {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public void setTORA(int TORA) {
+        this.TORA = TORA;
     }
     public int getTORA() {
         return TORA;

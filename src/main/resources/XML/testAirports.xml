@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Models xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="newAirport.xsd">
     <Airport code="ANT" name="Anthony">
-        <Runway>
-            <LogicalRunway degree="09">
-                <direction>L</direction>
-                <stopway>0</stopway>
-                <clearway>0</clearway>
-                <TORA>3660</TORA>
-                <dispThresh>0</dispThresh>
-            </LogicalRunway>
-        </Runway>
+        <Runways>
+            <Runway>
+                <LogicalRunways>
+                    <LogicalRunway degree="09">
+                        <stopway>0</stopway>
+                        <clearway>0</clearway>
+                        <TORA>3902</TORA>
+                        <dispThresh>306</dispThresh>
+                    </LogicalRunway>
+                    <LogicalRunway degree="27">
+                        <stopway>0</stopway>
+                        <clearway>78</clearway>
+                        <TORA>3884</TORA>
+                        <dispThresh>0</dispThresh>
+                    </LogicalRunway>
+                </LogicalRunways>
+            </Runway>
+        </Runways>
     </Airport>
 </Models>

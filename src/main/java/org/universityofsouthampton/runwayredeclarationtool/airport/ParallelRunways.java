@@ -48,10 +48,12 @@ public class ParallelRunways {
     var sndRunway = getSndRunway();
     fstRunway.addObstacle(obstacle);
     // TORA = Obstacle's disp from runway1 threshold + Obstacle's disp from runway2 threshold + runway1 displacedThreshold + runway 2 displacedThreshold + difference in TORAs
+    int difference = Math.max(0, fstRunway.getTORA() - sndRunway.getTORA());
+
     int distFromSndRunwayThres = sndRunway.getTORA() - sndRunway.getDisplacedThreshold() - fstRunway.getDisplacedThreshold() -
-        obstacle.getDistanceFromThreshold() + Math.abs(fstRunway.getTORA() - sndRunway.getTORA());
+        obstacle.getDistanceFromThreshold() + difference;
     System.out.println(sndRunway.getTORA() + " - " + sndRunway.getDisplacedThreshold() + " - " + fstRunway.getDisplacedThreshold() + " - " +
-        obstacle.getDistanceFromThreshold() + " + " + Math.abs(fstRunway.getTORA() - sndRunway.getTORA()) +" = " + distFromSndRunwayThres);
+        obstacle.getDistanceFromThreshold() + " + " + difference +" = " + distFromSndRunwayThres);
 
     // Make another obstacle object but with the distances from the other side
     Obstacle obstacle2 = new Obstacle(obstacle.getName(),obstacle.getHeight(),distFromSndRunwayThres,obstacle.getDistanceFromCentreline());
@@ -142,13 +144,9 @@ public class ParallelRunways {
     var runway1 = oldPair.getKey();
     var runway2 = oldPair.getValue();
     deleteRunways(oldPair);
-    if (!runway1.getObstacles().isEmpty()) {
-      Obstacle movedObstacle1 = runway1.getObstacles().get(0);
-      newPair.getKey().addObstacle(movedObstacle1);
-    }
-    if (!runway2.getObstacles().isEmpty()) {
-      Obstacle movedObstacle2 = runway2.getObstacles().get(0);
-      newPair.getValue().addObstacle(movedObstacle2);
+    if (!runway1.getObstacles().isEmpty() || !runway2.getObstacles().isEmpty()) {
+      Obstacle movedObstacle = runway1.getObstacles().get(0);
+      placeObstacle(movedObstacle);
     }
     updateLogicalRunways(newPair.getKey(),newPair.getValue());
   }

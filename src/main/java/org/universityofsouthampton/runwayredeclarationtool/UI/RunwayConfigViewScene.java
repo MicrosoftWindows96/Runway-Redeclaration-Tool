@@ -336,6 +336,7 @@ public class RunwayConfigViewScene extends BaseScene {
           Runway testRunway2 = new Runway(degree2,stopway2,clearway2,TORA2,dispThresh2);
           runwayManager.replaceRunways(runwayManager.getCurrentRunways(),new Pair<>(testRunway1,testRunway2));
 
+          app.updateXMLs();
           app.displayRunwayConfigScene(airport,runwayManager);
           Stage stage = (Stage) promptWindow.getScene().getWindow();
           stage.close();

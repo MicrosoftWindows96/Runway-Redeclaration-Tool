@@ -223,29 +223,38 @@ public class AirportListScene extends BaseScene {
     private void promptAddAirport() {
         PromptWindow promptWindow = new PromptWindow(app);
         var nameBox = promptWindow.addParameterField("Airport Name");
+        TextField textFieldName = (TextField) nameBox.getChildren().get(1);
         var codeBox = promptWindow.addParameterField("Airport Code");
+        TextField textFieldCode = (TextField) codeBox.getChildren().get(1);
 
-        // Implement submitButton
+        setupValidation(textFieldName, "^[A-Za-z ]+$");
+        setupValidation(textFieldCode, "^[A-Za-z]{1,3}$");
+
         Button submitButton = new Button("Add Airport");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Add");
         submitButton.setOnAction(e -> {
-            String name = capitalize(promptWindow.getInput(nameBox));
-            String code = promptWindow.getInput(codeBox).toUpperCase();
+            if (validateInputs(new TextField[]{textFieldName, textFieldCode})) {
+                String name = capitalize(textFieldName.getText().trim());
+                String code = textFieldCode.getText().toUpperCase();
 
-
-            if (name.isEmpty() || code.isEmpty()) {
-                showErrorDialog("Please enter a valid airport name and code.");
-                return;
+                if (name.isEmpty() || code.isEmpty()) {
+                    showErrorDialog("Please enter a valid airport name and code.");
+                    return;
+                }
+                Airport newAirport = new Airport(name, code);
+                app.addAirport(newAirport);
+                app.updateXMLs();
+                ((Stage) promptWindow.getScene().getWindow()).close();
+            } else {
+                showErrorDialog("Please correct the highlighted fields before proceeding.");
             }
-            Airport newAirport = new Airport(name, code);
-            app.addAirport(newAirport);
-            app.updateXMLs();
-            ((Stage) promptWindow.getScene().getWindow()).close();
         });
-        promptWindow.getChildren().addAll(nameBox,codeBox,submitButton);
-        promptWindow.getChildren().addAll(promptWindow.addButtons());
+
+        promptWindow.getChildren().addAll(nameBox, codeBox, submitButton);
         dialogGenerator(promptWindow, "Add NEW Airport");
     }
+
+
 
     private void promptAddRunway() {
         PromptWindow promptWindow = new PromptWindow(app);

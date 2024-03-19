@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -41,7 +42,7 @@ public class ObstacleListScene extends BaseScene {
 
         // Initialise selectedObstacle if there's a pre-determined obstacle in the runway
         if (!currentRunway.getObstacles().isEmpty()) {
-            selectedObstacle = currentRunway.getObstacles().get(0);
+            selectedObstacle = currentRunway.getObstacles().getFirst();
         }
 
         var title = new Text("Obstacle Update");
@@ -78,7 +79,7 @@ public class ObstacleListScene extends BaseScene {
             } else {
                 if (!this.currentRunway.getObstacles().isEmpty()) {
                     // Replace the current Obstacle with selected one
-                    Obstacle existingObstacle = this.currentRunway.getObstacles().get(0);
+                    Obstacle existingObstacle = this.currentRunway.getObstacles().getFirst();
                     this.otherObstacles.add(existingObstacle);
 
                     // update runway object
@@ -184,99 +185,124 @@ public class ObstacleListScene extends BaseScene {
     private void promptCreateObstacle() {
         PromptWindow promptWindow = new PromptWindow(app);
         var nameBox = promptWindow.addParameterField("Name");
-        var heightBox = promptWindow.addParameterField("Height");
-        var distFromThreBox = promptWindow.addParameterField("Distance From Threshold");
-        var distFromCentBox = promptWindow.addParameterField("Distance From Centreline");
+        TextField textFieldName = (TextField) nameBox.getChildren().get(1);
+        var heightBox = promptWindow.addParameterField("Height (m)");
+        TextField textFieldHeight = (TextField) heightBox.getChildren().get(1);
+        var distFromThreBox = promptWindow.addParameterField("Distance From Threshold (m)");
+        TextField textFieldDistFromThre = (TextField) distFromThreBox.getChildren().get(1);
+        var distFromCentBox = promptWindow.addParameterField("Distance From Centreline (m)");
+        TextField textFieldDistFromCent = (TextField) distFromCentBox.getChildren().get(1);
 
-        Button submitButton = new Button();
+        // Set up validation
+        setupValidation(textFieldName, "^[A-Za-z0-9- ]+$");
+        setupValidation(textFieldHeight, "\\d+");
+        setupValidation(textFieldDistFromThre, "\\d+");
+        setupValidation(textFieldDistFromCent, "\\d+");
+
+        Button submitButton = new Button("Create");
         styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
         submitButton.setOnAction(e -> {
-            String name = promptWindow.getInput(nameBox);
-            String heightName = promptWindow.getInput(heightBox);
-            String distFromThreName = promptWindow.getInput(distFromThreBox);
-            String distFromCentname = promptWindow.getInput(distFromCentBox);
-
-            if (name.isEmpty() || heightName.isEmpty() || distFromThreName.isEmpty() || distFromCentname.isEmpty()) {
-                showErrorDialog("All fields are required. Please fill in all fields.");
-            } else {
+            if (validateInputs(new TextField[]{textFieldName, textFieldHeight, textFieldDistFromThre, textFieldDistFromCent})) {
+                String name = textFieldName.getText();
                 try {
-                    int height = Integer.parseInt(heightName);
-                    int distFromThre = Integer.parseInt(distFromThreName);
-                    int distFromCent = Integer.parseInt(distFromCentname);
+                    int height = Integer.parseInt(textFieldHeight.getText());
+                    int distFromThre = Integer.parseInt(textFieldDistFromThre.getText());
+                    int distFromCent = Integer.parseInt(textFieldDistFromCent.getText());
 
-                    if (height <= 0 || distFromCent <= 0) {
-                        throw new IllegalArgumentException("Invalid measurements for obstacle");
-                    }
-                    // Add to other obstacles
-                    otherObstacles.add(new Obstacle(name,height,distFromThre,distFromCent));
-                    app.showNotification("Obstacle Warning", "Obstacle " + name + " created for " + currentAirport.getAirportCode() + " runway " + currentRunway.getName() + currentRunway.getDirection());
+                    Obstacle newObstacle = new Obstacle(name, height, distFromThre, distFromCent);
+                    otherObstacles.add(newObstacle);
+                    app.showNotification("Obstacle Created", "Obstacle " + name + " created successfully.");
                     updateObstaclesList();
-
-                    Stage stage = (Stage) promptWindow.getScene().getWindow();
-                    stage.close();
+                    ((Stage) promptWindow.getScene().getWindow()).close();
                 } catch (NumberFormatException ex) {
-                    showErrorDialog("Invalid input for number of obstacles. Please enter a valid integer.");
-                } catch (IllegalArgumentException ex) {
-                    showErrorDialog(ex.getMessage());
+                    showErrorDialog("Invalid input for obstacle measurements. Please enter valid integers.");
                 }
+            } else {
+                showErrorDialog("Please correct the highlighted fields before proceeding.");
             }
         });
-        promptWindow.getChildren().addAll(nameBox,heightBox,distFromThreBox,distFromCentBox,submitButton);
-        promptWindow.getChildren().addAll(promptWindow.addButtons());
+
+        promptWindow.getChildren().addAll(nameBox, heightBox, distFromThreBox, distFromCentBox, submitButton);
         dialogGenerator(promptWindow, "Create Obstacle");
     }
 
-    private void promptEditObstacle() {
-        PromptWindow promptWindow = new PromptWindow(app);
-        var nameBox = promptWindow.editParameterField("Name",selectedObstacle.getName());
-        var heightBox = promptWindow.editParameterField("Height",Integer.toString(selectedObstacle.getHeight()));
-        var distFromThreBox = promptWindow.editParameterField("Distance From Threshold",Integer.toString(selectedObstacle.getDistanceFromThreshold()));
-        var distFromCentBox = promptWindow.editParameterField("Distance From Centreline",Integer.toString(selectedObstacle.getDistanceFromCentreline()));
-
-        Button submitButton = new Button();
-        styleButton(submitButton, MaterialDesign.MDI_PLUS_BOX, "Create");
-        submitButton.setOnAction(e -> {
-            String name = promptWindow.getInput(nameBox);
-            String heightName = promptWindow.getInput(heightBox);
-            String distFromThreName = promptWindow.getInput(distFromThreBox);
-            String distFromCentname = promptWindow.getInput(distFromCentBox);
-
-            if (name.isEmpty() || heightName.isEmpty() || distFromThreName.isEmpty() || distFromCentname.isEmpty()) {
-                showErrorDialog("All fields are required. Please fill in all fields.");
+    private void setupValidation(TextField textField, String pattern) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(pattern)) {
+                textField.setStyle("-fx-control-inner-background: red;");
             } else {
-                try {
-                    int height = Integer.parseInt(heightName);
-                    int distFromThre = Integer.parseInt(distFromThreName);
-                    int distFromCent = Integer.parseInt(distFromCentname);
-
-                    if (height <= 0 || distFromCent <= 0) {
-                        throw new IllegalArgumentException("Invalid measurements for obstacle");
-                    }
-                    // replace the obstacle in runway object
-                    var newObstacle = new Obstacle(name,height,distFromThre,distFromCent);
-                    if (otherObstacles.contains(selectedObstacle)) {
-                        otherObstacles.remove(selectedObstacle);
-                        otherObstacles.add(newObstacle);
-                        app.showNotification("Obstacle Warning", "Obstacle " + name + " reconfigured for " + currentAirport.getAirportCode() + " runway " + currentRunway.getName() + currentRunway.getDirection());
-                    } else if (currentRunway.getObstacles().contains(selectedObstacle)) {
-                        currentRunway.removeObstacle(selectedObstacle);
-                        currentRunway.addObstacle(newObstacle);
-                        app.showNotification("Obstacle Warning", "Obstacle " + name + " reconfigured for " + currentAirport.getAirportCode() + " runway " + currentRunway.getName() + currentRunway.getDirection());
-                    }
-                    updateObstaclesList();
-
-                    Stage stage = (Stage) promptWindow.getScene().getWindow();
-                    stage.close();
-                } catch (NumberFormatException ex) {
-                    showErrorDialog("Invalid input for number of obstacles. Please enter a valid integer.");
-                } catch (IllegalArgumentException ex) {
-                    showErrorDialog(ex.getMessage());
-                }
+                textField.setStyle("-fx-control-inner-background: white;");
             }
         });
-        promptWindow.getChildren().addAll(nameBox,heightBox,distFromThreBox,distFromCentBox,submitButton);
-        promptWindow.getChildren().addAll(promptWindow.addButtons());
+    }
+
+    private boolean validateInputs(TextField[] textFields) {
+        boolean allValid = true;
+        for (TextField textField : textFields) {
+            String background = textField.getStyle();
+            if (background.contains("red")) {
+                allValid = false;
+                break;
+            }
+        }
+        if (!allValid) {
+            showErrorDialog("Some inputs are invalid. Please check your inputs.");
+        }
+        return allValid;
+    }
+
+
+    private void promptEditObstacle() {
+        if (selectedObstacle == null) {
+            System.out.println("No obstacle selected for editing.");
+            return;
+        }
+
+        PromptWindow promptWindow = new PromptWindow(app);
+        var nameBox = promptWindow.editParameterField("Name", selectedObstacle.getName());
+        TextField textFieldName = (TextField) nameBox.getChildren().get(1);
+        var heightBox = promptWindow.editParameterField("Height (m)", String.valueOf(selectedObstacle.getHeight()));
+        TextField textFieldHeight = (TextField) heightBox.getChildren().get(1);
+        var distFromThreBox = promptWindow.editParameterField("Distance From Threshold (m)", String.valueOf(selectedObstacle.getDistanceFromThreshold()));
+        TextField textFieldDistFromThre = (TextField) distFromThreBox.getChildren().get(1);
+        var distFromCentBox = promptWindow.editParameterField("Distance From Centreline (m)", String.valueOf(selectedObstacle.getDistanceFromCentreline()));
+        TextField textFieldDistFromCent = (TextField) distFromCentBox.getChildren().get(1);
+
+        // Set up validation
+        setupValidation(textFieldName, "^[A-Za-z0-9- ]+$"); // Alphanumeric and hyphens only
+        setupValidation(textFieldHeight, "\\d+"); // Positive integers only
+        setupValidation(textFieldDistFromThre, "\\d+"); // Positive integers only
+        setupValidation(textFieldDistFromCent, "\\d+"); // Positive integers only
+
+        Button submitButton = new Button("Save Changes");
+        styleButton(submitButton, MaterialDesign.MDI_CHECK, "Save");
+        submitButton.setOnAction(e -> {
+            if (validateInputs(new TextField[]{textFieldName, textFieldHeight, textFieldDistFromThre, textFieldDistFromCent})) {
+                String name = textFieldName.getText();
+                try {
+                    int height = Integer.parseInt(textFieldHeight.getText());
+                    int distFromThre = Integer.parseInt(textFieldDistFromThre.getText());
+                    int distFromCent = Integer.parseInt(textFieldDistFromCent.getText());
+
+                    selectedObstacle.setName(name);
+                    selectedObstacle.setHeight(height);
+                    selectedObstacle.setDistanceFromThreshold(distFromThre);
+                    selectedObstacle.setDistanceFromCentreline(distFromCent);
+
+                    app.showNotification("Obstacle Updated", "Obstacle " + name + " updated successfully.");
+                    updateObstaclesList();
+                    ((Stage) promptWindow.getScene().getWindow()).close();
+                } catch (NumberFormatException ex) {
+                    showErrorDialog("Invalid input for obstacle measurements. Please enter valid integers.");
+                }
+            } else {
+                showErrorDialog("Please correct the highlighted fields before proceeding.");
+            }
+        });
+
+        promptWindow.getChildren().addAll(nameBox, heightBox, distFromThreBox, distFromCentBox, submitButton);
         dialogGenerator(promptWindow, "Edit Obstacle");
+
     }
 
     private void promptSetBPV() {

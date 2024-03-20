@@ -342,6 +342,7 @@ public class RunwayConfigViewScene extends BaseScene {
             Obstacle movedObstacle = currentRunway.getObstacles().get(0);
             runwayManager.removeObstacle(movedObstacle);
             runwayManager.placeObstacle(movedObstacle);
+            runwayManager.runCalcOnBothRunways();
           }
 
           app.showNotification("Logical Runways",

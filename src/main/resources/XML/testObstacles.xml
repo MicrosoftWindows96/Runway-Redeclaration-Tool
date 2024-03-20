@@ -20,9 +20,9 @@
         <DistThreshold>-50</DistThreshold>
         <DistCent>5</DistCent>
     </Obstacle>
-    <Obstacle name="09-S3">
-        <Height>15</Height>
-        <DistThreshold>150</DistThreshold>
-        <DistCent>5</DistCent>
+    <Obstacle name="09-S2">
+        <Height>25</Height>
+        <DistThreshold>2853</DistThreshold>
+        <DistCent>4</DistCent>
     </Obstacle>
 </Obstacles>

@@ -53,7 +53,7 @@ public class ObstacleListScene extends BaseScene {
         Text title2 = new Text("List of Obstacles in " + airport.getAirportCode() + "-" + currentRunway.getName() + currentRunway.getDirection());
         title.setFont(Font.font("Arial", 20));
 
-        Text title3 = new Text("Other obstacles ")  ;
+        Text title3 = new Text("Predefined obstacles ")  ;
         title.setFont(Font.font("Arial", 20));
 
         this.currentObstacleScroll.setFitToWidth(true);

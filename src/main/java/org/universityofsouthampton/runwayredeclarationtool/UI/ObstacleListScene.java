@@ -321,7 +321,7 @@ public class ObstacleListScene extends BaseScene {
             } else {
                 try {
                     int BPVInt = Integer.parseInt(BPV);
-                    if (BPVInt <= 0) {
+                    if (BPVInt <= 0 || BPVInt >500) {
                         throw new IllegalArgumentException("Invalid measurements for Blast Protection Value");
                     }
                     // update the runway object to run calculations to display in the config runway scene

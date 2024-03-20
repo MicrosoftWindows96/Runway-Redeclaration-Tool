@@ -4,17 +4,6 @@
         <Runways>
             <Runway>
                 <LogicalRunways>
-                    <LogicalRunway degree="27">
-                        <stopway>0</stopway>
-                        <clearway>0</clearway>
-                        <TORA>3660</TORA>
-                        <dispThresh>0</dispThresh>
-                        <Obstacle name="09-S4">
-                            <Height>20</Height>
-                            <DistThreshold>-193</DistThreshold>
-                            <DistCent>6</DistCent>
-                        </Obstacle>
-                    </LogicalRunway>
                     <LogicalRunway degree="09">
                         <stopway>0</stopway>
                         <clearway>0</clearway>
@@ -26,33 +15,44 @@
                             <DistCent>6</DistCent>
                         </Obstacle>
                     </LogicalRunway>
-                </LogicalRunways>
-                <LogicalRunways>
                     <LogicalRunway degree="27">
                         <stopway>0</stopway>
-                        <clearway>78</clearway>
-                        <TORA>3884</TORA>
+                        <clearway>0</clearway>
+                        <TORA>3660</TORA>
                         <dispThresh>0</dispThresh>
+                        <Obstacle name="09-S4">
+                            <Height>20</Height>
+                            <DistThreshold>-193</DistThreshold>
+                            <DistCent>6</DistCent>
+                        </Obstacle>
                     </LogicalRunway>
+                </LogicalRunways>
+                <LogicalRunways>
                     <LogicalRunway degree="09">
                         <stopway>0</stopway>
                         <clearway>0</clearway>
                         <TORA>3902</TORA>
                         <dispThresh>306</dispThresh>
                     </LogicalRunway>
-                </LogicalRunways>
-                <LogicalRunways>
                     <LogicalRunway degree="27">
                         <stopway>0</stopway>
-                        <clearway>0</clearway>
-                        <TORA>1000</TORA>
+                        <clearway>78</clearway>
+                        <TORA>3884</TORA>
                         <dispThresh>0</dispThresh>
                     </LogicalRunway>
+                </LogicalRunways>
+                <LogicalRunways>
                     <LogicalRunway degree="09">
                         <stopway>0</stopway>
                         <clearway>0</clearway>
-                        <TORA>1000</TORA>
+                        <TORA>3000</TORA>
                         <dispThresh>300</dispThresh>
+                    </LogicalRunway>
+                    <LogicalRunway degree="27">
+                        <stopway>0</stopway>
+                        <clearway>0</clearway>
+                        <TORA>3000</TORA>
+                        <dispThresh>0</dispThresh>
                     </LogicalRunway>
                 </LogicalRunways>
             </Runway>
@@ -75,13 +75,13 @@
                     <LogicalRunway degree="26">
                         <stopway>0</stopway>
                         <clearway>0</clearway>
-                        <TORA>1000</TORA>
+                        <TORA>3000</TORA>
                         <dispThresh>50</dispThresh>
                     </LogicalRunway>
                     <LogicalRunway degree="08">
                         <stopway>0</stopway>
                         <clearway>0</clearway>
-                        <TORA>1000</TORA>
+                        <TORA>3000</TORA>
                         <dispThresh>0</dispThresh>
                     </LogicalRunway>
                 </LogicalRunways>

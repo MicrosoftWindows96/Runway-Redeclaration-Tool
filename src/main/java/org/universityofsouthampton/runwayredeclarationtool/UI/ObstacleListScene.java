@@ -77,17 +77,22 @@ public class ObstacleListScene extends BaseScene {
             if (this.selectedObstacle == null) {
                 System.out.println("Nothing Selected!");
             } else {
-                if (!this.currentRunway.getObstacles().isEmpty()) {
+                if (!this.currentRunway.getObstacles().isEmpty() ) {
                     // Replace the current Obstacle with selected one
                     Obstacle existingObstacle = this.currentRunway.getObstacles().getFirst();
                     this.otherObstacles.add(existingObstacle);
 
                     // update runway object
                     runwayManager.removeObstacle(existingObstacle);
+
+
                 }
                 runwayManager.placeObstacle(selectedObstacle);
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
+
+                app.showNotification("Obstacle Add", "Obstacle " + selectedObstacle.getName() + " has been added.");
+
             }
         });
 
@@ -103,6 +108,7 @@ public class ObstacleListScene extends BaseScene {
                     runwayManager.removeObstacle(selectedObstacle);
                 }
                 updateObstaclesList();
+                app.showNotification("Obstacle Remove", "Obstacle " + selectedObstacle.getName() + " has been removed.");
             }
         });
 
@@ -128,7 +134,9 @@ public class ObstacleListScene extends BaseScene {
             } else if  (this.currentRunway.getObstacles().isEmpty() || !this.currentRunway.getObstacles().contains(this.selectedObstacle)) {
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
+                app.showNotification("Obstacle Delete", "Obstacle " + selectedObstacle.getName() + " has been deleted.");
                 app.updateXMLs();
+
             } else {
                 System.out.println("Obstacle is in current obstacles!");
             }
@@ -211,9 +219,10 @@ public class ObstacleListScene extends BaseScene {
 
                 Obstacle newObstacle = new Obstacle(name, height, distFromThre, distFromCent);
                 otherObstacles.add(newObstacle);
-                app.showNotification("Obstacle Created", "Obstacle " + name + " created successfully.");
+
                 updateObstaclesList();
                 ((Stage) promptWindow.getScene().getWindow()).close();
+                app.showNotification("Obstacle Created", "Obstacle " + name + " created successfully.");
             } else {
                 showErrorDialog(errorMessage);
             }
@@ -284,9 +293,10 @@ public class ObstacleListScene extends BaseScene {
                 selectedObstacle.setDistanceFromThreshold(distFromThre);
                 selectedObstacle.setDistanceFromCentreline(distFromCent);
 
-                app.showNotification("Obstacle Updated", "Obstacle " + name + " updated successfully.");
+
                 updateObstaclesList();
                 ((Stage) promptWindow.getScene().getWindow()).close();
+                app.showNotification("Obstacle Updated", "Obstacle " + name + " updated successfully.");
             } else {
                 showErrorDialog(errorMessage);
             }

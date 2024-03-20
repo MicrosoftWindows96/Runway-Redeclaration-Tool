@@ -111,7 +111,6 @@ public class MainApplication extends Application {
         exportXML obstacleXML = new exportXML(airports, obstacles, new File(OBSTACLES_XML_PATH));
         obstacleXML.buildObstaclesXML();
 
-        showNotification("System", "Airports and obstacles updated");
         System.out.println("XML files successfully updated!");
     }
 

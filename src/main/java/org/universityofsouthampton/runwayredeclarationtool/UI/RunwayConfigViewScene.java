@@ -165,6 +165,7 @@ public class RunwayConfigViewScene extends BaseScene {
         alert.setHeaderText(null);
         alert.setContentText("Calculation breakdown has been successfully exported.");
         alert.showAndWait();
+        app.showNotification("Runway Update", "Runway " + currentRunway.getName() + " has been updated.");
       } catch (IOException ex) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -349,6 +350,7 @@ public class RunwayConfigViewScene extends BaseScene {
           app.displayRunwayConfigScene(airport,runwayManager);
           Stage stage = (Stage) promptWindow.getScene().getWindow();
           stage.close();
+          app.showNotification("Runway Update", "Runway " + currentRunway.getName() + " has been updated.");
 
         } catch (NumberFormatException ex) {
           showErrorDialog("Invalid input for runway measurements. Please enter valid integers.");

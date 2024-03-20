@@ -329,8 +329,8 @@ public class RunwayConfigViewScene extends BaseScene {
           int TORA2 = Integer.parseInt(promptWindow.getInput(TORAbox2));
           int dispThresh2 = Integer.parseInt(promptWindow.getInput(dispThreshBox2));
 
-          if (stopway1 < 0 || clearway1 < 0 || TORA1 < 0 || dispThresh1 < 0 ||
-              stopway2 < 0 || clearway2 < 0 || TORA2 < 0 || dispThresh2 < 0) {
+          if (stopway1 < 0 || stopway1 > 500 || clearway1 < 0 || clearway1 > 500 || TORA1 < 0 || TORA1 > 5000 || dispThresh1 < 0 || dispThresh1 > 5000 ||
+              stopway2 < 0 || stopway2 > 500 || clearway2 < 0 || clearway2 > 500 || TORA2 < 0 || TORA2 > 5000 || dispThresh2 < 0 || dispThresh2 > 5000 ) {
             throw new IllegalArgumentException("Invalid measurements for runways.");
           }
 

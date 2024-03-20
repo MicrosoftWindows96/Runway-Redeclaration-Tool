@@ -229,7 +229,13 @@ public class SideViewScene extends BaseScene {
                 if (slopeDistance <= 0){
                     endingXPosition = runwayStartX + displacedThresholdOffset + 10;
                 }else {
-                    endingXPosition = slopeDistance - 100;
+                    if (obstacle.getDistanceFromThreshold() < 1000 ) {
+                        endingXPosition = slopeDistance + 50;
+                    } else if (obstacle.getDistanceFromThreshold() >= 1000){
+                        endingXPosition = slopeDistance - 50;
+                    } else {
+                        endingXPosition = slopeDistance ;
+                    }
                 }
 
                 plane.setScaleX(1);
@@ -247,7 +253,11 @@ public class SideViewScene extends BaseScene {
                 break;
             case "Takeoff Away":
                 startingYPosition = 20;
-                startingXPosition = animationOverlay.getPrefWidth() - 250;
+                if (slopeDistance <= 0){
+                    startingXPosition = runwayStartX + displacedThresholdOffset + 100;
+                }else {
+                    startingXPosition = slopeDistance - 50;
+                }
                 altitude = 0;
                 endingXPosition = -plane.getFitWidth() - 100;
                 plane.setScaleX(1);

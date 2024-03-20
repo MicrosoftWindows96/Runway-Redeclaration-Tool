@@ -31,8 +31,6 @@ public class ParallelRunways {
         } else {
           System.out.println("Runway set " + runway1.getName() + "/" + runway2.getName() + " is FULL!");
         }
-      } else {
-        System.out.println("Invalid runways for this set: " + runway1.getName() + "/" + runway2.getName() );
       }
     }
   }
@@ -103,7 +101,7 @@ public class ParallelRunways {
     }
   }
 
-  private int getIntDegree(String degree) {
+  public int getIntDegree(String degree) {
     String parsedValue = degree;
     if (degree.matches("0[1-9]")) {
       parsedValue = String.valueOf((degree.charAt(1)));
@@ -163,6 +161,22 @@ public class ParallelRunways {
 
   public Pair<Runway,Runway> getCurrentRunways() {
     return currentRunways;
+  }
+
+  public Runway getHigherDegreeRunway() {
+    Runway runway = getFstRunway();
+    if (getSndRunway().getName().equals(degree2)) {
+      runway = getSndRunway();
+    }
+    return runway;
+  }
+
+  public Runway getLowerDegreeRunway() {
+    Runway runway = getFstRunway();
+    if (getSndRunway().getName().equals(degree1)) {
+      runway = getSndRunway();
+    }
+    return runway;
   }
 
   public String getDegree1() {

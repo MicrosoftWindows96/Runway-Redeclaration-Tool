@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -36,24 +38,18 @@ public class TopDownScene extends BaseScene {
     private double RESA;
     private double slopeDistance;
     private double RESADistance;
+    private boolean isRotate;
 
-    public TopDownScene(MainApplication app, ParallelRunways runwayManager) {
+    public TopDownScene(MainApplication app, ParallelRunways runwayManager, boolean isRotate) {
         this.app = app;
         this.currentRunway = runwayManager.getFstRunway();
         this.runwayManager = runwayManager;
+        this.isRotate = isRotate;
         this.obstacles = currentRunway.getObstacles();
         this.RESA = (double) 240 /6;
         if (!obstacles.isEmpty()) {
             this.obstacle = obstacles.getFirst();
         }
-        BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(1200.0,1200.0);
-        if (MainApplication.isDarkMode()) {
-            borderPane.setStyle("-fx-background-color: #121212;");
-        } else {
-            borderPane.setBackground(Background.fill(Color.rgb(201, 233, 246)));
-        }
-
 
         Text title = new Text("Aerial View");
         title.setFont(Font.font("Arial", 24));
@@ -61,16 +57,17 @@ public class TopDownScene extends BaseScene {
         title.setStroke(Color.WHITE);
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
-        VBox buttons = new VBox(10);
-        buttons.setAlignment(Pos.CENTER);
-        buttons.getChildren().addAll(addButtons());
+        HBox topBox = new HBox();
+        topBox.setAlignment(Pos.CENTER);
+        topBox.setSpacing(20);
+        topBox.getChildren().addAll(addButtons().get(0), title, addButtons().get(1));
 
-        VBox distanceInfoBox = new VBox();
+        HBox distanceInfoBox = new HBox();
 
         if (obstacles.isEmpty()) {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
-            distanceInfoBox.setSpacing(1); // Spacing between labels
+            distanceInfoBox.setSpacing(10); // Spacing between labels
             Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
             Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
             Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
@@ -86,7 +83,7 @@ public class TopDownScene extends BaseScene {
         } else {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
-            distanceInfoBox.setSpacing(1); // Spacing between labels
+            distanceInfoBox.setSpacing(10); // Spacing between labels
             Label toraLabel = new Label("TORA: " + currentRunway.getNewTORA() + "m");
             Label todaLabel = new Label("TODA: " + currentRunway.getNewTODA() + "m");
             Label asdaLabel = new Label("ASDA: " + currentRunway.getNewASDA() + "m");
@@ -103,43 +100,48 @@ public class TopDownScene extends BaseScene {
 
 
         VBox topLayout = new VBox();
+        topLayout.setPadding(new Insets(20));
         topLayout.setAlignment(Pos.TOP_CENTER);
-        topLayout.getChildren().addAll(title, buttons, distanceInfoBox);
-        BorderPane.setMargin(topLayout, new Insets(10));
+        topLayout.getChildren().addAll(topBox, distanceInfoBox);
 
-        borderPane.setTop(topLayout);
+        Canvas grassCanvas = new Canvas(800, 800);
+        Canvas runwayCanvas = new Canvas(800,800);
+        drawRunway(grassCanvas,runwayCanvas);
 
-        Canvas runwayCanvas = new Canvas(800, 600);
-        drawRunway(runwayCanvas);
+        StackPane layers = new StackPane(grassCanvas,runwayCanvas);
+        layers.setAlignment(Pos.TOP_CENTER);
 
-        borderPane.setCenter(runwayCanvas);
-        this.getChildren().add(borderPane);
+        StackPane root = new StackPane();
+        root.getChildren().addAll(layers,topLayout);
+
+        this.getChildren().add(root);
     }
 
-//    public void autoRotate(GraphicsContext gc, double rotation){
-//
-//        gc.rotate(rotation);
-//        if (rotation<45){gc.translate(120,-(rotation*12 + 7));}
-//        else if (rotation<90) {gc.translate(75,-(rotation*8 + 7));}
-//        else if (rotation<135) {gc.translate(30,-(rotation*4 + 7));}
-//        else if (rotation<180) {gc.translate(-5,-(rotation*6+1));}
-//        else if (rotation<225) {gc.translate(120,-(rotation*12 + 7));}
-//        else if (rotation<90) {gc.translate(120,-(rotation*12 + 7));}
-//        else if (rotation<135) {gc.translate(120,-(rotation*12 + 7));}
-//        else if (rotation<180) {gc.translate(120,-(rotation*12 + 7));}
-//        else if (rotation<225) {gc.translate(120,-(rotation*12 + 7));}
-//
-//    }
+    public void autoRotate(Canvas runwayCanvas, GraphicsContext gc, double rotation){
+        double centerX = runwayCanvas.getWidth() / 2;
+        double centerY = runwayCanvas.getHeight() / 2;
 
-    public void drawRunway(Canvas canvas) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.GREEN);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.save(); // Save the current state of the graphics context
+        gc.translate(centerX, centerY); // Translate to the center
+        gc.rotate(rotation-270); // Rotate around the center
+        gc.translate(-centerX, -centerY); // Translate back to the original position
 
-        double centerLineY = canvas.getHeight() / 2;
-//        double runwayLength = (double) currentRunway.getTORA() / 6;
-        double runwayLength = 350;
-        double runwayStartX = 100;
+    }
+
+    public void drawRunway(Canvas grassCanvas, Canvas runwayCanvas) {
+        GraphicsContext gc1 = grassCanvas.getGraphicsContext2D();
+        gc1.setFill(Color.GREEN);
+        gc1.fillRect(0, 0, grassCanvas.getWidth(), grassCanvas.getHeight());
+
+        GraphicsContext gc2 = runwayCanvas.getGraphicsContext2D();
+
+        if (isRotate) {
+            autoRotate(runwayCanvas, gc2,runwayManager.getIntDegree(currentRunway.getName())*10);
+        }
+
+        double centerLineY = runwayCanvas.getHeight() / 2;
+        double runwayLength = (double) currentRunway.getTORA() / 6;
+        double runwayStartX = (runwayCanvas.getWidth() - runwayLength) / 2;
         double runwayStartY = centerLineY - 20;
         double runwayHeight = 40;
 
@@ -152,13 +154,12 @@ public class TopDownScene extends BaseScene {
         this.TODA = (double) currentRunway.getTODA() / 6;
         this.ASDA = (double) currentRunway.getASDA() / 6;
         this.LDA = (double) currentRunway.getLDA() / 6;
-//        autoRotate(gc,160);
 
-        gc.setFill(Color.GRAY);
-        gc.fillRect(runwayStartX, centerLineY - 20, runwayLength, 40);
+        gc2.setFill(Color.GRAY);
+        gc2.fillRect(runwayStartX, centerLineY - 20, runwayLength, 40);
 
-        gc.setStroke(Color.WHITE);
-        gc.setLineWidth(2);
+        gc2.setStroke(Color.WHITE);
+        gc2.setLineWidth(2);
         double dashLength = 15;
         double spaceLength = 10;
         double runwayEndX = runwayStartX + runwayLength;
@@ -170,29 +171,29 @@ public class TopDownScene extends BaseScene {
                 // Adjust the length of the dash so it does not extend beyond the runway
                 dashEndX = runwayEndX;
             }
-            gc.strokeLine(x, centerLineY, dashEndX, centerLineY);
+            gc2.strokeLine(x, centerLineY, dashEndX, centerLineY);
         }
 
-        gc.setFill(Color.WHITE);
-        gc.fillRect(runwayStartX, centerLineY - 20, thresholdWidth, 40);
-        gc.fillRect(runwayStartX + runwayLength - thresholdWidth, centerLineY - 20, thresholdWidth, 40);
+        gc2.setFill(Color.WHITE);
+        gc2.fillRect(runwayStartX, centerLineY - 20, thresholdWidth, 40);
+        gc2.fillRect(runwayStartX + runwayLength - thresholdWidth, centerLineY - 20, thresholdWidth, 40);
 
         // e. Draw Stopway/Clearway
-        gc.setFill(Color.DARKBLUE);
-        gc.fillRect(runwayStartX - stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway left
-        gc.fillRect(runwayStartX + stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway right
+        gc2.setFill(Color.DARKBLUE);
+        gc2.fillRect(runwayStartX - stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway left
+        gc2.fillRect(runwayStartX + stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway right
 
-        gc.setFill(Color.LIGHTBLUE);
-        gc.fillRect(runwayStartX - stopwayWidth - clearwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway left
-        gc.fillRect(runwayStartX + runwayLength + stopwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway right
+        gc2.setFill(Color.LIGHTBLUE);
+        gc2.fillRect(runwayStartX - stopwayWidth - clearwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway left
+        gc2.fillRect(runwayStartX + runwayLength + stopwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway right
 
 
         Font labelFont = Font.font("Arial", 14);
-        gc.setFont(labelFont);
+        gc2.setFont(labelFont);
         if (MainApplication.isDarkMode()) {
-            gc.setFill(Color.WHITE);
+            gc2.setFill(Color.WHITE);
         } else {
-            gc.setFill(Color.BLACK);
+            gc2.setFill(Color.BLACK);
         }
 
         // b. Draw threshold indicators
@@ -205,10 +206,10 @@ public class TopDownScene extends BaseScene {
             double obstacleWidth = 10;
 
             //gc.setFill(Color.BLACK);
-            gc.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
+            gc2.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
 
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";
-            gc.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight - 5);
+            gc2.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight - 5);
 
             // gc.setStroke(Color.BLACK);
             // gc.strokeLine(runwayStartX, runwayStartY + 20, runwayStartX + TORA, runwayStartY + 20); // slope line
@@ -223,8 +224,8 @@ public class TopDownScene extends BaseScene {
                 this.slopeDistance = obstacleX + ((double) obstacle.getHeight() /6 * 50);
 
                 // RESA
-                gc.setFill(Color.ORANGE);
-                gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
+                gc2.setFill(Color.ORANGE);
+                gc2.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
 
                 // Blast (currently 0)
                 // gc.setFill(Color.BLUE);
@@ -232,14 +233,14 @@ public class TopDownScene extends BaseScene {
 
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
 
-                gc.setStroke(Color.LIGHTPINK);
-                gc.strokeLine(RESADistance, centerLineY - 20 + 40, RESADistance + this.TORA, centerLineY - 20 + 40); // TORA line
-                gc.setStroke(Color.YELLOW);
-                gc.strokeLine(RESADistance, centerLineY - 20 + 55, RESADistance + this.TODA, centerLineY - 20 + 55); // TODA line
-                gc.setStroke(Color.LIGHTGREEN);
-                gc.strokeLine(RESADistance, centerLineY - 20 + 70, RESADistance + this.ASDA, centerLineY - 20 + 70); // ASDA line
-                gc.setStroke(Color.BLUE);
-                gc.strokeLine(slopeDistance, centerLineY - 20 + 85, slopeDistance + this.LDA, centerLineY - 20 + 85); // LDA line
+                gc2.setStroke(Color.LIGHTPINK);
+                gc2.strokeLine(RESADistance, centerLineY - 20 + 40, RESADistance + this.TORA, centerLineY - 20 + 40); // TORA line
+                gc2.setStroke(Color.YELLOW);
+                gc2.strokeLine(RESADistance, centerLineY - 20 + 55, RESADistance + this.TODA, centerLineY - 20 + 55); // TODA line
+                gc2.setStroke(Color.LIGHTGREEN);
+                gc2.strokeLine(RESADistance, centerLineY - 20 + 70, RESADistance + this.ASDA, centerLineY - 20 + 70); // ASDA line
+                gc2.setStroke(Color.BLUE);
+                gc2.strokeLine(slopeDistance, centerLineY - 20 + 85, slopeDistance + this.LDA, centerLineY - 20 + 85); // LDA line
 
 
             } else if (obstacle.getDistanceFromThreshold() >= (1000 /6)) {
@@ -261,59 +262,59 @@ public class TopDownScene extends BaseScene {
                 this.slopeDistance = oppositeStartX;
 
                 // RESA
-                gc.setFill(Color.ORANGE);
-                gc.fillRect(obstacleX - this.RESA, runwayStartY, this.RESA, runwayHeight);
+                gc2.setFill(Color.ORANGE);
+                gc2.fillRect(obstacleX - this.RESA, runwayStartY, this.RESA, runwayHeight);
 
                 // Blast (currently is 0)
 //                gc.setFill(Color.BLUE);
 //                gc.fillRect(obstacleX - ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
 
-                gc.setStroke(Color.LIGHTPINK);
-                gc.strokeLine(runwayStartX, centerLineY - 20 + 40, slopeDistance -10, centerLineY - 20 + 40); // TORA line
-                gc.setStroke(Color.YELLOW);
-                gc.strokeLine(runwayStartX, centerLineY - 20 + 55, slopeDistance -10, centerLineY - 20 + 55); // TODA line
-                gc.setStroke(Color.LIGHTGREEN);
-                gc.strokeLine(runwayStartX, centerLineY - 20 + 70, slopeDistance -10, centerLineY - 20 + 70); // ASDA line
-                gc.setStroke(Color.BLUE);
-                gc.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + 85, runwayStartX + displacedThresholdOffset + this.LDA - ((double) (currentRunway.getRESA()+60) /6), centerLineY - 20 + 85); // LDA line
+                gc2.setStroke(Color.LIGHTPINK);
+                gc2.strokeLine(runwayStartX, centerLineY - 20 + 40, slopeDistance -10, centerLineY - 20 + 40); // TORA line
+                gc2.setStroke(Color.YELLOW);
+                gc2.strokeLine(runwayStartX, centerLineY - 20 + 55, slopeDistance -10, centerLineY - 20 + 55); // TODA line
+                gc2.setStroke(Color.LIGHTGREEN);
+                gc2.strokeLine(runwayStartX, centerLineY - 20 + 70, slopeDistance -10, centerLineY - 20 + 70); // ASDA line
+                gc2.setStroke(Color.BLUE);
+                gc2.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + 85, runwayStartX + displacedThresholdOffset + this.LDA - ((double) (currentRunway.getRESA()+60) /6), centerLineY - 20 + 85); // LDA line
 
             }
 
         }else {
-            gc.setStroke(Color.LIGHTPINK);
-            gc.strokeLine(runwayStartX, centerLineY - 20 + 40, runwayStartX + this.TORA, centerLineY - 20 + 40); // TORA line
-            gc.setStroke(Color.YELLOW);
-            gc.strokeLine(runwayStartX, centerLineY - 20 + 55, runwayStartX + this.TODA, centerLineY - 20 + 55); // TODA line
-            gc.setStroke(Color.LIGHTGREEN);
-            gc.strokeLine(runwayStartX, centerLineY - 20 + 70, runwayStartX + this.ASDA, centerLineY - 20 + 70); // ASDA line
-            gc.setStroke(Color.BLUE);
-            gc.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + 85, runwayStartX +displacedThresholdOffset + this.LDA, centerLineY - 20 + 85); // LDA line
+            gc2.setStroke(Color.LIGHTPINK);
+            gc2.strokeLine(runwayStartX, centerLineY - 20 + 40, runwayStartX + this.TORA, centerLineY - 20 + 40); // TORA line
+            gc2.setStroke(Color.YELLOW);
+            gc2.strokeLine(runwayStartX, centerLineY - 20 + 55, runwayStartX + this.TODA, centerLineY - 20 + 55); // TODA line
+            gc2.setStroke(Color.LIGHTGREEN);
+            gc2.strokeLine(runwayStartX, centerLineY - 20 + 70, runwayStartX + this.ASDA, centerLineY - 20 + 70); // ASDA line
+            gc2.setStroke(Color.BLUE);
+            gc2.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + 85, runwayStartX +displacedThresholdOffset + this.LDA, centerLineY - 20 + 85); // LDA line
 
         }
 
         if (displacedThresholdOffset > 0) {
-            gc.setFill(Color.RED);
-            gc.fillRect(runwayStartX + displacedThresholdOffset, runwayStartY, thresholdWidth, runwayHeight);
+            gc2.setFill(Color.RED);
+            gc2.fillRect(runwayStartX + displacedThresholdOffset, runwayStartY, thresholdWidth, runwayHeight);
         }
 
         //gc.setFill(Color.BLACK);
         if (MainApplication.isDarkMode()) {
-            gc.setFill(Color.WHITE);
+            gc2.setFill(Color.WHITE);
         } else {
-            gc.setFill(Color.BLACK);
+            gc2.setFill(Color.BLACK);
         }
 
         java.awt.FontMetrics metrics = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font("Arial", java.awt.Font.PLAIN, 14));
 
         String leftRunwayName = runwayManager.getFstRunway().getName() + runwayManager.getFstRunway().getDirection();
-        gc.fillText(leftRunwayName, runwayStartX, centerLineY - 25);
-        gc.fillText("Take-off/Landing →", runwayStartX, centerLineY - 40); // Adjust text position as needed
+        gc2.fillText(leftRunwayName, runwayStartX, centerLineY - 25);
+        gc2.fillText("Take-off/Landing →", runwayStartX, centerLineY - 40); // Adjust text position as needed
 
 
         String rightRunwayName = runwayManager.getSndRunway().getName() + runwayManager.getSndRunway().getDirection();
         int stringWidth = metrics.stringWidth(rightRunwayName);
-        gc.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);
-        gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth -100, centerLineY - 40); // Adjust text position as needed
+        gc2.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);
+        gc2.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth -100, centerLineY - 40); // Adjust text position as needed
 
     }
 
@@ -337,6 +338,12 @@ public class TopDownScene extends BaseScene {
             }
         });
 
-        return new ArrayList<>(List.of(backButton));
+        Button rotateButton = new Button();
+        styleButton(rotateButton, MaterialDesign.MDI_RECYCLE, "Rotate");
+        rotateButton.setOnAction(e -> {
+            app.display2DtopDownViewScene(runwayManager,!isRotate);
+        });
+
+        return new ArrayList<>(List.of(backButton,rotateButton));
     }
 }

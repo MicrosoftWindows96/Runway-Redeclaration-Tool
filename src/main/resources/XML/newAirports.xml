@@ -9,10 +9,10 @@
                         <clearway>0</clearway>
                         <TORA>3660</TORA>
                         <dispThresh>307</dispThresh>
-                        <Obstacle name="27-S2">
-                            <Height>25</Height>
-                            <DistThreshold>500</DistThreshold>
-                            <DistCent>1</DistCent>
+                        <Obstacle name="09-S4">
+                            <Height>20</Height>
+                            <DistThreshold>3546</DistThreshold>
+                            <DistCent>6</DistCent>
                         </Obstacle>
                     </LogicalRunway>
                     <LogicalRunway degree="27">
@@ -20,10 +20,10 @@
                         <clearway>0</clearway>
                         <TORA>3660</TORA>
                         <dispThresh>0</dispThresh>
-                        <Obstacle name="27-S2">
-                            <Height>25</Height>
-                            <DistThreshold>2853</DistThreshold>
-                            <DistCent>1</DistCent>
+                        <Obstacle name="09-S4">
+                            <Height>20</Height>
+                            <DistThreshold>-193</DistThreshold>
+                            <DistCent>6</DistCent>
                         </Obstacle>
                     </LogicalRunway>
                 </LogicalRunways>
@@ -83,20 +83,6 @@
                         <clearway>0</clearway>
                         <TORA>1000</TORA>
                         <dispThresh>50</dispThresh>
-                    </LogicalRunway>
-                </LogicalRunways>
-                <LogicalRunways>
-                    <LogicalRunway degree="10">
-                        <stopway>1</stopway>
-                        <clearway>1</clearway>
-                        <TORA>1</TORA>
-                        <dispThresh>1</dispThresh>
-                    </LogicalRunway>
-                    <LogicalRunway degree="26">
-                        <stopway>1</stopway>
-                        <clearway>1</clearway>
-                        <TORA>1</TORA>
-                        <dispThresh>1</dispThresh>
                     </LogicalRunway>
                 </LogicalRunways>
             </Runway>

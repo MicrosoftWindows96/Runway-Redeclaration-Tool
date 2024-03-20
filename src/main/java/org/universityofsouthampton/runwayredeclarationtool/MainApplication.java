@@ -185,15 +185,15 @@ public class MainApplication extends Application {
 
 
 
-    public void display2DtopDownViewScene(ParallelRunways runwayManager) {
+    public void display2DtopDownViewScene(ParallelRunways runwayManager, boolean isRotate) {
         if (secondaryStage == null) {
             secondaryStage = new Stage();
             secondaryStage.setTitle("2D Side View");
         }
 
-        TopDownScene topDownScene = new TopDownScene(this, runwayManager);
+        TopDownScene topDownScene = new TopDownScene(this, runwayManager, isRotate);
         topDownScene.setSecondaryStage(secondaryStage);
-        Scene topDownSceneScene = new Scene(topDownScene, 800, 600);
+        Scene topDownSceneScene = new Scene(topDownScene, 800, 800);
         secondaryStage.setScene(topDownSceneScene);
         secondaryStage.show();
     }
@@ -206,7 +206,7 @@ public class MainApplication extends Application {
 
         BothViewScene bothViewScene = new BothViewScene(this, runwayManager);
         bothViewScene.setSecondaryStage(secondaryStage);
-        Scene bothViewSceneScene = new Scene(bothViewScene, 800, 600);
+        Scene bothViewSceneScene = new Scene(bothViewScene, 800, 510);
         secondaryStage.setScene(bothViewSceneScene);
         secondaryStage.show();
     }

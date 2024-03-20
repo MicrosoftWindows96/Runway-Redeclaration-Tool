@@ -9,10 +9,10 @@
                         <clearway>0</clearway>
                         <TORA>3660</TORA>
                         <dispThresh>307</dispThresh>
-                        <Obstacle name="09-S3">
-                            <Height>15</Height>
-                            <DistThreshold>150</DistThreshold>
-                            <DistCent>5</DistCent>
+                        <Obstacle name="09-S4">
+                            <Height>20</Height>
+                            <DistThreshold>3546</DistThreshold>
+                            <DistCent>6</DistCent>
                         </Obstacle>
                     </LogicalRunway>
                     <LogicalRunway degree="27">
@@ -20,16 +20,16 @@
                         <clearway>0</clearway>
                         <TORA>3660</TORA>
                         <dispThresh>0</dispThresh>
-                        <Obstacle name="09-S3">
-                            <Height>15</Height>
-                            <DistThreshold>3203</DistThreshold>
-                            <DistCent>5</DistCent>
+                        <Obstacle name="09-S4">
+                            <Height>20</Height>
+                            <DistThreshold>-193</DistThreshold>
+                            <DistCent>6</DistCent>
                         </Obstacle>
                     </LogicalRunway>
                 </LogicalRunways>
                 <LogicalRunways>
                     <LogicalRunway degree="09">
-                        <stopway>50</stopway>
+                        <stopway>0</stopway>
                         <clearway>0</clearway>
                         <TORA>3902</TORA>
                         <dispThresh>306</dispThresh>
@@ -96,7 +96,7 @@
                         <stopway>0</stopway>
                         <clearway>0</clearway>
                         <TORA>3902</TORA>
-                        <dispThresh>306</dispThresh>
+                        <dispThresh>0</dispThresh>
                         <Obstacle name="09-S2">
                             <Height>25</Height>
                             <DistThreshold>2853</DistThreshold>
@@ -110,7 +110,7 @@
                         <dispThresh>0</dispThresh>
                         <Obstacle name="09-S2">
                             <Height>25</Height>
-                            <DistThreshold>743</DistThreshold>
+                            <DistThreshold>1049</DistThreshold>
                             <DistCent>4</DistCent>
                         </Obstacle>
                     </LogicalRunway>

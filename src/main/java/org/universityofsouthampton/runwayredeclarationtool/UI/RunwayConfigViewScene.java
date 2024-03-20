@@ -19,6 +19,7 @@ import javafx.util.Pair;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
@@ -62,8 +63,8 @@ public class RunwayConfigViewScene extends BaseScene {
     buttonBox.getChildren().addAll(addButtons());
     getChildren().add(buttonBox);
 
-    Button oppositeButton = new Button("Opposite"); // Goes to opposite runway direction
-    styleButton(oppositeButton, MaterialDesign.MDI_RECYCLE, "Opposite");
+    Button oppositeButton = new Button(); // Goes to opposite runway direction
+    styleButton(oppositeButton, MaterialDesign.MDI_RECYCLE, "Logical");
     oppositeButton.setOnAction(e -> {
       runwayManager.swapRunways();
       app.displayRunwayConfigScene(airport,runwayManager);
@@ -73,7 +74,7 @@ public class RunwayConfigViewScene extends BaseScene {
     });
 
     Button nextButton = new Button(); // Goes to next parallel runway
-    styleButton(nextButton, MaterialDesign.MDI_ARROW_ALL, "Switch");
+    styleButton(nextButton, MaterialDesign.MDI_ARROW_ALL, "Parallel");
     nextButton.setOnAction(e -> {
       runwayManager.nextCurrentRunway();
       app.displayRunwayConfigScene(airport,runwayManager);
@@ -334,8 +335,16 @@ public class RunwayConfigViewScene extends BaseScene {
 
           Runway testRunway1 = new Runway(degree1,stopway1,clearway1,TORA1,dispThresh1);
           Runway testRunway2 = new Runway(degree2,stopway2,clearway2,TORA2,dispThresh2);
-          runwayManager.replaceRunways(runwayManager.getCurrentRunways(),new Pair<>(testRunway1,testRunway2));
+          runwayManager.setNewRunwayParameters(runwayManager.getFstRunway(),testRunway1);
+          runwayManager.setNewRunwayParameters(runwayManager.getSndRunway(),testRunway2);
+          if (!currentRunway.getObstacles().isEmpty()) {
+            Obstacle movedObstacle = currentRunway.getObstacles().get(0);
+            runwayManager.removeObstacle(movedObstacle);
+            runwayManager.placeObstacle(movedObstacle);
+          }
 
+          app.showNotification("Logical Runways",
+              degree1 + runwayManager.getFstRunway().getDirection() + "/" + degree1 + runwayManager.getSndRunway().getDirection() + " updated!");
           app.updateXMLs();
           app.displayRunwayConfigScene(airport,runwayManager);
           Stage stage = (Stage) promptWindow.getScene().getWindow();

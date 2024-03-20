@@ -17,7 +17,7 @@ public class Runway {
     private int newTODA; // Calculated Take-Off Distance Available
     private int newASDA; // Calculated Accelerate-Stop Distance Available
     private int newLDA; // Calculated Landing Distance Available
-    private final int displacedThreshold; // Displaced Threshold
+    private int displacedThreshold; // Displaced Threshold
     private final ArrayList<Obstacle> obstacles; // ArrayList of Obstacles
     private final int RESA = 240; // Runway End Safety Area
     private final int ALS = 50; // Approach Landing Surface
@@ -27,8 +27,8 @@ public class Runway {
     private boolean landingToward;
     private boolean takeoffAway;
     private boolean takeoffToward;
-    private final int stopway;
-    private final int clearway;
+    private int stopway;
+    private int clearway;
 
     public Runway(String name, int stopway, int clearway, int TORA, int displacedThreshold){
         this.name = name;
@@ -212,6 +212,9 @@ public class Runway {
     public int getLDA() {
         return LDA;
     }
+    public void setDisplacedThreshold(int displacedThreshold) {
+        this.displacedThreshold = displacedThreshold;
+    }
     public int getDisplacedThreshold() {
         return displacedThreshold;
     }
@@ -233,13 +236,18 @@ public class Runway {
     public void setBlastProtectionValue(int BPV) {
         blastProtectionValue = BPV;
     }
+    public void setStopway(int stopway) {
+        this.stopway = stopway;
+    }
     public int getStopway(){
         return stopway;
+    }
+    public void setClearway(int clearway) {
+        this.clearway = clearway;
     }
     public int getClearway(){
         return clearway;
     }
-
     public int getRESA(){
         return RESA;
     }

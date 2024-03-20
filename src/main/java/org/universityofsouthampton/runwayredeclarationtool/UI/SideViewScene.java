@@ -50,6 +50,9 @@ public class SideViewScene extends BaseScene {
 
     private double slopeDistance;
     private double RESADistance;
+    private double displacedThresholdOffset;
+    private double runwayStartX;
+    private double runwayWidth;
 
     public SideViewScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
@@ -217,25 +220,34 @@ public class SideViewScene extends BaseScene {
             case "Land Over":
                 startingYPosition = 0;
                 startingXPosition = -plane.getFitWidth();
-                endingXPosition = RESADistance + 100;
+                endingXPosition = RESADistance + 200;
                 plane.setScaleX(-1);
                 break;
             case "Land Toward":
                 startingYPosition = 0;
                 startingXPosition = animationOverlay.getPrefWidth();
-                endingXPosition = slopeDistance - 100;
+                if (slopeDistance <= 0){
+                    endingXPosition = runwayStartX + displacedThresholdOffset + 10;
+                }else {
+                    endingXPosition = slopeDistance - 100;
+                }
+
                 plane.setScaleX(1);
                 break;
             case "Takeoff Toward":
                 startingYPosition = 20;
                 altitude = 0;
-                startingXPosition = slopeDistance - 100;
+                if (slopeDistance <= 0){
+                    startingXPosition = runwayStartX + displacedThresholdOffset + 10;
+                }else {
+                    startingXPosition = slopeDistance - 100;
+                }
                 endingXPosition = animationOverlay.getPrefWidth() + 100;
                 plane.setScaleX(-1);
                 break;
             case "Takeoff Away":
                 startingYPosition = 20;
-                startingXPosition = animationOverlay.getPrefWidth() - 150;
+                startingXPosition = animationOverlay.getPrefWidth() - 250;
                 altitude = 0;
                 endingXPosition = -plane.getFitWidth() - 100;
                 plane.setScaleX(1);
@@ -325,13 +337,13 @@ public class SideViewScene extends BaseScene {
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 50, canvas.getWidth(), canvas.getHeight() - 50);
 
-        double runwayStartX = 100;
+        runwayStartX = 100;
         double runwayStartY = 50;
-        double runwayWidth = (double) currentRunway.getTORA() / 6;
+        runwayWidth = (double) currentRunway.getTORA() / 6;
         double runwayHeight = 5;
 
         double thresholdWidth = 5;
-        double displacedThresholdOffset = (double) currentRunway.getDisplacedThreshold() / 6;
+        displacedThresholdOffset = (double) currentRunway.getDisplacedThreshold() / 6;
         double stopwayWidth = (double) currentRunway.getStopway() / 6;
         double clearwayWidth = (double) currentRunway.getClearway() / 6;
 

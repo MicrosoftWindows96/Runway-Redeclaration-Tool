@@ -34,7 +34,7 @@ public class ViewSelectionScene extends BaseScene {
         }
 
 
-        Text title = new Text("Top Down View");
+        Text title = new Text("Visualisations");
         title.setFont(Font.font("Arial", 24));
         title.setStyle("-fx-fill: #333;");
         title.setStroke(Color.WHITE);

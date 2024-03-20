@@ -217,7 +217,7 @@ public class SideViewScene extends BaseScene {
             case "Land Over":
                 startingYPosition = 0;
                 startingXPosition = -plane.getFitWidth();
-                endingXPosition = RESADistance + 100;
+                endingXPosition = RESADistance + 200;
                 plane.setScaleX(-1);
                 break;
             case "Land Toward":
@@ -235,7 +235,7 @@ public class SideViewScene extends BaseScene {
                 break;
             case "Takeoff Away":
                 startingYPosition = 20;
-                startingXPosition = animationOverlay.getPrefWidth() - 150;
+                startingXPosition = animationOverlay.getPrefWidth() - 250;
                 altitude = 0;
                 endingXPosition = -plane.getFitWidth() - 100;
                 plane.setScaleX(1);

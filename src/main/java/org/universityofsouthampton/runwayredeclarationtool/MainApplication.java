@@ -35,13 +35,14 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        playBackgroundMusic();
+
         root = new StackPane();
         background = AnimatedPatternBackground.getInstance();
         root.getChildren().add(background);
 
         initialiseAirports();
         displayMenu();
-        playBackgroundMusic();
 
         Scene scene = new Scene(root, 800, 600);
 

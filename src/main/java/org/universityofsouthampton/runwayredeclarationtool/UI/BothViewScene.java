@@ -99,9 +99,9 @@ public class BothViewScene extends BaseScene {
         viewSplitPane.setOrientation(Orientation.VERTICAL);
 
 
-        Canvas topViewCanvas = new Canvas(800, 200);
+        Canvas topViewCanvas = new Canvas(800, 300);
         new TopDownScene(app, runwayManager).drawRunway(topViewCanvas);
-        Canvas sideViewCanvas = new Canvas(800, 200);
+        Canvas sideViewCanvas = new Canvas(800, 300);
         new SideViewScene(app, runwayManager).drawRunway(sideViewCanvas);
 
         viewSplitPane.getItems().addAll(topViewCanvas, sideViewCanvas);

@@ -36,13 +36,10 @@ public class exportXML {
     this.exportedObstacles = exportedObstacles;
 
     try {
-      // Create a DocumentBuilderFactory (Used to parse XML files)
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
-      // Create a DocumentBuilder
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-      // Create a new XMl document
       document = dBuilder.newDocument();
 
     } catch (Exception e) {

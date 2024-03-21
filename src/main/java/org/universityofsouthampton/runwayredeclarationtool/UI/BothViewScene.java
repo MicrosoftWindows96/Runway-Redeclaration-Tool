@@ -10,8 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -50,17 +48,16 @@ public class BothViewScene extends BaseScene {
         title.setStroke(Color.WHITE);
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
-        HBox topBox = new HBox();
-        topBox.setAlignment(Pos.CENTER);
-        topBox.setSpacing(20);
-        topBox.getChildren().addAll(title, addButtons().get(0));
+        VBox buttons = new VBox(10);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.getChildren().addAll(addButtons());
 
-        HBox distanceInfoBox = new HBox();
+        VBox distanceInfoBox = new VBox();
 
         if (obstacles.isEmpty()) {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
-            distanceInfoBox.setSpacing(10); // Spacing between labels
+            distanceInfoBox.setSpacing(1); // Spacing between labels
             Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
             Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
             Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
@@ -76,7 +73,7 @@ public class BothViewScene extends BaseScene {
         } else {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
-            distanceInfoBox.setSpacing(10); // Spacing between labels
+            distanceInfoBox.setSpacing(1); // Spacing between labels
             Label toraLabel = new Label("TORA: " + currentRunway.getNewTORA() + "m");
             Label todaLabel = new Label("TODA: " + currentRunway.getNewTODA() + "m");
             Label asdaLabel = new Label("ASDA: " + currentRunway.getNewASDA() + "m");
@@ -93,28 +90,25 @@ public class BothViewScene extends BaseScene {
 
         VBox topLayout = new VBox();
         topLayout.setAlignment(Pos.TOP_CENTER);
-        topLayout.getChildren().addAll(topBox,distanceInfoBox);
+        topLayout.getChildren().addAll(title, buttons,distanceInfoBox);
         BorderPane.setMargin(topLayout, new Insets(10));
+
+        borderPane.setTop(topLayout);
 
         SplitPane viewSplitPane = new SplitPane();
         viewSplitPane.setOrientation(Orientation.VERTICAL);
 
-        Canvas grassCanvas = new Canvas(800, 300);
-        Canvas runwayCanvas = new Canvas(800,300);
-        new TopDownScene(app, runwayManager, false).drawRunway(grassCanvas,runwayCanvas);
 
-        StackPane layers = new StackPane(grassCanvas,runwayCanvas);
-        layers.setAlignment(Pos.TOP_CENTER);
-
-        Canvas sideViewCanvas = new Canvas(800, 200);
+        Canvas topViewCanvas = new Canvas(800, 300);
+        new TopDownScene(app, runwayManager).drawRunway(topViewCanvas);
+        Canvas sideViewCanvas = new Canvas(800, 300);
         new SideViewScene(app, runwayManager).drawRunway(sideViewCanvas);
 
-        viewSplitPane.getItems().addAll(layers, sideViewCanvas);
+        viewSplitPane.getItems().addAll(topViewCanvas, sideViewCanvas);
 
-        StackPane root = new StackPane();
-        root.getChildren().addAll(viewSplitPane,topLayout);
+        borderPane.setCenter(viewSplitPane);
 
-        this.getChildren().add(root);
+        this.getChildren().add(borderPane);
     }
 
     private Stage secondaryStage;

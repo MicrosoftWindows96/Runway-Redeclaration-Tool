@@ -11,7 +11,7 @@ class ObstacleTest {
         obstacle = new Obstacle("Tree",32,21,21);
     }
 
-    @Test
+    /*@Test
     void testGetAttributes() {
         obstacle = new Obstacle("Tree",32,21,21);
         assertEquals("Tree", obstacle.getName());
@@ -31,5 +31,39 @@ class ObstacleTest {
         assertEquals(21, obstacle.getHeight());
         assertEquals(100, obstacle.getDistanceFromThreshold());
         assertEquals(123, obstacle.getDistanceFromCentreline());
+    }*/
+
+    @Test
+    public void testConstructor() {
+        assertEquals("Tree", obstacle.getName());
+        assertEquals(32, obstacle.getHeight());
+        assertEquals(21, obstacle.getDistanceFromThreshold());
+        assertEquals(21, obstacle.getDistanceFromCentreline());
+    }
+
+    @Test
+    public void testSetName() {
+        obstacle.setName("New Name");
+        assertEquals("New Name", obstacle.getName());
+    }
+
+    @Test
+    public void testSetHeight() {
+        obstacle.setHeight(20);
+        assertEquals(20, obstacle.getHeight());
+    }
+
+    @Test
+    public void testSetDistanceFromThreshold() {
+        obstacle.setDistanceFromThreshold(200);
+        assertEquals(200, obstacle.getDistanceFromThreshold());
+    }
+
+    @Test
+    public void testSetDistanceFromCentreline() {
+        obstacle.setDistanceFromCentreline(100);
+        assertEquals(100, obstacle.getDistanceFromCentreline());
     }
 }
+
+

@@ -196,7 +196,7 @@ public class TopDownScene extends BaseScene {
             gc.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
 
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";
-            gc.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight - 5);
+            gc.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight + 100);
 
             this.TORA = (double) currentRunway.getNewTORA() / 6;
             this.TODA = (double) currentRunway.getNewTODA() / 6;
@@ -204,7 +204,7 @@ public class TopDownScene extends BaseScene {
             this.LDA = (double) currentRunway.getNewLDA() / 6;
 
             if (obstacle.getDistanceFromThreshold() < (1000 /6)) {
-                this.slopeDistance = obstacleX + ((double) obstacle.getHeight() /6 * 50);
+                this.slopeDistance = obstacleX + ((double) obstacle.getHeight() / 6 * 50);
 
                 gc.setFill(Color.ORANGE);
                 gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);

@@ -72,9 +72,13 @@ public class TopDownScene extends BaseScene {
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
             distanceInfoBox.setSpacing(1); // Spacing between labels
             Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
+            toraLabel.setTextFill(Color.LIGHTPINK);
             Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
+            todaLabel.setTextFill(Color.YELLOW);
             Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
+            asdaLabel.setTextFill(Color.LIGHTGREEN);
             Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
+            ldaLabel.setTextFill(Color.BLUE);
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
             if (MainApplication.isDarkMode()) {
                 //set text color to white
@@ -88,9 +92,13 @@ public class TopDownScene extends BaseScene {
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
             distanceInfoBox.setSpacing(1); // Spacing between labels
             Label toraLabel = new Label("TORA: " + currentRunway.getNewTORA() + "m");
+            toraLabel.setTextFill(Color.LIGHTPINK);
             Label todaLabel = new Label("TODA: " + currentRunway.getNewTODA() + "m");
+            todaLabel.setTextFill(Color.YELLOW);
             Label asdaLabel = new Label("ASDA: " + currentRunway.getNewASDA() + "m");
+            asdaLabel.setTextFill(Color.LIGHTGREEN);
             Label ldaLabel = new Label("LDA: " + currentRunway.getNewLDA() + "m");
+            ldaLabel.setTextFill(Color.BLUE);
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
             if (MainApplication.isDarkMode()) {
                 //set text color to white

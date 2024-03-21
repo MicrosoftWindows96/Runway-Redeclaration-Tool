@@ -112,7 +112,6 @@ public class MainApplication extends Application {
         exportXML obstacleXML = new exportXML(airports, obstacles, new File(OBSTACLES_XML_PATH));
         obstacleXML.buildObstaclesXML();
 
-        showNotification("System", "Airports and obstacles updated");
         System.out.println("XML files successfully updated!");
     }
 
@@ -187,7 +186,7 @@ public class MainApplication extends Application {
 
 
 
-    public void display2DtopDownViewScene(ParallelRunways runwayManager) {
+    public void display2DtopDownViewScene(ParallelRunways runwayManager, boolean isRotate) {
         if (secondaryStage == null) {
             secondaryStage = new Stage();
             secondaryStage.setTitle("2D Side View");

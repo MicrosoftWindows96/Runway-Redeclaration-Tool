@@ -40,9 +40,9 @@ public class Runway {
         this.TODA = TORA + clearway;
         this.ASDA = TORA + stopway;
         this.LDA = TORA - displacedThreshold;
-        if(isNameInvalid(name)){
+        if(isNameInvalid(name)){ // If name doesn't match criteria
             throw new IllegalArgumentException("Invalid runway name!");
-        } else if (checkValidParameters()) {
+        } else if (!checkValidParameters()) { // Return False if distances are invalid
             throw new IllegalArgumentException("Invalid distances!");
         }
         try {
@@ -54,13 +54,14 @@ public class Runway {
 
     // Validators for the runway object (_ is a placeholder for no direction, it's a single runway.)
     public boolean isNameInvalid(String name){  // Checks name credentials
-        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])([LRC_])?$";
-        return !name.matches(regex);
+        String regex = "^(0[1-9]|1[0-9]|2[0-9]|3[0-6])$";
+        return !name.matches(regex); // Returns true if the name doesn't match regex.
     }
-    public boolean checkValidParameters(){ // Checks parameters
-        boolean greaterThanZero = (TORA<0 || TODA <0 || ASDA <0 || LDA<0 || displacedThreshold <0 || stopway <0 || clearway<0);
-        boolean checkTODA = (TODA == TORA + clearway && TODA > TORA);
+    public boolean checkValidParameters(){ // Checks parameters, returns true if all cases are met
+        boolean greaterThanZero = (TORA>0 && TODA>0 && ASDA>0 && LDA>0 && displacedThreshold>=0 && stopway>=0 && clearway>=0);
+        boolean checkTODA = (TODA == TORA + clearway && TODA >= TORA);
         boolean checkASDA = (ASDA == TORA + stopway || ASDA == LDA + stopway);
+//        System.out.println(greaterThanZero + " " + checkTODA + " " + checkASDA);
         return (greaterThanZero && checkTODA && checkASDA);
     }
 

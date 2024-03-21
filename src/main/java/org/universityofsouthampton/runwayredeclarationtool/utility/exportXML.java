@@ -133,7 +133,7 @@ public class exportXML {
       }
   }
 
-  private static Element createAirportElement(Document document, String name, String code) {
+  public Element createAirportElement(Document document, String name, String code) {
     // Create the Airport element
     Element airportElement = document.createElement("Airport");
     airportElement.setAttribute("name", name);
@@ -141,7 +141,7 @@ public class exportXML {
     return airportElement;
   }
 
-  private static void createLogicalRunwayElement(Document document, Runway runway,
+  public void createLogicalRunwayElement(Document document, Runway runway,
       Element logicalRunwaysElement, ArrayList<Obstacle> obstacles) {
 
     // Create the LogicalRunway element
@@ -171,7 +171,7 @@ public class exportXML {
 
     // Add obstacle
     if (obstacles != null && !runway.getObstacles().isEmpty()) {
-      Obstacle obstacle = obstacles.getFirst();
+      Obstacle obstacle = obstacles.get(0);
       Element obstacleElement = document.createElement("Obstacle");
       obstacleElement.setAttribute("name", obstacle.getName());
       logicalRunwayElement.appendChild(obstacleElement);

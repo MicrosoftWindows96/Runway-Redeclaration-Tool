@@ -25,9 +25,4 @@
         <DistThreshold>-50</DistThreshold>
         <DistCent>5</DistCent>
     </Obstacle>
-    <Obstacle name="TestObstacle">
-        <Height>20</Height>
-        <DistThreshold>400</DistThreshold>
-        <DistCent>50</DistCent>
-    </Obstacle>
 </Obstacles>

@@ -17,7 +17,6 @@ module org.universityofsouthampton.runwayredeclarationtool {
     requires org.kordamp.ikonli.fontawesome5;
     requires java.desktop;
     requires org.kordamp.ikonli.materialdesign;
-    requires org.kordamp.ikonli.fontawesome;
     requires java.xml.bind;
     requires annotations;
     requires javafx.media;

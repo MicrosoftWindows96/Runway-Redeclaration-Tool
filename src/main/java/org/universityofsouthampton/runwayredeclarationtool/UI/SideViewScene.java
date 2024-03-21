@@ -138,6 +138,7 @@ public class SideViewScene extends BaseScene {
         styleButton(button4, MaterialDesign.MDI_NUMERIC_4_BOX, "T Away"); // Takeoff Away
         button4.setOnAction(e -> animatePlane("Takeoff Away"));
 
+
         rightButtons.getChildren().addAll(button1, button2, button3,button4);
 
         Region spacer = new Region();

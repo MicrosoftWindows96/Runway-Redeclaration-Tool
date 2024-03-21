@@ -14,8 +14,8 @@ class exportXMLTest {
     exportXML ExportXML;
     ArrayList<Airport> airports; // Imported airports
     ArrayList<Obstacle> obstacles; // Imported obstacles
-    String AIRPORTS_XML_PATH = "src/main/resources/XML/newAirports.xml";
-    String OBSTACLES_XML_PATH = "src/main/resources/XML/testObstacles.xml";
+    String AIRPORTS_XML_PATH = "src/main/resources/XML/newAirportsTest.xml";
+    String OBSTACLES_XML_PATH = "src/main/resources/XML/newTestObstacles.xml";
 
     @BeforeEach
     void setUp() {

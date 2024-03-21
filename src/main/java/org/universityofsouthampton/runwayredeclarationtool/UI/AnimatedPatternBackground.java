@@ -18,7 +18,6 @@ public class AnimatedPatternBackground extends Pane {
   private final Pane cloudLayer = new Pane();
   private final double iconSize = 24;
   private final double speed = 1.0;
-  //private final double planeSpeed = 4.0;
   private static AnimatedPatternBackground instance;
   public boolean isDarkMode = false;
 

@@ -10,8 +10,8 @@ public class Runway {
     private String name; // Runway name
     private String direction; // Runway direction
     private int TORA; // Take-Off Run Available (same as length of runway)
-    private final int TODA; // Take-Off Distance Available
-    private final int ASDA; // Accelerate-Stop Distance Available
+    private int TODA; // Take-Off Distance Available
+    private int ASDA; // Accelerate-Stop Distance Available
     private final int LDA; // Landing Distance Available
     private int newTORA; // Calculated Take-Off Run Available
     private int newTODA; // Calculated Take-Off Distance Available
@@ -214,6 +214,7 @@ public class Runway {
     }
     public void setDisplacedThreshold(int displacedThreshold) {
         this.displacedThreshold = displacedThreshold;
+        this.ASDA = this.TORA - this.displacedThreshold;
     }
     public int getDisplacedThreshold() {
         return displacedThreshold;
@@ -238,12 +239,14 @@ public class Runway {
     }
     public void setStopway(int stopway) {
         this.stopway = stopway;
+        this.ASDA = this.TORA + this.stopway;
     }
     public int getStopway(){
         return stopway;
     }
     public void setClearway(int clearway) {
         this.clearway = clearway;
+        this.TODA = this.TORA + this.clearway;
     }
     public int getClearway(){
         return clearway;

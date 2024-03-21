@@ -52,4 +52,48 @@ public class RunwayTest {
     void testCalculations(){
 
     }
+
+    @Test
+    void shouldThrowExceptionWhenInvalidRunwayName() {
+        assertThrows(IllegalArgumentException.class, () -> new Runway("50", 200, 300, 3929, 0));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenInvalidDistances() {
+        assertThrows(IllegalArgumentException.class, () -> new Runway("18R", -200, 300, 3929, 0));
+    }
+
+    @Test
+    void shouldAddObstacleSuccessfully() {
+        runway.addObstacle(obstacle);
+        assertEquals(1, runway.getObstacles().size());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenAddingNullObstacle() {
+        assertThrows(IllegalArgumentException.class, () -> runway.addObstacle(null));
+    }
+
+    @Test
+    void shouldRemoveObstacleSuccessfully() {
+        runway.addObstacle(obstacle);
+        runway.removeObstacle(obstacle);
+        assertEquals(0, runway.getObstacles().size());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRemovingNullObstacle() {
+        assertThrows(IllegalArgumentException.class, () -> runway.removeObstacle(null));
+    }
+
+    @Test
+    void shouldCalculateDistancesCorrectly() {
+        runway.addObstacle(obstacle);
+        runway.setBlastProtectionValue(100);
+        runway.runCalculations();
+        assertTrue(runway.getNewTORA() > 0);
+        assertTrue(runway.getNewTODA() > 0);
+        assertTrue(runway.getNewASDA() > 0);
+        assertTrue(runway.getNewLDA() > 0);
+    }
 }

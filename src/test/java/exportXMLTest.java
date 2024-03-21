@@ -14,8 +14,8 @@ class exportXMLTest {
     exportXML ExportXML;
     ArrayList<Airport> airports; // Imported airports
     ArrayList<Obstacle> obstacles; // Imported obstacles
-    String AIRPORTS_XML_PATH = "src/main/resources/XML/newAirports.xml";
-    String OBSTACLES_XML_PATH = "src/main/resources/XML/testObstacles.xml";
+    String AIRPORTS_XML_PATH = "src/main/resources/XML/newAirportsTest.xml";
+    String OBSTACLES_XML_PATH = "src/main/resources/XML/newTestObstacles.xml";
 
     @BeforeEach
     void setUp() {
@@ -41,11 +41,6 @@ class exportXMLTest {
     }
     @Test
     void testCreateLogicalRunwayElement() {
-//        obstacle = new Obstacle("Tree",32,21,21);
-//        assertEquals("Tree", obstacle.getName());
-//        assertEquals(32, obstacle.getHeight());
-//        assertEquals(21, obstacle.getDistanceFromThreshold());
-//        assertEquals(21, obstacle.getDistanceFromCentreline());
     }
 
 

@@ -34,7 +34,7 @@ public class ViewSelectionScene extends BaseScene {
         }
 
 
-        Text title = new Text("Top Down View");
+        Text title = new Text("Visualisations");
         title.setFont(Font.font("Arial", 24));
         title.setStyle("-fx-fill: #333;");
         title.setStroke(Color.WHITE);
@@ -75,7 +75,9 @@ public class ViewSelectionScene extends BaseScene {
 
         Button bothViewButton = new Button();
         styleButton(bothViewButton, MaterialDesign.MDI_LOGIN, "Both");
-        bothViewButton.setOnAction(e -> app.display2DbothViewScene(runwayManager));
+        bothViewButton.setOnAction(e -> {
+            app.display2DbothViewScene(runwayManager);
+        });
 
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_CLOSE, "Close");

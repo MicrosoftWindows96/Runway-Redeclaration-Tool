@@ -19,6 +19,7 @@ import javafx.util.Pair;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
@@ -62,8 +63,8 @@ public class RunwayConfigViewScene extends BaseScene {
     buttonBox.getChildren().addAll(addButtons());
     getChildren().add(buttonBox);
 
-    Button oppositeButton = new Button("Opposite"); // Goes to opposite runway direction
-    styleButton(oppositeButton, MaterialDesign.MDI_RECYCLE, "Opposite");
+    Button oppositeButton = new Button(); // Goes to opposite runway direction
+    styleButton(oppositeButton, MaterialDesign.MDI_RECYCLE, "Logical");
     oppositeButton.setOnAction(e -> {
       runwayManager.swapRunways();
       app.displayRunwayConfigScene(airport,runwayManager);
@@ -73,7 +74,7 @@ public class RunwayConfigViewScene extends BaseScene {
     });
 
     Button nextButton = new Button(); // Goes to next parallel runway
-    styleButton(nextButton, MaterialDesign.MDI_ARROW_ALL, "Switch");
+    styleButton(nextButton, MaterialDesign.MDI_ARROW_ALL, "Parallel");
     nextButton.setOnAction(e -> {
       runwayManager.nextCurrentRunway();
       app.displayRunwayConfigScene(airport,runwayManager);
@@ -164,6 +165,7 @@ public class RunwayConfigViewScene extends BaseScene {
         alert.setHeaderText(null);
         alert.setContentText("Calculation breakdown has been successfully exported.");
         alert.showAndWait();
+        app.showNotification("Runway Update", "Runway " + currentRunway.getName() + " has been updated.");
       } catch (IOException ex) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -327,19 +329,29 @@ public class RunwayConfigViewScene extends BaseScene {
           int TORA2 = Integer.parseInt(promptWindow.getInput(TORAbox2));
           int dispThresh2 = Integer.parseInt(promptWindow.getInput(dispThreshBox2));
 
-          if (stopway1 < 0 || clearway1 < 0 || TORA1 < 0 || dispThresh1 < 0 ||
-              stopway2 < 0 || clearway2 < 0 || TORA2 < 0 || dispThresh2 < 0) {
+          if (stopway1 < 0 || stopway1 > 500 || clearway1 < 0 || clearway1 > 500 || TORA1 < 0 || TORA1 > 5000 || dispThresh1 < 0 || dispThresh1 > 5000 ||
+              stopway2 < 0 || stopway2 > 500 || clearway2 < 0 || clearway2 > 500 || TORA2 < 0 || TORA2 > 5000 || dispThresh2 < 0 || dispThresh2 > 5000 ) {
             throw new IllegalArgumentException("Invalid measurements for runways.");
           }
 
           Runway testRunway1 = new Runway(degree1,stopway1,clearway1,TORA1,dispThresh1);
           Runway testRunway2 = new Runway(degree2,stopway2,clearway2,TORA2,dispThresh2);
-          runwayManager.replaceRunways(runwayManager.getCurrentRunways(),new Pair<>(testRunway1,testRunway2));
+          runwayManager.setNewRunwayParameters(runwayManager.getFstRunway(),testRunway1);
+          runwayManager.setNewRunwayParameters(runwayManager.getSndRunway(),testRunway2);
+          if (!currentRunway.getObstacles().isEmpty()) {
+            Obstacle movedObstacle = currentRunway.getObstacles().get(0);
+            runwayManager.removeObstacle(movedObstacle);
+            runwayManager.placeObstacle(movedObstacle);
+            runwayManager.runCalcOnBothRunways();
+          }
 
+          app.showNotification("Logical Runways",
+              degree1 + runwayManager.getFstRunway().getDirection() + "/" + degree1 + runwayManager.getSndRunway().getDirection() + " updated!");
           app.updateXMLs();
           app.displayRunwayConfigScene(airport,runwayManager);
           Stage stage = (Stage) promptWindow.getScene().getWindow();
           stage.close();
+          app.showNotification("Runway Update", "Runway " + currentRunway.getName() + " has been updated.");
 
         } catch (NumberFormatException ex) {
           showErrorDialog("Invalid input for runway measurements. Please enter valid integers.");

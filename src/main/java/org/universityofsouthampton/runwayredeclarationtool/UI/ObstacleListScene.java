@@ -53,7 +53,7 @@ public class ObstacleListScene extends BaseScene {
         Text title2 = new Text("List of Obstacles in " + airport.getAirportCode() + "-" + currentRunway.getName() + currentRunway.getDirection());
         title.setFont(Font.font("Arial", 20));
 
-        Text title3 = new Text("Other obstacles ")  ;
+        Text title3 = new Text("Predefined obstacles ")  ;
         title.setFont(Font.font("Arial", 20));
 
         this.currentObstacleScroll.setFitToWidth(true);
@@ -77,17 +77,22 @@ public class ObstacleListScene extends BaseScene {
             if (this.selectedObstacle == null) {
                 System.out.println("Nothing Selected!");
             } else {
-                if (!this.currentRunway.getObstacles().isEmpty()) {
+                if (!this.currentRunway.getObstacles().isEmpty() ) {
                     // Replace the current Obstacle with selected one
                     Obstacle existingObstacle = this.currentRunway.getObstacles().getFirst();
                     this.otherObstacles.add(existingObstacle);
 
                     // update runway object
                     runwayManager.removeObstacle(existingObstacle);
+
+
                 }
                 runwayManager.placeObstacle(selectedObstacle);
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
+
+                app.showNotification("Obstacle Add", "Obstacle " + selectedObstacle.getName() + " has been added.");
+
             }
         });
 
@@ -103,6 +108,7 @@ public class ObstacleListScene extends BaseScene {
                     runwayManager.removeObstacle(selectedObstacle);
                 }
                 updateObstaclesList();
+                app.showNotification("Obstacle Remove", "Obstacle " + selectedObstacle.getName() + " has been removed.");
             }
         });
 
@@ -128,7 +134,9 @@ public class ObstacleListScene extends BaseScene {
             } else if  (this.currentRunway.getObstacles().isEmpty() || !this.currentRunway.getObstacles().contains(this.selectedObstacle)) {
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
+                app.showNotification("Obstacle Delete", "Obstacle " + selectedObstacle.getName() + " has been deleted.");
                 app.updateXMLs();
+
             } else {
                 System.out.println("Obstacle is in current obstacles!");
             }
@@ -211,9 +219,10 @@ public class ObstacleListScene extends BaseScene {
 
                 Obstacle newObstacle = new Obstacle(name, height, distFromThre, distFromCent);
                 otherObstacles.add(newObstacle);
-                app.showNotification("Obstacle Created", "Obstacle " + name + " created successfully.");
+
                 updateObstaclesList();
                 ((Stage) promptWindow.getScene().getWindow()).close();
+                app.showNotification("Obstacle Created", "Obstacle " + name + " created successfully.");
             } else {
                 showErrorDialog(errorMessage);
             }
@@ -284,9 +293,10 @@ public class ObstacleListScene extends BaseScene {
                 selectedObstacle.setDistanceFromThreshold(distFromThre);
                 selectedObstacle.setDistanceFromCentreline(distFromCent);
 
-                app.showNotification("Obstacle Updated", "Obstacle " + name + " updated successfully.");
+
                 updateObstaclesList();
                 ((Stage) promptWindow.getScene().getWindow()).close();
+                app.showNotification("Obstacle Updated", "Obstacle " + name + " updated successfully.");
             } else {
                 showErrorDialog(errorMessage);
             }
@@ -311,7 +321,7 @@ public class ObstacleListScene extends BaseScene {
             } else {
                 try {
                     int BPVInt = Integer.parseInt(BPV);
-                    if (BPVInt <= 0) {
+                    if (BPVInt <= 0 || BPVInt >500) {
                         throw new IllegalArgumentException("Invalid measurements for Blast Protection Value");
                     }
                     // update the runway object to run calculations to display in the config runway scene

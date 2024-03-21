@@ -95,7 +95,6 @@ public class importXML {
     public Runway makeRunwayObject(Element logicalRunwayElement) {
         // Retrieve data for LogicalRunway
         String degree = logicalRunwayElement.getAttribute("degree");
-        System.out.println("Degree: " + degree);
         int stopway = Integer.parseInt(
             logicalRunwayElement.getElementsByTagName("stopway").item(0).getTextContent());
         int clearway = Integer.parseInt(

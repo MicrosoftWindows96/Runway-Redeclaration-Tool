@@ -11,8 +11,8 @@ public class ParallelRunways {
   protected ArrayList<Pair<Runway,Runway>> logicalRunways; // This is the list of parallel runways
   private int pointer = 0;
   private Pair<Runway,Runway> currentRunways;
-  private String degree1; // SET direction of runway
-  private String degree2; // SET direction opposite side
+  private String degree1; // LOWER DEGREE
+  private String degree2; // HIGHER DEGREE
   // Pair of one runway and it's opposite direction
 
   public ParallelRunways () {
@@ -21,8 +21,8 @@ public class ParallelRunways {
 
   public void checkRunways (Runway runway1, Runway runway2) { // Check runway details to then add to arrayList of parallel runways
     if (logicalRunways.size() == 0) { // SET the parallel runway degrees
-      degree1 = runway1.getName();
-      degree2 = runway2.getName();
+      degree1 = getStrDegree(Math.min(getIntDegree(runway1.getName()), getIntDegree(runway2.getName())));
+      degree2 = getStrDegree(Math.max(getIntDegree(runway1.getName()), getIntDegree(runway2.getName())));
       updateLogicalRunways(runway1,runway2);
     } else {
       if (checkParallelRunway(runway1) || checkParallelRunway(runway2)) {
@@ -31,15 +31,11 @@ public class ParallelRunways {
         } else {
           System.out.println("Runway set " + runway1.getName() + "/" + runway2.getName() + " is FULL!");
         }
-      } else {
-        System.out.println("Invalid runways for this set: " + runway1.getName() + "/" + runway2.getName() );
       }
     }
   }
   public boolean checkParallelRunway(Runway runway) { // This method checks if a newly added runway is parallel to existing runways AND can be added
     // IF runway matches with any of the degrees AND the current # of parallel runways hasn't exceeded 3
-    System.out.println(runway.getName() + " : " + degree1);
-    System.out.println(runway.getName() + " : " + degree2);
     return (runway.getName().equals(degree1) || runway.getName().equals(degree2));
   }
 
@@ -105,6 +101,22 @@ public class ParallelRunways {
     }
   }
 
+  public int getIntDegree(String degree) {
+    String parsedValue = degree;
+    if (degree.matches("0[1-9]")) {
+      parsedValue = String.valueOf((degree.charAt(1)));
+    }
+    return Integer.parseInt(parsedValue);
+  }
+
+  private String getStrDegree(int intDegree) {
+    String degree = String.valueOf(intDegree);
+    if (intDegree <= 9) {
+      degree = "0" + intDegree;
+    }
+    return degree;
+  }
+
   // Methods for UI
   public void setBPV(int BPV) {
     getFstRunway().setBlastProtectionValue(BPV);
@@ -134,29 +146,37 @@ public class ParallelRunways {
       newLogicalRunways. add(new Pair<>(runwayPair.getValue(), runwayPair.getKey()));
     }
     logicalRunways = newLogicalRunways;
-    var oldDegree1 = degree1;
-    degree1 = degree2;
-    degree2 = oldDegree1;
     currentRunways = logicalRunways.get(pointer);
   }
 
-  public void replaceRunways(Pair<Runway,Runway> oldPair, Pair<Runway,Runway> newPair) {
-    var runway1 = oldPair.getKey();
-    var runway2 = oldPair.getValue();
-    deleteRunways(oldPair);
-    if (!runway1.getObstacles().isEmpty() || !runway2.getObstacles().isEmpty()) {
-      Obstacle movedObstacle = runway1.getObstacles().get(0);
-      placeObstacle(movedObstacle);
+  public void setNewRunwayParameters(Runway oldParameters, Runway newParameters) {
+    if (!oldParameters.equals(newParameters)) {
+      oldParameters.setName(newParameters.getName());
+      oldParameters.setTORA(newParameters.getTORA());
+      oldParameters.setStopway(newParameters.getStopway());
+      oldParameters.setClearway(newParameters.getClearway());
+      oldParameters.setDisplacedThreshold(newParameters.getDisplacedThreshold());
     }
-    updateLogicalRunways(newPair.getKey(),newPair.getValue());
-  }
-
-  public void deleteRunways(Pair<Runway,Runway> runwayPair) {
-    logicalRunways.remove(runwayPair);
   }
 
   public Pair<Runway,Runway> getCurrentRunways() {
     return currentRunways;
+  }
+
+  public Runway getHigherDegreeRunway() {
+    Runway runway = getFstRunway();
+    if (getSndRunway().getName().equals(degree2)) {
+      runway = getSndRunway();
+    }
+    return runway;
+  }
+
+  public Runway getLowerDegreeRunway() {
+    Runway runway = getFstRunway();
+    if (getSndRunway().getName().equals(degree1)) {
+      runway = getSndRunway();
+    }
+    return runway;
   }
 
   public String getDegree1() {

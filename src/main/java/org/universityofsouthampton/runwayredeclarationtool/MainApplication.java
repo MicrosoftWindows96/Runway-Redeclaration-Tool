@@ -191,7 +191,7 @@ public class MainApplication extends Application {
             secondaryStage.setTitle("2D Side View");
         }
 
-        TopDownScene topDownScene = new TopDownScene(this, runwayManager, isRotate);
+        TopDownScene topDownScene = new TopDownScene(this, runwayManager);
         topDownScene.setSecondaryStage(secondaryStage);
         Scene topDownSceneScene = new Scene(topDownScene, 800, 800);
         secondaryStage.setScene(topDownSceneScene);

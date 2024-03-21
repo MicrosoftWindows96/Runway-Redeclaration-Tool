@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Obstacles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="obstacle.xsd">
+    <Obstacle name="27-S2">
+        <Height>25</Height>
+        <DistThreshold>500</DistThreshold>
+        <DistCent>1</DistCent>
+    </Obstacle>
+    <Obstacle name="27-S4">
+        <Height>20</Height>
+        <DistThreshold>3546</DistThreshold>
+        <DistCent>6</DistCent>
+    </Obstacle>
+    <Obstacle name="27-S2">
+        <Height>25</Height>
+        <DistThreshold>500</DistThreshold>
+        <DistCent>1</DistCent>
+    </Obstacle>
+    <Obstacle name="09-S2">
+        <Height>25</Height>
+        <DistThreshold>2853</DistThreshold>
+        <DistCent>4</DistCent>
+    </Obstacle>
+    <Obstacle name="27-S1">
+        <Height>12</Height>
+        <DistThreshold>-50</DistThreshold>
+        <DistCent>5</DistCent>
+    </Obstacle>
+</Obstacles>

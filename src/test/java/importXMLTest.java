@@ -11,33 +11,33 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class importXMLTest {
-    exportXML ExportXML;
     ArrayList<Airport> airports; // Imported airports
     ArrayList<Obstacle> obstacles; // Imported obstacles
-    String AIRPORTS_XML_PATH = "src/main/resources/XML/newAirports.xml";
-    String OBSTACLES_XML_PATH = "src/main/resources/XML/testObstacles.xml";
+    String OLD_AIRPORTS_XML_PATH = "src/main/resources/XML/testAirports.xml"; // airport file to import from to compare
+    String OLD_OBSTACLES_XML_PATH = "src/main/resources/XML/testObstacles.xml"; // obstacle file to import from to compare
 
     @BeforeEach
     void setUp() {
-        importXML airportXML = new importXML(new File(AIRPORTS_XML_PATH));
+        importXML airportXML = new importXML(new File(OLD_AIRPORTS_XML_PATH));
         airports = airportXML.makeAirportsXML();
-        importXML obstacleXML = new importXML(new File(OBSTACLES_XML_PATH));
+        importXML obstacleXML = new importXML(new File(OLD_OBSTACLES_XML_PATH));
         obstacles = obstacleXML.makeObstaclesXML();
-        ExportXML = new exportXML(airports,obstacles,new File(AIRPORTS_XML_PATH));
     }
 
     @Test
     void testBuildAirportXML() {
-        ExportXML.buildAirportsXML();
+        Airport airport = airports.get(0);
+        assertEquals("Anthony",airport.getAirportName());
+        assertEquals("ANT",airport.getAirportCode());
     }
 
     @Test
     void testBuildObstaclesXML() {
-        ExportXML.buildObstaclesXML();
-    }
-    @Test
-    void testCreateAirportElement() {
-//        ExportXML.
+        Obstacle obstacle = obstacles.get(0);
+        assertEquals("27-S2",obstacle.getName());
+        assertEquals(25,obstacle.getHeight());
+        assertEquals(500,obstacle.getDistanceFromThreshold());
+        assertEquals(1,obstacle.getDistanceFromCentreline());
     }
     @Test
     void testCreateLogicalRunwayElement() {

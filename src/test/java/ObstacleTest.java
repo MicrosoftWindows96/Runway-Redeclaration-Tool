@@ -11,7 +11,7 @@ class ObstacleTest {
         obstacle = new Obstacle("Tree",32,21,21);
     }
 
-    /*@Test
+    @Test
     void testGetAttributes() {
         obstacle = new Obstacle("Tree",32,21,21);
         assertEquals("Tree", obstacle.getName());
@@ -31,7 +31,7 @@ class ObstacleTest {
         assertEquals(21, obstacle.getHeight());
         assertEquals(100, obstacle.getDistanceFromThreshold());
         assertEquals(123, obstacle.getDistanceFromCentreline());
-    }*/
+    }
 
     @Test
     public void testConstructor() {

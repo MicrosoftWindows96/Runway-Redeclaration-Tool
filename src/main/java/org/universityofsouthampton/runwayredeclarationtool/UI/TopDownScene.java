@@ -1,5 +1,7 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,11 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
@@ -22,6 +27,7 @@ import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class TopDownScene extends BaseScene {
 
@@ -36,6 +42,10 @@ public class TopDownScene extends BaseScene {
     private final double RESA;
     private double slopeDistance;
     private double RESADistance;
+    private final Pane cloudLayer = new Pane();
+    private final double iconSize = 24;
+    private final double speed = 1.0;
+    private final Random random = new Random();
 
     public TopDownScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
@@ -53,6 +63,10 @@ public class TopDownScene extends BaseScene {
         } else {
             borderPane.setBackground(Background.fill(Color.rgb(201, 233, 246)));
         }
+
+        cloudLayer.setPrefSize(800, 50);
+        createPattern();
+        animatePattern();
 
 
         Text title = new Text("Aerial View");
@@ -112,7 +126,7 @@ public class TopDownScene extends BaseScene {
 
         VBox topLayout = new VBox();
         topLayout.setAlignment(Pos.TOP_CENTER);
-        topLayout.getChildren().addAll(title, buttons, distanceInfoBox);
+        topLayout.getChildren().addAll(cloudLayer, title, buttons, distanceInfoBox);
         BorderPane.setMargin(topLayout, new Insets(10));
 
         borderPane.setTop(topLayout);
@@ -122,6 +136,52 @@ public class TopDownScene extends BaseScene {
 
         borderPane.setCenter(runwayCanvas);
         this.getChildren().add(borderPane);
+    }
+
+
+    private void createPattern() {
+        cloudLayer.getChildren().clear();
+
+        double areaWidth = cloudLayer.getPrefWidth();
+        double areaHeight = cloudLayer.getPrefHeight();
+        int maxCloudSize = 48;
+        int minCloudSize = 24;
+
+        int numberOfClouds = 50;
+
+        for (int i = 0; i < numberOfClouds; i++) {
+            double x = random.nextDouble() * areaWidth;
+            double y = random.nextDouble() * areaHeight;
+
+            int size = random.nextInt(maxCloudSize - minCloudSize + 1) + minCloudSize;
+
+            var cloud = createCloudIcon(x, y, size);
+            cloudLayer.getChildren().add(cloud);
+        }
+    }
+
+    private FontIcon createCloudIcon(double x, double y, int size) {
+        FontIcon cloudIcon = FontIcon.of(MaterialDesign.MDI_CLOUD, size);
+        cloudIcon.setFill(javafx.scene.paint.Color.WHITE);
+        cloudIcon.setLayoutX(x - size / 2.0);
+        cloudIcon.setLayoutY(y - size / 2.0);
+        return cloudIcon;
+    }
+
+    private void animatePattern() {
+        Timeline cloudTimeline = new Timeline(new KeyFrame(Duration.millis(100), e -> {
+            for (var node : cloudLayer.getChildren()) {
+                if (node instanceof FontIcon icon && ((FontIcon) node).getIconCode() == MaterialDesign.MDI_CLOUD) {
+                    icon.setLayoutX(icon.getLayoutX() + speed);
+                    if (icon.getLayoutX() > cloudLayer.getPrefWidth()) {
+                        icon.setLayoutX(-iconSize);
+                        icon.setLayoutY(random.nextDouble() * cloudLayer.getPrefHeight());
+                    }
+                }
+            }
+        }));
+        cloudTimeline.setCycleCount(Timeline.INDEFINITE);
+        cloudTimeline.play();
     }
 
     public void drawRunway(Canvas canvas) {
@@ -219,6 +279,7 @@ public class TopDownScene extends BaseScene {
                 gc.strokeLine(RESADistance, centerLineY - 20 + 70, RESADistance + this.ASDA, centerLineY - 20 + 70); // ASDA line
                 gc.setStroke(Color.BLUE);
                 gc.strokeLine(slopeDistance, centerLineY - 20 + 85, slopeDistance + this.LDA, centerLineY - 20 + 85); // LDA line
+
 
 
             } else if (obstacle.getDistanceFromThreshold() >= (1000 /6)) {

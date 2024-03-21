@@ -39,13 +39,31 @@ public class RunwayTest {
     }
 
     @Test
-    void testValidParameters(){
+    void testValidParameters(){ // BOUNDARY TESTING FOR NEGATIVE VALUES
         assertTrue(runway.checkValidParameters());
         assertTrue(new Runway("09",0,0,3660,307).checkValidParameters());
-        assertThrows(IllegalArgumentException.class, () -> new Runway("09",-10,0,3660,307).checkValidParameters()); // Negative stopway
-        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,-10,3660,307).checkValidParameters()); // Negative clearway
-        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,-3660,307).checkValidParameters()); // negative TORA
-        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,3660,-307).checkValidParameters()); // Negative displaced threshold
+
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",-1,0,3660,307).checkValidParameters()); // Negative stopway
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,-1,3660,307).checkValidParameters()); // Negative clearway
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,-1,307).checkValidParameters()); // negative TORA
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,3660,-1).checkValidParameters()); // Negative displaced threshold
+    }
+
+    @Test
+    void testRunwayDistancePartitions() {
+        assertTrue(new Runway("09",0,0,3660,307).checkValidParameters()); // Valid distance within range of 1800-4000m
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,4500,307).checkValidParameters()); // Invalid distance testing > 4000m
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,1500,307).checkValidParameters()); // Invalid distance testing < 1800m
+    }
+
+    @Test
+    void testRunwayDistanceBoundaries() {
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,4001,307).checkValidParameters()); // Invalid distance testing > 4000m 4001
+        assertTrue(new Runway("09",0,0,4000,307).checkValidParameters()); // Valid distance within range of 1800-4000m 4000
+
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,1799,307).checkValidParameters()); // Invalid distance testing < 1800m 1799
+        assertTrue(new Runway("09",0,0,1801,307).checkValidParameters()); // Valid distance within range of 1800-4000m 1801
+
     }
 
     @Test

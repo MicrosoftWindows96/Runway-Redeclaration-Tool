@@ -12,6 +12,14 @@ public class Obstacle {
         this.distanceFromThreshold = distanceFromThreshold;
         this.distanceFromCentreline = distanceFromCentreline;
     }
+
+    public boolean validObstacle(Runway runway) {
+        boolean maxHeight = height < 35 && height >= 10;
+        boolean distanceThreshold = (distanceFromThreshold < runway.getTORA() && distanceFromThreshold > -runway.getDisplacedThreshold());
+        boolean distFromCent = (distanceFromCentreline < 100);
+        return (maxHeight && distanceThreshold && distFromCent);
+    }
+
     public void setName(String name) {
         this.name = name;
     }

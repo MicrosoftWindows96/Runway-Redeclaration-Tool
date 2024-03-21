@@ -50,7 +50,9 @@ public class SideViewScene extends BaseScene {
 
     private double slopeDistance;
     private double RESADistance;
-
+    private double displacedThresholdOffset;
+    private double runwayStartX;
+    private double runwayWidth;
     public SideViewScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
         this.currentRunway = runwayManager.getFstRunway();
@@ -90,33 +92,41 @@ public class SideViewScene extends BaseScene {
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
             distanceInfoBox.setSpacing(1); // Spacing between labels
             Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
+            toraLabel.setTextFill(Color.LIGHTPINK);
             Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
+            todaLabel.setTextFill(Color.YELLOW);
             Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
+            asdaLabel.setTextFill(Color.LIGHTGREEN);
             Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
+            ldaLabel.setTextFill(Color.BLUE);
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-            if (MainApplication.isDarkMode()) {
-                //set text color to white
-                toraLabel.setTextFill(Color.WHITE);
-                todaLabel.setTextFill(Color.WHITE);
-                asdaLabel.setTextFill(Color.WHITE);
-                ldaLabel.setTextFill(Color.WHITE);
-            }
+//            if (MainApplication.isDarkMode()) {
+//                //set text color to white
+//                toraLabel.setTextFill(Color.WHITE);
+//                todaLabel.setTextFill(Color.WHITE);
+//                asdaLabel.setTextFill(Color.WHITE);
+//                ldaLabel.setTextFill(Color.WHITE);
+//        }
         } else {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
             distanceInfoBox.setSpacing(1); // Spacing between labels
             Label toraLabel = new Label("TORA: " + currentRunway.getNewTORA() + "m");
+            toraLabel.setTextFill(Color.LIGHTPINK);
             Label todaLabel = new Label("TODA: " + currentRunway.getNewTODA() + "m");
+            todaLabel.setTextFill(Color.YELLOW);
             Label asdaLabel = new Label("ASDA: " + currentRunway.getNewASDA() + "m");
+            asdaLabel.setTextFill(Color.LIGHTGREEN);
             Label ldaLabel = new Label("LDA: " + currentRunway.getNewLDA() + "m");
+            ldaLabel.setTextFill(Color.BLUE);
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-            if (MainApplication.isDarkMode()) {
-                //set text color to white
-                toraLabel.setTextFill(Color.WHITE);
-                todaLabel.setTextFill(Color.WHITE);
-                asdaLabel.setTextFill(Color.WHITE);
-                ldaLabel.setTextFill(Color.WHITE);
-            }
+//            if (MainApplication.isDarkMode()) {
+//                //set text color to white
+//                toraLabel.setTextFill(Color.WHITE);
+//                todaLabel.setTextFill(Color.WHITE);
+//                asdaLabel.setTextFill(Color.WHITE);
+//                ldaLabel.setTextFill(Color.WHITE);
+//            }
         }
 
 
@@ -216,25 +226,48 @@ public class SideViewScene extends BaseScene {
             case "Land Over":
                 startingYPosition = 0;
                 startingXPosition = -plane.getFitWidth();
-                endingXPosition = RESADistance + 100;
+                endingXPosition = RESADistance + 200;
                 plane.setScaleX(-1);
                 break;
             case "Land Toward":
                 startingYPosition = 0;
                 startingXPosition = animationOverlay.getPrefWidth();
-                endingXPosition = slopeDistance - 100;
+                if (slopeDistance <= 0){
+                    endingXPosition = runwayStartX + displacedThresholdOffset + 10;
+                }else {
+                    if (obstacle.getDistanceFromThreshold() < 1000 ) {
+                        endingXPosition = slopeDistance + 70;
+                    } else if (obstacle.getDistanceFromThreshold() >= 1000){
+                        endingXPosition = slopeDistance - 70;
+                    } else {
+                        endingXPosition = slopeDistance ;
+                    }
+                }
+
                 plane.setScaleX(1);
                 break;
             case "Takeoff Toward":
                 startingYPosition = 20;
                 altitude = 0;
-                startingXPosition = slopeDistance - 100;
+                if (slopeDistance <= 0){
+                    startingXPosition = runwayStartX + displacedThresholdOffset + 10;
+                }else if (obstacle.getDistanceFromThreshold() < 1000){
+                    startingXPosition = slopeDistance + 70;
+                } else {
+                    startingXPosition = slopeDistance - 70;
+                }
                 endingXPosition = animationOverlay.getPrefWidth() + 100;
                 plane.setScaleX(-1);
                 break;
             case "Takeoff Away":
                 startingYPosition = 20;
-                startingXPosition = animationOverlay.getPrefWidth() - 150;
+                if (slopeDistance <= 0){
+                    startingXPosition = runwayStartX + displacedThresholdOffset + 100;
+                }else if (obstacle.getDistanceFromThreshold() < 1000){
+                    startingXPosition = slopeDistance + 70;
+                } else {
+                    startingXPosition = slopeDistance - 70;
+                }
                 altitude = 0;
                 endingXPosition = -plane.getFitWidth() - 100;
                 plane.setScaleX(1);
@@ -242,6 +275,9 @@ public class SideViewScene extends BaseScene {
             default:
                 return;
         }
+
+
+
 
         plane.setTranslateX(startingXPosition);
         plane.setTranslateY(altitude);
@@ -324,13 +360,13 @@ public class SideViewScene extends BaseScene {
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 50, canvas.getWidth(), canvas.getHeight() - 50);
 
-        double runwayStartX = 100;
+        runwayStartX = 100;
         double runwayStartY = 50;
-        double runwayWidth = (double) currentRunway.getTORA() / 6;
+        runwayWidth = (double) currentRunway.getTORA() / 6;
         double runwayHeight = 5;
 
         double thresholdWidth = 5;
-        double displacedThresholdOffset = (double) currentRunway.getDisplacedThreshold() / 6;
+        displacedThresholdOffset = (double) currentRunway.getDisplacedThreshold() / 6;
         double stopwayWidth = (double) currentRunway.getStopway() / 6;
         double clearwayWidth = (double) currentRunway.getClearway() / 6;
 

@@ -59,33 +59,49 @@ public class BothViewScene extends BaseScene {
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
             distanceInfoBox.setSpacing(1); // Spacing between labels
             Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
+            // tora label has pink background
+            toraLabel.setStyle("-fx-background-color: #FFC0CB;");
             Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
+            // yellow background
+            todaLabel.setStyle("-fx-background-color: #FFFF00;");
             Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
+            // light green background
+            asdaLabel.setStyle("-fx-background-color: #90EE90;");
             Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
+            // blue background
+            ldaLabel.setStyle("-fx-background-color: #ADD8E6;");
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-            if (MainApplication.isDarkMode()) {
-                //set text color to white
-                toraLabel.setTextFill(Color.WHITE);
-                todaLabel.setTextFill(Color.WHITE);
-                asdaLabel.setTextFill(Color.WHITE);
-                ldaLabel.setTextFill(Color.WHITE);
-            }
+//            if (MainApplication.isDarkMode()) {
+//                //set text color to white
+//                toraLabel.setTextFill(Color.WHITE);
+//                todaLabel.setTextFill(Color.WHITE);
+//                asdaLabel.setTextFill(Color.WHITE);
+//                ldaLabel.setTextFill(Color.WHITE);
+//            }
         } else {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
             distanceInfoBox.setSpacing(1); // Spacing between labels
-            Label toraLabel = new Label("TORA: " + currentRunway.getNewTORA() + "m");
-            Label todaLabel = new Label("TODA: " + currentRunway.getNewTODA() + "m");
-            Label asdaLabel = new Label("ASDA: " + currentRunway.getNewASDA() + "m");
-            Label ldaLabel = new Label("LDA: " + currentRunway.getNewLDA() + "m");
+            Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
+            // tora label has pink background
+            toraLabel.setStyle("-fx-background-color: #FFC0CB;");
+            Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
+            // yellow background
+            todaLabel.setStyle("-fx-background-color: #FFFF00;");
+            Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
+            // light green background
+            asdaLabel.setStyle("-fx-background-color: #90EE90;");
+            Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
+            // blue background
+            ldaLabel.setStyle("-fx-background-color: #ADD8E6;");
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-            if (MainApplication.isDarkMode()) {
-                //set text color to white
-                toraLabel.setTextFill(Color.WHITE);
-                todaLabel.setTextFill(Color.WHITE);
-                asdaLabel.setTextFill(Color.WHITE);
-                ldaLabel.setTextFill(Color.WHITE);
-            }
+//            if (MainApplication.isDarkMode()) {
+//                //set text color to white
+//                toraLabel.setTextFill(Color.WHITE);
+//                todaLabel.setTextFill(Color.WHITE);
+//                asdaLabel.setTextFill(Color.WHITE);
+//                ldaLabel.setTextFill(Color.WHITE);
+//            }
         }
 
         VBox topLayout = new VBox();

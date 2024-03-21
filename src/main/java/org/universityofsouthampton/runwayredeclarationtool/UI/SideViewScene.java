@@ -101,13 +101,13 @@ public class SideViewScene extends BaseScene {
             Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
             ldaLabel.setTextFill(Color.BLUE);
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-            if (MainApplication.isDarkMode()) {
-                //set text color to white
-                toraLabel.setTextFill(Color.WHITE);
-                todaLabel.setTextFill(Color.WHITE);
-                asdaLabel.setTextFill(Color.WHITE);
-                ldaLabel.setTextFill(Color.WHITE);
-            }
+//            if (MainApplication.isDarkMode()) {
+//                //set text color to white
+//                toraLabel.setTextFill(Color.WHITE);
+//                todaLabel.setTextFill(Color.WHITE);
+//                asdaLabel.setTextFill(Color.WHITE);
+//                ldaLabel.setTextFill(Color.WHITE);
+//            }
         } else {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
@@ -121,13 +121,13 @@ public class SideViewScene extends BaseScene {
             Label ldaLabel = new Label("LDA: " + currentRunway.getNewLDA() + "m");
             ldaLabel.setTextFill(Color.BLUE);
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-            if (MainApplication.isDarkMode()) {
-                //set text color to white
-                toraLabel.setTextFill(Color.WHITE);
-                todaLabel.setTextFill(Color.WHITE);
-                asdaLabel.setTextFill(Color.WHITE);
-                ldaLabel.setTextFill(Color.WHITE);
-            }
+//            if (MainApplication.isDarkMode()) {
+//                //set text color to white
+//                toraLabel.setTextFill(Color.WHITE);
+//                todaLabel.setTextFill(Color.WHITE);
+//                asdaLabel.setTextFill(Color.WHITE);
+//                ldaLabel.setTextFill(Color.WHITE);
+//            }
         }
 
 

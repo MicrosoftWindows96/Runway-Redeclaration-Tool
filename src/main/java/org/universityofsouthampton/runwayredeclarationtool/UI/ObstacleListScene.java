@@ -42,7 +42,7 @@ public class ObstacleListScene extends BaseScene {
 
         // Initialise selectedObstacle if there's a pre-determined obstacle in the runway
         if (!currentRunway.getObstacles().isEmpty()) {
-            selectedObstacle = currentRunway.getObstacles().getFirst();
+            selectedObstacle = currentRunway.getObstacles().get(0);
         }
 
         var title = new Text("Obstacle Update");
@@ -79,7 +79,7 @@ public class ObstacleListScene extends BaseScene {
             } else {
                 if (!this.currentRunway.getObstacles().isEmpty() ) {
                     // Replace the current Obstacle with selected one
-                    Obstacle existingObstacle = this.currentRunway.getObstacles().getFirst();
+                    Obstacle existingObstacle = this.currentRunway.getObstacles().get(0);
                     this.otherObstacles.add(existingObstacle);
 
                     // update runway object

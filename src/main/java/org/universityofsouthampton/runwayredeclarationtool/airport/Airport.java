@@ -30,7 +30,7 @@ public class Airport {
                 if (pRunway.checkParallelRunway(runway1) || pRunway.checkParallelRunway(runway2) &&
                     pRunway.getLogicalRunways().size() == 3) {
                     break; // TERMINATE ADDING RUNWAY AS PARALLEL RUNWAY SET IS FULL
-                } else if (pRunway.equals(parallelRunwaySets.getLast()) && !pRunway.checkParallelRunway(runway1) && !pRunway.checkParallelRunway(runway2)) {
+                } else if (pRunway.equals(parallelRunwaySets.get(parallelRunwaySets.size() - 1)) && !pRunway.checkParallelRunway(runway1) && !pRunway.checkParallelRunway(runway2)) {
                     makeNewParallelRunwaySet(runway1,runway2);
                     break;
                 }

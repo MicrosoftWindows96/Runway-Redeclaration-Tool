@@ -11,46 +11,61 @@ public class RunwayTest {
     Obstacle obstacle;
     @BeforeEach
     void setUp(){
-        runway = new Runway("18R", 200, 300, 3929, 0);
+        runway = new Runway("27", 0, 78, 3884, 0);
         obstacle = new Obstacle("Tree", 20,50, 2);
     }
 
     @Test
     void testGetAttributes(){
-        runway = new Runway("10L",320,213,3321,200);
-        assertEquals("10L", runway.getName()); //tests getter for name
-        assertEquals(3321, runway.getTORA()); //gets TORA
-        assertEquals(200, runway.getDisplacedThreshold()); //gets Displaced Threshold
-        assertEquals(320, runway.getStopway()); //gets Stopway
-        assertEquals(213, runway.getClearway()); //gets Clearway
-        assertEquals(3534, runway.getTODA());
-        assertEquals(3641, runway.getASDA());
+        assertEquals("27", runway.getName()); //tests getter for name
+        assertEquals(3884, runway.getTORA()); //gets TORA
+        assertEquals(0, runway.getDisplacedThreshold()); //gets Displaced Threshold
+        assertEquals(0, runway.getStopway()); //gets Stopway
+        assertEquals(78, runway.getClearway()); //gets Clearway
+        assertEquals(3962, runway.getTODA()); // Tests if TODA is calculated properly
+        assertEquals(3884, runway.getASDA()); // Tests if ASDA is calculated properly
+        assertEquals(3884, runway.getLDA()); // Tests if LDA is calculated properly
     }
 
     @Test
-    void testValidName(){
+    void testValidName(){ // This method checks if the given runway name does not match the naming credentials
         assertFalse(runway.isNameInvalid("18"));
-        assertFalse(runway.isNameInvalid("30L"));
-        assertFalse(runway.isNameInvalid("20R"));
-        assertFalse(runway.isNameInvalid("10C"));
+        assertTrue(runway.isNameInvalid("30L"));
+        assertTrue(runway.isNameInvalid("20R"));
+        assertTrue(runway.isNameInvalid("10C"));
         assertTrue(runway.isNameInvalid("00"));
-        assertTrue(runway.isNameInvalid("50"));
+        assertFalse(runway.isNameInvalid("27"));
         assertTrue(runway.isNameInvalid("sjdjsjd"));
     }
 
     @Test
     void testValidParameters(){
-
+        assertTrue(runway.checkValidParameters());
+        assertTrue(new Runway("09",0,0,3660,307).checkValidParameters());
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",-10,0,3660,307).checkValidParameters()); // Negative stopway
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,-10,3660,307).checkValidParameters()); // Negative clearway
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,-3660,307).checkValidParameters()); // negative TORA
+        assertThrows(IllegalArgumentException.class, () -> new Runway("09",0,0,3660,-307).checkValidParameters()); // Negative displaced threshold
     }
 
     @Test
     void testAddObstacle(){
+        assertThrows(IllegalArgumentException.class, () -> runway.addObstacle(null)); // Adding a null parameter
 
+        runway = new Runway("09",0,0,3660,307);
+        runway.addObstacle(obstacle);
+        assertThrows(IllegalArgumentException.class, () -> runway.addObstacle(obstacle)); // Adding an obstacle when there is already one on the runway.
     }
 
     @Test
     void testCalculations(){
-
+        runway.addObstacle(new Obstacle("Test",20, 50,20));
+        runway.setBlastProtectionValue(300);
+        runway.runCalculations();
+        assertEquals(3534,runway.getNewTORA());
+        assertEquals(3612,runway.getNewTODA());
+        assertEquals(3534,runway.getNewASDA());
+        assertEquals(2774,runway.getNewLDA());
     }
 
     @Test

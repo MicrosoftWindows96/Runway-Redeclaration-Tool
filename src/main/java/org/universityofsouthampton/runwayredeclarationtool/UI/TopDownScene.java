@@ -146,12 +146,12 @@ public class TopDownScene extends BaseScene {
         double spaceLength = 10;
         double runwayEndX = runwayStartX + runwayLength;
 
-        for (double x = runwayStartX; x < runwayEndX; x += dashLength + spaceLength) {
+        for (double x = runwayStartX+5; x < runwayEndX; x += dashLength + spaceLength) {
             // Check if the dash extends beyond the runway length
-            double dashEndX = x + dashLength;
+            double dashEndX = x + dashLength - 5;
             if (dashEndX > runwayEndX) {
                 // Adjust the length of the dash so it does not extend beyond the runway
-                dashEndX = runwayEndX;
+                dashEndX = runwayEndX - 5;
             }
             gc.strokeLine(x, centerLineY, dashEndX, centerLineY);
         }

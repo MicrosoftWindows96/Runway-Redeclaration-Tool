@@ -290,14 +290,42 @@ public class TopDownScene extends BaseScene {
 
         String leftRunwayName = runwayManager.getDegree1() + runwayManager.getFstRunway().getDirection();
         gc.fillText(leftRunwayName, runwayStartX, centerLineY - 25);
-        gc.fillText("Take-off/Landing →", runwayStartX, centerLineY - 40); // Adjust text position as needed
+        gc.fillText("Take-off/Landing →", runwayStartX, centerLineY - 40);
 
 
         String rightRunwayName = runwayManager.getDegree2() + runwayManager.getSndRunway().getDirection();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);
-        gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth -100, centerLineY - 40); // Adjust text position as needed
+        gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth -100, centerLineY - 40);
 
+        drawCompass(canvas, 700, 50, calculateBearingFromRunwayName(currentRunway.getName()));
+    }
+
+    private int calculateBearingFromRunwayName(String runwayName) {
+        try {
+            String numericPart = runwayName.replaceAll("\\D+", "");
+            int bearing = Integer.parseInt(numericPart) * 10;
+            return bearing;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private void drawCompass(Canvas canvas, double centerX, double centerY, int bearing) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        double radius = 30;
+
+        gc.setStroke(Color.BLACK);
+        gc.strokeOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
+
+        double endX = centerX + radius * Math.sin(Math.toRadians(bearing));
+        double endY = centerY - radius * Math.cos(Math.toRadians(bearing));
+
+        gc.setStroke(Color.RED);
+        gc.strokeLine(centerX, centerY, endX, endY);
+
+        gc.setFill(Color.BLACK);
+        gc.fillText(bearing + "°", centerX - 10, centerY + radius + 20);
     }
 
     private Stage secondaryStage;

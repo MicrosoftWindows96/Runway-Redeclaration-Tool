@@ -71,7 +71,7 @@ public class ViewSelectionScene extends BaseScene {
 
         Button topDownViewButton = new Button();
         styleButton(topDownViewButton, MaterialDesign.MDI_LOGIN, "Aerial");
-        topDownViewButton.setOnAction(e -> app.display2DtopDownViewScene(runwayManager));
+        topDownViewButton.setOnAction(e -> app.display2DtopDownViewScene(runwayManager, false));
 
         Button bothViewButton = new Button();
         styleButton(bothViewButton, MaterialDesign.MDI_LOGIN, "Both");

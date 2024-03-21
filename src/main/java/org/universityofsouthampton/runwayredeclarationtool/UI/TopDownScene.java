@@ -86,7 +86,7 @@ public class TopDownScene extends BaseScene {
 //                todaLabel.setTextFill(Color.WHITE);
 //                asdaLabel.setTextFill(Color.WHITE);
 //                ldaLabel.setTextFill(Color.WHITE);
-//            }
+//        }
         } else {
             distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
             distanceInfoBox.setPadding(new Insets(5)); // Padding around the box

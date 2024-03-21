@@ -47,7 +47,7 @@ public class TopDownScene extends BaseScene {
             this.obstacle = obstacles.getFirst();
         }
         BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(1200.0,1200.0);
+        borderPane.setPrefSize(800.0,600.0);
         if (MainApplication.isDarkMode()) {
             borderPane.setStyle("-fx-background-color: #121212;");
         } else {

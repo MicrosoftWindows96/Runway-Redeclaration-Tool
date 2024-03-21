@@ -194,7 +194,7 @@ public class MainApplication extends Application {
 
         TopDownScene topDownScene = new TopDownScene(this, runwayManager);
         topDownScene.setSecondaryStage(secondaryStage);
-        Scene topDownSceneScene = new Scene(topDownScene, 800, 800);
+        Scene topDownSceneScene = new Scene(topDownScene, 800, 600);
         secondaryStage.setScene(topDownSceneScene);
         secondaryStage.show();
     }
@@ -207,7 +207,7 @@ public class MainApplication extends Application {
 
         BothViewScene bothViewScene = new BothViewScene(this, runwayManager);
         bothViewScene.setSecondaryStage(secondaryStage);
-        Scene bothViewSceneScene = new Scene(bothViewScene, 800, 510);
+        Scene bothViewSceneScene = new Scene(bothViewScene, 800, 600);
         secondaryStage.setScene(bothViewSceneScene);
         secondaryStage.show();
     }

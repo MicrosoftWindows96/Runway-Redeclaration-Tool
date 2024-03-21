@@ -319,7 +319,7 @@ public class TopDownScene extends BaseScene {
         gc.fillOval((double) 700 - 3, (double) 50 - 3, 6, 6);
 
         gc.setFill(Color.BLACK);
-        gc.fillText(bearing + "°", (double) 700 - 10, (double) 50 + radius + 25);
+        gc.fillText(bearing + "°", 700 - 10, 50);
     }
 
     private Stage secondaryStage;

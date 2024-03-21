@@ -20,6 +20,10 @@ module org.universityofsouthampton.runwayredeclarationtool {
     requires java.xml.bind;
     requires annotations;
     requires javafx.media;
+    requires io;
+    requires layout;
+    requires kernel;
+    requires javafx.swing;
 
     opens org.universityofsouthampton.runwayredeclarationtool to javafx.fxml;
     exports org.universityofsouthampton.runwayredeclarationtool;

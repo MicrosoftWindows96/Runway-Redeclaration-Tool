@@ -41,11 +41,6 @@ class exportXMLTest {
     }
     @Test
     void testCreateLogicalRunwayElement() {
-//        obstacle = new Obstacle("Tree",32,21,21);
-//        assertEquals("Tree", obstacle.getName());
-//        assertEquals(32, obstacle.getHeight());
-//        assertEquals(21, obstacle.getDistanceFromThreshold());
-//        assertEquals(21, obstacle.getDistanceFromCentreline());
     }
 
 

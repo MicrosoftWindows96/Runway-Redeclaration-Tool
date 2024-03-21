@@ -33,7 +33,7 @@ public class TopDownScene extends BaseScene {
     private double LDA ;
     private final ArrayList<Obstacle> obstacles;
     private Obstacle obstacle;
-    private double RESA;
+    private final double RESA;
     private double slopeDistance;
     private double RESADistance;
 
@@ -147,10 +147,8 @@ public class TopDownScene extends BaseScene {
         double runwayEndX = runwayStartX + runwayLength;
 
         for (double x = runwayStartX+5; x < runwayEndX; x += dashLength + spaceLength) {
-            // Check if the dash extends beyond the runway length
             double dashEndX = x + dashLength - 5;
             if (dashEndX > runwayEndX) {
-                // Adjust the length of the dash so it does not extend beyond the runway
                 dashEndX = runwayEndX - 5;
             }
             gc.strokeLine(x, centerLineY, dashEndX, centerLineY);
@@ -182,20 +180,15 @@ public class TopDownScene extends BaseScene {
         if (!obstacles.isEmpty()) {
             Obstacle obstacle = obstacles.getFirst();
             double fromCentreline = (double) obstacle.getDistanceFromCentreline() /6;
-            double obstacleX = runwayStartX + ((double) obstacle.getDistanceFromThreshold() / 6); // X position of the obstacle
-            double obstacleHeight = (double) obstacle.getHeight();
-            double obstacleY = centerLineY + fromCentreline; // Adjust Y position to place on top of the runway
+            double obstacleX = runwayStartX + ((double) obstacle.getDistanceFromThreshold() / 6);
+            double obstacleHeight = obstacle.getHeight();
+            double obstacleY = centerLineY + fromCentreline;
             double obstacleWidth = 10;
 
-            //gc.setFill(Color.BLACK);
             gc.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
 
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";
             gc.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight - 5);
-
-            // gc.setStroke(Color.BLACK);
-            // gc.strokeLine(runwayStartX, runwayStartY + 20, runwayStartX + TORA, runwayStartY + 20); // slope line
-
 
             this.TORA = (double) currentRunway.getNewTORA() / 6;
             this.TODA = (double) currentRunway.getNewTODA() / 6;
@@ -205,13 +198,8 @@ public class TopDownScene extends BaseScene {
             if (obstacle.getDistanceFromThreshold() < (1000 /6)) {
                 this.slopeDistance = obstacleX + ((double) obstacle.getHeight() /6 * 50);
 
-                // RESA
                 gc.setFill(Color.ORANGE);
                 gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
-
-                // Blast (currently 0)
-                // gc.setFill(Color.BLUE);
-                // gc.fillRect(obstacleX + obstacleWidth + ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
 
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
 
@@ -232,24 +220,16 @@ public class TopDownScene extends BaseScene {
                 double oppositeEndX = obstacleX;
                 double oppositeEndY = obstacleY;
 
-// Calculate slope of the line
                 double slope = (oppositeEndY - oppositeStartY) / (oppositeEndX - oppositeStartX);
 
-// Length to extend the line
                 double extensionLength = 30;
 
-// Calculate new ending point
                 double newEndX = oppositeEndX + (extensionLength / Math.sqrt(1 + slope * slope)); // Note the '+' here
 
                 this.slopeDistance = oppositeStartX;
 
-                // RESA
                 gc.setFill(Color.ORANGE);
                 gc.fillRect(obstacleX - this.RESA, runwayStartY, this.RESA, runwayHeight);
-
-                // Blast (currently is 0)
-//                gc.setFill(Color.BLUE);
-//                gc.fillRect(obstacleX - ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
 
                 gc.setStroke(Color.LIGHTPINK);
                 gc.strokeLine(runwayStartX, centerLineY - 20 + 40, slopeDistance -10, centerLineY - 20 + 40); // TORA line
@@ -279,7 +259,6 @@ public class TopDownScene extends BaseScene {
             gc.fillRect(runwayStartX + displacedThresholdOffset, runwayStartY, thresholdWidth, runwayHeight);
         }
 
-        //gc.setFill(Color.BLACK);
         if (MainApplication.isDarkMode()) {
             gc.setFill(Color.WHITE);
         } else {

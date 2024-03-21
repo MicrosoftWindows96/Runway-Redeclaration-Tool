@@ -176,8 +176,6 @@ public class SideViewScene extends BaseScene {
         animationOverlay.setPrefSize(800, 200);
         stackPane.getChildren().add(animationOverlay);
 
-        //animatePlane();
-
         this.getChildren().add(borderPane);
     }
 
@@ -373,13 +371,11 @@ public class SideViewScene extends BaseScene {
             double obstacleHeight = (double) obstacle.getHeight() / 6;
             double obstacleY = runwayStartY - obstacleHeight;
 
-            //gc.setFill(Color.BLACK);
             gc.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
 
             String obstacleText = obstacle.getName() + " (" + obstacle.getHeight() + "m)";
             gc.fillText(obstacleText, obstacleX, runwayStartY - runwayHeight - 5);
 
-            //gc.setFill(Color.BLACK);
             this.TORA = (double) currentRunway.getNewTORA() / 6;
             this.TODA = (double) currentRunway.getNewTODA() / 6;
             this.ASDA = (double) currentRunway.getNewASDA() / 6;
@@ -392,13 +388,10 @@ public class SideViewScene extends BaseScene {
                 double endX = obstacleX + (obstacleHeight * 50 ); // Bottom-left corner of the obstacle
                 double endY = obstacleY + obstacleHeight; // Bottom-left corner of the obstacle
 
-// Calculate slope of the line
                 double slope = (endY - startY) / (endX - startX);
 
-// Determine the extension length (adjust as needed)
-                double extensionLength = 30; // Length to extend the line
+                double extensionLength = 30;
 
-// Calculate new starting point
                 double newStartX = startX - (extensionLength / Math.sqrt(1 + slope * slope));
                 double newStartY = startY - (slope * (startX - newStartX));
 
@@ -407,13 +400,8 @@ public class SideViewScene extends BaseScene {
 
                 this.slopeDistance = endX;
 
-                // RESA
                 gc.setFill(Color.ORANGE);
                 gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
-
-                // Blast (currently 0)
-//                gc.setFill(Color.BLUE);
-//                gc.fillRect(obstacleX + obstacleWidth + ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
 
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
 
@@ -450,13 +438,8 @@ public class SideViewScene extends BaseScene {
 
                 this.slopeDistance = oppositeStartX;
 
-                // RESA
                 gc.setFill(Color.ORANGE);
                 gc.fillRect(obstacleX - this.RESA, runwayStartY, this.RESA, runwayHeight);
-
-                // Blast (currently is 0)
-                // gc.setFill(Color.BLUE);
-                // gc.fillRect(obstacleX - ((double) currentRunway.getBlastProtectionValue() /6), runwayStartY, 2, runwayHeight);
 
                 gc.setStroke(Color.LIGHTPINK);
                 gc.strokeLine(runwayStartX, runwayStartY + 15, slopeDistance -10, runwayStartY + 15); // TORA line

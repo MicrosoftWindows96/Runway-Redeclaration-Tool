@@ -298,34 +298,49 @@ public class TopDownScene extends BaseScene {
         gc.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);
         gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth -100, centerLineY - 40);
 
-        drawCompass(canvas, 700, 50, calculateBearingFromRunwayName(currentRunway.getName()));
+        drawCompass(canvas, calculateBearingFromRunwayName(currentRunway.getName()));
     }
 
     private int calculateBearingFromRunwayName(String runwayName) {
         try {
             String numericPart = runwayName.replaceAll("\\D+", "");
-            int bearing = Integer.parseInt(numericPart) * 10;
-            return bearing;
+            return Integer.parseInt(numericPart) * 10;
         } catch (NumberFormatException e) {
             return 0;
         }
     }
 
-    private void drawCompass(Canvas canvas, double centerX, double centerY, int bearing) {
+    private void drawCompass(Canvas canvas, int bearing) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        double radius = 30;
+        double radius = 40;
 
         gc.setStroke(Color.BLACK);
-        gc.strokeOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
+        gc.setLineWidth(2);
+        gc.strokeOval((double) 700 - radius, (double) 50 - radius, radius * 2, radius * 2);
+        gc.setFill(Color.LIGHTGRAY);
+        gc.fillOval((double) 700 - radius, (double) 50 - radius, radius * 2, radius * 2);
 
-        double endX = centerX + radius * Math.sin(Math.toRadians(bearing));
-        double endY = centerY - radius * Math.cos(Math.toRadians(bearing));
+        Font oldFont = gc.getFont();
+        gc.setFont(new Font("Arial", 12));
+        gc.setFill(Color.BLACK);
+        gc.fillText("N", (double) 700 - 5, (double) 50 - radius + 15);
+        gc.fillText("S", (double) 700 - 5, (double) 50 + radius - 5);
+        gc.fillText("E", (double) 700 + radius - 15, (double) 50 + 5);
+        gc.fillText("W", (double) 700 - radius + 5, (double) 50 + 5);
 
+        gc.setFont(oldFont);
+
+        double endX = (double) 700 + radius * 0.8 * Math.sin(Math.toRadians(bearing));
+        double endY = (double) 50 - radius * 0.8 * Math.cos(Math.toRadians(bearing));
         gc.setStroke(Color.RED);
-        gc.strokeLine(centerX, centerY, endX, endY);
+        gc.setLineWidth(2);
+        gc.strokeLine(700, 50, endX, endY);
+
+        gc.setFill(Color.RED);
+        gc.fillOval((double) 700 - 3, (double) 50 - 3, 6, 6);
 
         gc.setFill(Color.BLACK);
-        gc.fillText(bearing + "°", centerX - 10, centerY + radius + 20);
+        gc.fillText(bearing + "°", (double) 700 - 10, (double) 50 + radius + 25);
     }
 
     private Stage secondaryStage;

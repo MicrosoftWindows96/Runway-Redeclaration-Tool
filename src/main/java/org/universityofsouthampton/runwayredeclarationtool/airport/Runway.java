@@ -61,8 +61,10 @@ public class Runway {
         boolean greaterThanZero = (TORA>0 && TODA>0 && ASDA>0 && LDA>0 && displacedThreshold>=0 && stopway>=0 && clearway>=0);
         boolean checkTODA = (TODA == TORA + clearway && TODA >= TORA);
         boolean checkASDA = (ASDA == TORA + stopway || ASDA == LDA + stopway);
+        boolean checkMinimum = TORA >= 1800;
+        boolean checkMaximum = TORA <= 4000;
 //        System.out.println(greaterThanZero + " " + checkTODA + " " + checkASDA);
-        return (greaterThanZero && checkTODA && checkASDA);
+        return (greaterThanZero && checkTODA && checkASDA && checkMaximum && checkMinimum);
     }
 
     // Removing obstacle AND adding obstacle changes calculation conditions

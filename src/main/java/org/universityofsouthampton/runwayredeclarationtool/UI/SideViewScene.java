@@ -273,6 +273,8 @@ public class SideViewScene extends BaseScene {
                 return;
         }
 
+
+
         plane.setTranslateX(startingXPosition);
         plane.setTranslateY(altitude);
 

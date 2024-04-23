@@ -46,6 +46,7 @@ public class TopDownScene extends BaseScene {
     private final double iconSize = 24;
     private final double speed = 1.0;
     private final Random random = new Random();
+    private boolean isRotated = false;
 
     public TopDownScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
@@ -148,7 +149,7 @@ public class TopDownScene extends BaseScene {
 
         drawCompass(compassCanvas, calculateBearingFromRunwayName(currentRunway.getName()));
         compassCanvas.relocate(20, 20); // Set the position of the compass canvas within the pane
-        compassPane.relocate(680, 30); // Set the position of the compass pane within the root layout
+        compassPane.relocate(600, 30); // Set the position of the compass pane within the root layout
         borderPane.getChildren().add(compassPane); // Add the compass pane to the borderPane
 
         this.getChildren().add(borderPane);
@@ -205,7 +206,7 @@ public class TopDownScene extends BaseScene {
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        double centerLineY = canvas.getHeight() / 2 - 100;
+        double centerLineY = canvas.getHeight() / 2 - 50;
         double runwayLength = (double) currentRunway.getTORA() / 6;
         double runwayStartX = 100;
         double runwayStartY = centerLineY - 20;
@@ -374,7 +375,7 @@ public class TopDownScene extends BaseScene {
         }
     }
 
-    private Canvas compassCanvas = new Canvas(100, 100);
+    private Canvas compassCanvas = new Canvas(150, 150);
     private Pane compassPane = new Pane(compassCanvas);
 
     private void drawCompass(Canvas canvas, int bearing) {
@@ -431,8 +432,8 @@ public class TopDownScene extends BaseScene {
         double centerY = runwayCanvas.getHeight() / 2;
         gc.translate(centerX, centerY);
 
-        // Rotate the canvas by the desired angle
-        double rotationAngle = bearing - 90; // Adjust the angle based on your requirements
+        // Rotate the canvas by the desired angle if not rotated, or reset if rotated
+        double rotationAngle = isRotated ? 0 : bearing - 90; // Adjust the angle based on your requirements
         gc.rotate(Math.toRadians(rotationAngle));
 
         // Translate back to the original position
@@ -443,6 +444,9 @@ public class TopDownScene extends BaseScene {
 
         // Restore the previous transform state
         gc.restore();
+
+        // Toggle the rotation state
+        isRotated = !isRotated;
     }
 
     @Override

@@ -12,16 +12,29 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+import org.universityofsouthampton.runwayredeclarationtool.users.Account;
 
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MenuScene extends BaseScene {
 
-  private MainApplication app;
+  private final MainApplication app;
+  private final List<Account> accounts;
+  private static final String ACCOUNTS_FILE = "accounts.txt";
 
   public MenuScene(MainApplication app) {
     this.app = app;
+
+    this.accounts = loadAccountsFromFile();
+
+    // some sample accounts
+    accounts.add(new Account("admin", "password"));
+    accounts.add(new Account("user", "password123"));
+
     this.setAlignment(Pos.TOP_CENTER);
     this.setSpacing(200);
 
@@ -50,6 +63,53 @@ public class MenuScene extends BaseScene {
 
     // Add nodes
     this.getChildren().addAll(title, buttons);
+  }
+
+  private List<Account> loadAccountsFromFile() {
+    List<Account> accounts = new ArrayList<>();
+
+    // Get the path to the resources folder
+    URL resourcesUrl = MenuScene.class.getResource("/");
+    if (resourcesUrl != null) {
+      File resourcesDir = new File(resourcesUrl.getPath());
+      File accountsFile = new File(resourcesDir, ACCOUNTS_FILE);
+      String filePath = accountsFile.getAbsolutePath();
+
+      // Create the file if it doesn't exist
+      try {
+        if (!accountsFile.exists()) {
+          boolean created = accountsFile.createNewFile();
+          if (!created) {
+            System.err.println("Failed to create file: " + filePath);
+          }
+        }
+      } catch (IOException e) {
+        System.err.println("Error creating file: " + e.getMessage());
+      }
+
+      try (BufferedReader reader = new BufferedReader(new FileReader(accountsFile))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+          String[] parts = line.split(",");
+          if (parts.length == 2) {
+            accounts.add(new Account(parts[0], parts[1]));
+          }
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    return accounts;
+  }
+
+  private void saveAccountsToFile() {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(ACCOUNTS_FILE))) {
+      for (Account account : accounts) {
+        writer.write(account.getUsername() + "," + account.getPassword() + "\n");
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private void toggleDarkMode() {
@@ -88,7 +148,11 @@ public class MenuScene extends BaseScene {
     Button loginButton = new Button();
     styleButton(loginButton, MaterialDesign.MDI_KEY, "Login");
     loginButton.setOnAction(e -> {
-      if ("".equals(usernameInput.getText()) && "".equals(passwordInput.getText())) {
+      String username = usernameInput.getText();
+      String password = passwordInput.getText();
+
+      boolean isAuthenticated = authenticateUser(username, password);
+      if (isAuthenticated) {
         app.displayAirportListScene();
         loginStage.close();
       } else {
@@ -96,11 +160,81 @@ public class MenuScene extends BaseScene {
       }
     });
 
-    loginVBox.getChildren().addAll(new Label("Username:"), usernameInput, new Label("Password:"), passwordInput, loginButton);
+    Button registerButton = new Button();
+    styleButton(registerButton, MaterialDesign.MDI_ACCOUNT_PLUS, "Register");
+    registerButton.setOnAction(e -> promptRegistration(loginStage));
+
+    loginVBox.getChildren().addAll(new Label("Username:"), usernameInput, new Label("Password:"), passwordInput, loginButton, registerButton);
 
     Scene loginScene = new Scene(loginVBox, 300, 200);
     loginStage.setScene(loginScene);
     loginStage.showAndWait();
+  }
+
+  private void promptRegistration(Stage parentStage) {
+    Stage registrationStage = new Stage();
+    registrationStage.initOwner(parentStage);
+    registrationStage.initModality(Modality.WINDOW_MODAL);
+    registrationStage.setTitle("Register");
+
+    VBox registrationVBox = new VBox(10);
+    registrationVBox.setAlignment(Pos.CENTER);
+    registrationVBox.setPadding(new Insets(20));
+
+    TextField usernameInput = new TextField();
+    usernameInput.setPromptText("Username");
+
+    PasswordField passwordInput = new PasswordField();
+    passwordInput.setPromptText("Password");
+
+    Button registerButton = new Button();
+    styleButton(registerButton, MaterialDesign.MDI_ACCOUNT_PLUS, "Register");
+    registerButton.setOnAction(e -> {
+      String username = usernameInput.getText();
+      String password = passwordInput.getText();
+
+      if (username.isEmpty() || password.isEmpty()) {
+        showAlert("Please enter a username and password.");
+      } else if (isUsernameTaken(username)) {
+        showAlert("Username is already taken.");
+      } else {
+        accounts.add(new Account(username, password));
+        saveAccountsToFile();
+        registrationStage.close();
+      }
+    });
+
+    registrationVBox.getChildren().addAll(new Label("Username:"), usernameInput, new Label("Password:"), passwordInput, registerButton);
+
+    Scene registrationScene = new Scene(registrationVBox, 300, 200);
+    registrationStage.setScene(registrationScene);
+    registrationStage.showAndWait();
+  }
+
+  private boolean isUsernameTaken(String username) {
+    for (Account account : accounts) {
+      if (account.getUsername().equals(username)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void showAlert(String message) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
+  private boolean authenticateUser(String username, String password) {
+    for (Account account : accounts) {
+      if (account.getUsername().equals(username) && account.getPassword().equals(password)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void showAlert() {

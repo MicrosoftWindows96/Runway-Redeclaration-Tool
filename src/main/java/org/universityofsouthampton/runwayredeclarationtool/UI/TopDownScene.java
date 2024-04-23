@@ -75,10 +75,11 @@ public class TopDownScene extends BaseScene {
         title.setStroke(Color.WHITE);
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
+
+
         VBox buttons = new VBox(10);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(addButtons());
-
         VBox distanceInfoBox = new VBox();
 
         if (obstacles.isEmpty()) {
@@ -197,7 +198,7 @@ public class TopDownScene extends BaseScene {
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        double centerLineY = canvas.getHeight() / 2;
+        double centerLineY = canvas.getHeight() / 2 - 100;
         double runwayLength = (double) currentRunway.getTORA() / 6;
         double runwayStartX = 100;
         double runwayStartY = centerLineY - 20;
@@ -405,6 +406,33 @@ public class TopDownScene extends BaseScene {
         this.secondaryStage = stage;
     }
 
+    private void rotateRunway(int bearing) {
+        // Get the canvas and its graphics context
+        Canvas runwayCanvas = (Canvas) ((BorderPane) getChildren().get(0)).getCenter();
+        GraphicsContext gc = runwayCanvas.getGraphicsContext2D();
+
+        // Save the current transform state
+        gc.save();
+
+        // Translate to the center of the canvas
+        double centerX = runwayCanvas.getWidth() / 2;
+        double centerY = runwayCanvas.getHeight() / 2;
+        gc.translate(centerX, centerY);
+
+        // Rotate the canvas by the desired angle
+        double rotationAngle = bearing - 90; // Adjust the angle based on your requirements
+        gc.rotate(Math.toRadians(rotationAngle));
+
+        // Translate back to the original position
+        gc.translate(-centerX, -centerY);
+
+        // Draw the runway with the new rotation
+        drawRunway(runwayCanvas);
+
+        // Restore the previous transform state
+        gc.restore();
+    }
+
     @Override
     ArrayList<Button> addButtons() {
         Button backButton = new Button();
@@ -419,6 +447,10 @@ public class TopDownScene extends BaseScene {
             }
         });
 
-        return new ArrayList<>(List.of(backButton));
+        Button rotateButton = new Button();
+        styleButton(rotateButton, MaterialDesign.MDI_ROTATE_3D, "Rotate");
+        rotateButton.setOnAction(e -> rotateRunway(calculateBearingFromRunwayName(currentRunway.getName())));
+
+        return new ArrayList<>(List.of(backButton, rotateButton));
     }
 }

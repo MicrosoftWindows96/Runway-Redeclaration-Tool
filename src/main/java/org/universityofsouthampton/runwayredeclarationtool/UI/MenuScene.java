@@ -68,47 +68,71 @@ public class MenuScene extends BaseScene {
   private List<Account> loadAccountsFromFile() {
     List<Account> accounts = new ArrayList<>();
 
-    // Get the path to the resources folder
-    URL resourcesUrl = MenuScene.class.getResource("/");
-    if (resourcesUrl != null) {
-      File resourcesDir = new File(resourcesUrl.getPath());
-      File accountsFile = new File(resourcesDir, ACCOUNTS_FILE);
-      String filePath = accountsFile.getAbsolutePath();
+    // Specify the file path relative to the project's root directory
 
-      // Create the file if it doesn't exist
+    String filePath = "src/main/resources/accounts.txt";
+
+    // Create the accounts file
+    File accountsFile = new File(filePath);
+
+    // Create the file if it doesn't exist
+    if (!accountsFile.exists()) {
       try {
-        if (!accountsFile.exists()) {
-          boolean created = accountsFile.createNewFile();
-          if (!created) {
-            System.err.println("Failed to create file: " + filePath);
-          }
+        boolean created = accountsFile.createNewFile();
+        if (!created) {
+          System.err.println("Failed to create file: " + accountsFile.getAbsolutePath());
+          return accounts;
         }
       } catch (IOException e) {
         System.err.println("Error creating file: " + e.getMessage());
-      }
-
-      try (BufferedReader reader = new BufferedReader(new FileReader(accountsFile))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-          String[] parts = line.split(",");
-          if (parts.length == 2) {
-            accounts.add(new Account(parts[0], parts[1]));
-          }
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
+        return accounts;
       }
     }
+
+    // Read the account data from the file
+    try (BufferedReader reader = new BufferedReader(new FileReader(accountsFile))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        String[] parts = line.split(",");
+        if (parts.length == 2) {
+          accounts.add(new Account(parts[0], parts[1]));
+        }
+      }
+    } catch (IOException e) {
+      System.err.println("Error reading from file: " + e.getMessage());
+    }
+
     return accounts;
   }
 
   private void saveAccountsToFile() {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(ACCOUNTS_FILE))) {
+    // Specify the file path relative to the project's root directory
+    String filePath = "src/main/resources/accounts.txt";
+
+    // Create the accounts file
+    File accountsFile = new File(filePath);
+
+    // Create the file if it doesn't exist
+    if (!accountsFile.exists()) {
+      try {
+        boolean created = accountsFile.createNewFile();
+        if (!created) {
+          System.err.println("Failed to create file: " + accountsFile.getAbsolutePath());
+          return;
+        }
+      } catch (IOException e) {
+        System.err.println("Error creating file: " + e.getMessage());
+        return;
+      }
+    }
+
+    // Write the account data to the file
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(accountsFile))) {
       for (Account account : accounts) {
         writer.write(account.getUsername() + "," + account.getPassword() + "\n");
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      System.err.println("Error writing to file: " + e.getMessage());
     }
   }
 

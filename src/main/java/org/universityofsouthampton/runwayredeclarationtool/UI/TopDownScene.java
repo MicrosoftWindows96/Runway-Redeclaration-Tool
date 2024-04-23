@@ -231,7 +231,7 @@ public class TopDownScene extends BaseScene {
         double spaceLength = 10;
         double runwayEndX = runwayStartX + runwayLength;
 
-        for (double x = runwayStartX+5; x < runwayEndX; x += dashLength + spaceLength) {
+        for (double x = runwayStartX + 5; x < runwayEndX; x += dashLength + spaceLength) {
             double dashEndX = x + dashLength - 5;
             if (dashEndX > runwayEndX) {
                 dashEndX = runwayEndX - 5;
@@ -252,7 +252,6 @@ public class TopDownScene extends BaseScene {
         gc.fillRect(runwayStartX - stopwayWidth - clearwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway left
         gc.fillRect(runwayStartX + runwayLength + stopwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway right
 
-
         Font labelFont = Font.font("Arial", 14);
         gc.setFont(labelFont);
         if (MainApplication.isDarkMode()) {
@@ -261,10 +260,9 @@ public class TopDownScene extends BaseScene {
             gc.setFill(Color.BLACK);
         }
 
-        // b. Draw threshold indicators
         if (!obstacles.isEmpty()) {
             Obstacle obstacle = obstacles.getFirst();
-            double fromCentreline = (double) obstacle.getDistanceFromCentreline() /6;
+            double fromCentreline = (double) obstacle.getDistanceFromCentreline() / 6;
             double obstacleX = runwayStartX + ((double) obstacle.getDistanceFromThreshold() / 6);
             double obstacleHeight = obstacle.getHeight();
             double obstacleY = centerLineY + fromCentreline;
@@ -280,28 +278,15 @@ public class TopDownScene extends BaseScene {
             this.ASDA = (double) currentRunway.getNewASDA() / 6;
             this.LDA = (double) currentRunway.getNewLDA() / 6;
 
-            if (obstacle.getDistanceFromThreshold() < (1000 /6)) {
+            if (obstacle.getDistanceFromThreshold() < (1000 / 6)) {
                 this.slopeDistance = obstacleX + ((double) obstacle.getHeight() / 6 * 50);
 
                 gc.setFill(Color.ORANGE);
-                gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
+                gc.fillRect(obstacleX + obstacleWidth, runwayStartY, this.RESA, runwayHeight);
 
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
-
-                gc.setStroke(Color.LIGHTPINK);
-                gc.strokeLine(RESADistance, centerLineY - 20 + 40, RESADistance + this.TORA, centerLineY - 20 + 40); // TORA line
-                gc.setStroke(Color.YELLOW);
-                gc.strokeLine(RESADistance, centerLineY - 20 + 55, RESADistance + this.TODA, centerLineY - 20 + 55); // TODA line
-                gc.setStroke(Color.LIGHTGREEN);
-                gc.strokeLine(RESADistance, centerLineY - 20 + 70, RESADistance + this.ASDA, centerLineY - 20 + 70); // ASDA line
-                gc.setStroke(Color.BLUE);
-                gc.strokeLine(slopeDistance, centerLineY - 20 + 85, slopeDistance + this.LDA, centerLineY - 20 + 85); // LDA line
-
-
-
-            } else if (obstacle.getDistanceFromThreshold() >= (1000 /6)) {
-                // Original opposite diagonal line points
-                double oppositeStartX = obstacleX + obstacleWidth - ((double) obstacle.getHeight() /6 * 50 );
+            } else if (obstacle.getDistanceFromThreshold() >= (1000 / 6)) {
+                double oppositeStartX = obstacleX + obstacleWidth - ((double) obstacle.getHeight() / 6 * 50);
                 double oppositeStartY = obstacleY + obstacleHeight;
                 double oppositeEndX = obstacleX;
                 double oppositeEndY = obstacleY;
@@ -310,34 +295,36 @@ public class TopDownScene extends BaseScene {
 
                 double extensionLength = 30;
 
-                double newEndX = oppositeEndX + (extensionLength / Math.sqrt(1 + slope * slope)); // Note the '+' here
+                double newEndX = oppositeEndX + (extensionLength / Math.sqrt(1 + slope * slope));
 
                 this.slopeDistance = oppositeStartX;
 
                 gc.setFill(Color.ORANGE);
                 gc.fillRect(obstacleX - this.RESA, runwayStartY, this.RESA, runwayHeight);
-
-                gc.setStroke(Color.LIGHTPINK);
-                gc.strokeLine(runwayStartX, centerLineY - 20 + 40, slopeDistance -10, centerLineY - 20 + 40); // TORA line
-                gc.setStroke(Color.YELLOW);
-                gc.strokeLine(runwayStartX, centerLineY - 20 + 55, slopeDistance -10, centerLineY - 20 + 55); // TODA line
-                gc.setStroke(Color.LIGHTGREEN);
-                gc.strokeLine(runwayStartX, centerLineY - 20 + 70, slopeDistance -10, centerLineY - 20 + 70); // ASDA line
-                gc.setStroke(Color.BLUE);
-                gc.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + 85, runwayStartX + displacedThresholdOffset + this.LDA - ((double) (currentRunway.getRESA()+60) /6), centerLineY - 20 + 85); // LDA line
-
             }
+        }
 
-        }else {
+        double lineOffsetY = 40;
+        double lineSpacing = 15;
+
+        if (currentRunway.getDirection().equals("R")) {
             gc.setStroke(Color.LIGHTPINK);
-            gc.strokeLine(runwayStartX, centerLineY - 20 + 40, runwayStartX + this.TORA, centerLineY - 20 + 40); // TORA line
+            gc.strokeLine(runwayEndX - this.TORA, centerLineY - 20 + lineOffsetY, runwayEndX, centerLineY - 20 + lineOffsetY); // TORA line
             gc.setStroke(Color.YELLOW);
-            gc.strokeLine(runwayStartX, centerLineY - 20 + 55, runwayStartX + this.TODA, centerLineY - 20 + 55); // TODA line
+            gc.strokeLine(runwayEndX - this.TODA, centerLineY - 20 + lineOffsetY + lineSpacing, runwayEndX, centerLineY - 20 + lineOffsetY + lineSpacing); // TODA line
             gc.setStroke(Color.LIGHTGREEN);
-            gc.strokeLine(runwayStartX, centerLineY - 20 + 70, runwayStartX + this.ASDA, centerLineY - 20 + 70); // ASDA line
+            gc.strokeLine(runwayEndX - this.ASDA, centerLineY - 20 + lineOffsetY + lineSpacing * 2, runwayEndX, centerLineY - 20 + lineOffsetY + lineSpacing * 2); // ASDA line
             gc.setStroke(Color.BLUE);
-            gc.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + 85, runwayStartX +displacedThresholdOffset + this.LDA, centerLineY - 20 + 85); // LDA line
-
+            gc.strokeLine(runwayEndX - this.LDA - displacedThresholdOffset, centerLineY - 20 + lineOffsetY + lineSpacing * 3, runwayEndX - displacedThresholdOffset, centerLineY - 20 + lineOffsetY + lineSpacing * 3); // LDA line
+        } else {
+            gc.setStroke(Color.LIGHTPINK);
+            gc.strokeLine(runwayStartX, centerLineY - 20 + lineOffsetY, runwayStartX + this.TORA, centerLineY - 20 + lineOffsetY); // TORA line
+            gc.setStroke(Color.YELLOW);
+            gc.strokeLine(runwayStartX, centerLineY - 20 + lineOffsetY + lineSpacing, runwayStartX + this.TODA, centerLineY - 20 + lineOffsetY + lineSpacing); // TODA line
+            gc.setStroke(Color.LIGHTGREEN);
+            gc.strokeLine(runwayStartX, centerLineY - 20 + lineOffsetY + lineSpacing * 2, runwayStartX + this.ASDA, centerLineY - 20 + lineOffsetY + lineSpacing * 2); // ASDA line
+            gc.setStroke(Color.BLUE);
+            gc.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + lineOffsetY + lineSpacing * 3, runwayStartX + displacedThresholdOffset + this.LDA, centerLineY - 20 + lineOffsetY + lineSpacing * 3); // LDA line
         }
 
         if (displacedThresholdOffset > 0) {
@@ -357,13 +344,10 @@ public class TopDownScene extends BaseScene {
         gc.fillText(leftRunwayName, runwayStartX, centerLineY - 25);
         gc.fillText("Take-off/Landing →", runwayStartX, centerLineY - 40);
 
-
         String rightRunwayName = runwayManager.getDegree2() + runwayManager.getSndRunway().getDirection();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);
-        gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth -100, centerLineY - 40);
-
-        //drawCompass(canvas, calculateBearingFromRunwayName(currentRunway.getName()));
+        gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth - 100, centerLineY - 40);
     }
 
     private int calculateBearingFromRunwayName(String runwayName) {

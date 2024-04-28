@@ -47,6 +47,18 @@ public class AirportListScene extends BaseScene {
         title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         title.setStroke(Color.WHITE);
 
+
+        VBox helpBox = new VBox(10);
+        helpBox.setAlignment(Pos.TOP_RIGHT);
+        Button helpButton = new Button();
+        styleDarkButton(helpButton, MaterialDesign.MDI_WEATHER_NIGHT, "");
+        helpButton.setOnAction(e -> app.displayHelpGuideScene());
+        helpButton.setLayoutX(20);
+        helpButton.setLayoutY(20);
+        helpBox.getChildren().add(helpButton);
+
+
+
         // Initialise the screen contents and airportScroll
         BorderPane mainPane = new BorderPane();
         airportScroll.setFitToWidth(true);
@@ -77,7 +89,7 @@ public class AirportListScene extends BaseScene {
         // Add the contents
         mainPane.setLeft(leftBox);
         mainPane.setCenter(infoBox);
-        getChildren().addAll(title, mainPane, buttonBox);
+        getChildren().addAll(title, mainPane, buttonBox,helpBox);
     }
 
     @Override
@@ -242,7 +254,7 @@ public class AirportListScene extends BaseScene {
         fileChooser.setTitle("Save Airport XML File");
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
-            exportXML exporter = new exportXML(importedAirports, new ArrayList<>(), file);
+            exportXML exporter = new exportXML(this.importedAirports, new ArrayList<>(), file);
             exporter.buildAirportsXML();
             exporter.writeXML();
             app.showNotification("Airport Export", "Airport file has been exported.");

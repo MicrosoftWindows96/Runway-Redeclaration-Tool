@@ -234,4 +234,10 @@ public class MainApplication extends Application {
     public AccountManager getAccountManager() {
         return accountManager;
     }
+
+    public void displayHelpGuideScene() {
+        HelpGuideScene helpGuideScene = new HelpGuideScene(this);
+        root.getChildren().setAll(background, helpGuideScene);
+
+    }
 }

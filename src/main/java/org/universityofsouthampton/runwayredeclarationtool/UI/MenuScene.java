@@ -43,7 +43,7 @@ public class MenuScene extends BaseScene {
     darkMode.setAlignment(Pos.TOP_RIGHT);
     Button darkModeToggle = new Button();
     styleDarkButton(darkModeToggle, MaterialDesign.MDI_WEATHER_NIGHT, "");
-    darkModeToggle.setOnAction(e -> toggleDarkMode());
+    darkModeToggle.setOnAction(e -> app.displayHelpGuideScene());
     darkModeToggle.setLayoutX(20);
     darkModeToggle.setLayoutY(20);
     darkMode.getChildren().add(darkModeToggle);

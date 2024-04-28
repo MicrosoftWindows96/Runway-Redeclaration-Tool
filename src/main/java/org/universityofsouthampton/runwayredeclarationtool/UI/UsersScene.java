@@ -31,7 +31,7 @@ public class UsersScene extends BaseScene {
   public UsersScene(MainApplication app) {
     this.app = app;
     this.accountManager = app.getAccountManager();
-
+    setSpacing(10);
     setAlignment(Pos.CENTER);
 
     // Set title
@@ -90,7 +90,11 @@ public class UsersScene extends BaseScene {
     Button deleteButton = new Button();
     styleButton(deleteButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
     deleteButton.setOnAction(e -> {
-      accountManager.getAccounts().remove(account);
+      if (account.equals(accountManager.getLoggedInAccount())) {
+        showAlert("Can't delete your OWN account");
+      } else {
+        accountManager.getAccounts().remove(account);
+      }
       updateList();
       accountManager.saveAccountsToFile();
     });

@@ -15,10 +15,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import kotlin.coroutines.AbstractCoroutineContextElement;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+import org.universityofsouthampton.runwayredeclarationtool.users.Account;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
@@ -52,6 +54,16 @@ public class AirportListScene extends BaseScene {
         airportScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; ");
         importedAirports = app.getAirports();
         updateList();
+        VBox leftBox = new VBox(5,airportScroll);
+
+        // For ADMINS initialise the "Users" button to access user management
+        if (app.getLoggedInAccount().getRole().equals("admin")) {
+            Button usersButton = new Button("Users"); // Button to Import xml file to add onto airport list
+            styleButton(usersButton, MaterialDesign.MDI_EMOTICON, "Users");
+            usersButton.setOnAction(e -> {});
+            leftBox.getChildren().add(usersButton);
+        }
+
 
         // Set infoBox's positioning
         infoBox.setPadding(new Insets(10));
@@ -64,42 +76,39 @@ public class AirportListScene extends BaseScene {
         buttonBox.getChildren().addAll(addButtons());
 
         // Add the contents
-        mainPane.setLeft(airportScroll);
+        mainPane.setLeft(leftBox);
         mainPane.setCenter(infoBox);
         getChildren().addAll(title, mainPane, buttonBox);
     }
 
     @Override
     ArrayList<Button> addButtons() {
-        Button addAirport = new Button(); // Button to add a new airport
-        styleButton(addAirport, MaterialDesign.MDI_PLUS_BOX, "Add");
-        addAirport.setOnAction(e -> {
-            promptAddAirport();
-            updateList();
-            app.updateXMLs();
-        });
+        ArrayList<Button> buttons = new ArrayList<>();
 
-        Button backButton = new Button("Log Out"); // Button to return to the login screen
-        styleButton(backButton, MaterialDesign.MDI_LOCK, "Log Out");
-        backButton.setOnAction(e -> app.displayMenu());
+        if (app.getLoggedInAccount().getRole().equals("admin")) { // ADMIN EXCLUSIVE BUTTONS
+            Button addAirport = new Button(); // Button to add a new airport
+            styleButton(addAirport, MaterialDesign.MDI_PLUS_BOX, "Add");
+            addAirport.setOnAction(e -> {
+                promptAddAirport();
+                updateList();
+                app.updateXMLs();
+            });
 
-        Button deleteButton = new Button("Delete"); // Button to delete a selected airport
-        styleButton(deleteButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
-        deleteButton.setOnAction(e -> {
-            importedAirports.remove(selectedAirport);
-            updateList();
-            app.showNotification("Delete Airport", "Airport " + selectedAirport.getAirportName() + " has been deleted.");
-            app.updateXMLs();
-            updateAirportInfo(null);
-        });
+            Button deleteButton = new Button("Delete"); // Button to delete a selected airport
+            styleButton(deleteButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
+            deleteButton.setOnAction(e -> {
+                importedAirports.remove(selectedAirport);
+                updateList();
+                app.showNotification("Delete Airport", "Airport " + selectedAirport.getAirportName() + " has been deleted.");
+                app.updateXMLs();
+                updateAirportInfo(null);
+            });
 
-        Button importXMLButton = new Button("Import"); // Button to Import xml file to add onto airport list
-        styleButton(importXMLButton, MaterialDesign.MDI_DOWNLOAD, "Import");
-        importXMLButton.setOnAction(e -> importAirportsFromXML());
+            buttons.add(addAirport);
+            buttons.add(deleteButton);
+        }
 
-        Button exportXMLButton = new Button("Export"); // Button to Export into a xml file the current airport list contents
-        styleButton(exportXMLButton, MaterialDesign.MDI_UPLOAD, "Export");
-        exportXMLButton.setOnAction(e -> exportAirportsToXML());
+        if (app.getLoggedInAccount().getRole().equals("admin") || app.getLoggedInAccount().getRole().equals("editor")) { // BUTTONS ACCESSED BY ADMIN AND EDITOR
 
         Button modifyButton = new Button("Modify"); // Button to edit a selected airport
         styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
@@ -111,7 +120,28 @@ public class AirportListScene extends BaseScene {
             }
         });
 
-        return new ArrayList<>(Arrays.asList(addAirport, deleteButton, modifyButton, importXMLButton,exportXMLButton, backButton));
+        buttons.add(modifyButton);
+
+        }
+
+        // REST ARE ACCESSED BY ALL ROLES:
+        Button importXMLButton = new Button("Import"); // Button to Import xml file to add onto airport list
+        styleButton(importXMLButton, MaterialDesign.MDI_DOWNLOAD, "Import");
+        importXMLButton.setOnAction(e -> importAirportsFromXML());
+
+        Button exportXMLButton = new Button("Export"); // Button to Export into a xml file the current airport list contents
+        styleButton(exportXMLButton, MaterialDesign.MDI_UPLOAD, "Export");
+        exportXMLButton.setOnAction(e -> exportAirportsToXML());
+
+        Button backButton = new Button("Log Out"); // Button to return to the login screen
+        styleButton(backButton, MaterialDesign.MDI_LOCK, "Log Out");
+        backButton.setOnAction(e -> app.displayMenu());
+
+        buttons.add(importXMLButton);
+        buttons.add(exportXMLButton);
+        buttons.add(backButton);
+
+        return buttons;
     }
 
     private void updateList() { // Method updates the display of airports on the left of the screen
@@ -150,32 +180,41 @@ public class AirportListScene extends BaseScene {
                 Text runwayInfo = new Text("Degrees: " + pRunwaySet.getDegree1() + "/" + pRunwaySet.getDegree2() + " - Parallel Runways: " + pRunwaySet.getLogicalRunways().size());
                 runwayInfo.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 
-                Button configureButton = new Button();
+                HBox runwayButtonsBox = new HBox(10); // INITIALISE INFO BOX
+
+                Button configureButton = new Button(); // ALL ROLES CAN VIEW THE RUNWAY DETAILS
                 configureButton.setOnAction(e -> app.displayRunwayConfigScene(airport,pRunwaySet));
                 styleButton(configureButton, MaterialDesign.MDI_LOGIN, "Access");
+                runwayButtonsBox.getChildren().add(configureButton);
 
-                Button deleteRunwayButton = new Button("Delete");
-                deleteRunwayButton.setOnAction(e -> {
-                    airport.getParallelRunwaySets().remove(pRunwaySet);
-                    app.updateXMLs();
-                    updateAirportInfo(airport);
-                    app.showNotification("Runway Delete", "Runway " + pRunwaySet.getDegree1() + "/" + pRunwaySet.getDegree2() + " has been deleted");
-                });
-                styleButton(deleteRunwayButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
+                if (app.getLoggedInAccount().getRole().equals("admin")) { // ONLY ADMINS CAN ADD/DELETE RUNWAYS
+                    Button deleteRunwayButton = new Button("Delete");
+                    deleteRunwayButton.setOnAction(e -> {
+                        airport.getParallelRunwaySets().remove(pRunwaySet);
+                        app.updateXMLs();
+                        updateAirportInfo(airport);
+                        app.showNotification("Runway Delete", "Runway " + pRunwaySet.getDegree1() + "/" + pRunwaySet.getDegree2() + " has been deleted");
+                    });
+                    styleButton(deleteRunwayButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
+                    runwayButtonsBox.getChildren().add(deleteRunwayButton);
+                }
 
-                HBox runwayButtonsBox = new HBox(10, configureButton, deleteRunwayButton);
                 runwaysInfoBox.getChildren().addAll(runwayInfo, runwayButtonsBox);
             }
-
-            Button addRunwayButton = new Button("Add Runway");
-            addRunwayButton.setOnAction(e -> promptAddRunway());
-            styleButton(addRunwayButton, MaterialDesign.MDI_PLUS_BOX, "Add");
 
             ScrollPane runwaysScrollPane = new ScrollPane(runwaysInfoBox);
             runwaysScrollPane.setFitToWidth(true);
             runwaysScrollPane.setMinHeight(150);
 
-            VBox detailsBox = new VBox(5, airportName, airportCode, numRunways, runwaysScrollPane, addRunwayButton);
+            VBox detailsBox = new VBox(5, airportName, airportCode, numRunways, runwaysScrollPane);
+
+            if (app.getLoggedInAccount().getRole().equals("admin")) {
+                Button addRunwayButton = new Button("Add Runway");
+                addRunwayButton.setOnAction(e -> promptAddRunway());
+                styleButton(addRunwayButton, MaterialDesign.MDI_PLUS_BOX, "Add");
+                detailsBox.getChildren().add(addRunwayButton);
+            }
+
             detailsBox.setPadding(new Insets(10));
             detailsBox.setStyle("-fx-background-color: #eaeaea; -fx-border-color: #c0c0c0; -fx-border-width: 1; -fx-border-radius: 5;");
 

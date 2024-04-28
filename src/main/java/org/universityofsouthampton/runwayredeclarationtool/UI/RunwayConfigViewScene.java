@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.universityofsouthampton.runwayredeclarationtool.users.Account;
 
 import static org.universityofsouthampton.runwayredeclarationtool.MainApplication.secondaryStage;
 
@@ -92,6 +93,19 @@ public class RunwayConfigViewScene extends BaseScene {
 
   @Override
   ArrayList<Button> addButtons() {
+    ArrayList<Button> buttons = new ArrayList<>();
+
+    if (app.getLoggedInAccount().getRole().equals("admin") || app.getLoggedInAccount().getRole().equals("editor")) {
+
+      Button runwayUpdateButton = new Button();
+      styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
+      runwayUpdateButton.setOnAction(e -> {
+        if (secondaryStage != null) {
+          secondaryStage.close();
+        }
+        promptEditRunway();
+      });
+
     Button obstacleUpdateButton = new Button();
     styleButton(obstacleUpdateButton, MaterialDesign.MDI_SETTINGS, "Obstacles");
     obstacleUpdateButton.setOnAction(e -> {
@@ -101,15 +115,18 @@ public class RunwayConfigViewScene extends BaseScene {
       }
     });
 
-    Button runwayUpdateButton = new Button();
-    styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
-    runwayUpdateButton.setOnAction(e -> {
-      if (secondaryStage != null) {
-        secondaryStage.close();
-      }
+    buttons.add(runwayUpdateButton);
+    buttons.add(obstacleUpdateButton);
 
-      promptEditRunway();
-    });
+    }
+
+    Button viewsButton = new Button("Render");
+    styleButton(viewsButton, MaterialDesign.MDI_VIEW_AGENDA, "Render");
+    viewsButton.setOnAction(e -> app.displayViewsSceneBeta(runwayManager));
+
+    Button exportButton = new Button("Export");
+    styleButton(exportButton, MaterialDesign.MDI_UPLOAD, "Export");
+    exportButton.setOnAction(e -> exportCalculationBreakdown());
 
     Button backButton = new Button();
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
@@ -121,15 +138,11 @@ public class RunwayConfigViewScene extends BaseScene {
       }
     });
 
-    Button exportButton = new Button("Export");
-    styleButton(exportButton, MaterialDesign.MDI_UPLOAD, "Export");
-    exportButton.setOnAction(e -> exportCalculationBreakdown());
+    buttons.add(viewsButton);
+    buttons.add(exportButton);
+    buttons.add(backButton);
 
-    Button viewsButton = new Button("Render");
-    styleButton(viewsButton, MaterialDesign.MDI_VIEW_AGENDA, "Render");
-    viewsButton.setOnAction(e -> app.displayViewsSceneBeta(runwayManager));
-
-    return new ArrayList<>(Arrays.asList(runwayUpdateButton, obstacleUpdateButton, viewsButton, exportButton, backButton));
+    return buttons; //new ArrayList<>(Arrays.asList(runwayUpdateButton, obstacleUpdateButton, viewsButton, exportButton, backButton));
   }
 
   private VBox createCalculationBreakdownSection() {

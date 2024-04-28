@@ -32,8 +32,8 @@ public class MenuScene extends BaseScene {
     this.accounts = loadAccountsFromFile();
 
     // some sample accounts
-    accounts.add(new Account("admin", "password"));
-    accounts.add(new Account("user", "password123"));
+//    accounts.add(new Account("admin", "password"));
+//    accounts.add(new Account("user", "password123"));
 
     this.setAlignment(Pos.TOP_CENTER);
     this.setSpacing(200);
@@ -94,8 +94,8 @@ public class MenuScene extends BaseScene {
       String line;
       while ((line = reader.readLine()) != null) {
         String[] parts = line.split(",");
-        if (parts.length == 2) {
-          accounts.add(new Account(parts[0], parts[1]));
+        if (parts.length == 3) {
+          accounts.add(new Account(parts[0], parts[1], parts[2]));
         }
       }
     } catch (IOException e) {
@@ -129,7 +129,7 @@ public class MenuScene extends BaseScene {
     // Write the account data to the file
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(accountsFile))) {
       for (Account account : accounts) {
-        writer.write(account.getUsername() + "," + account.getPassword() + "\n");
+        writer.write(account.getUsername() + "," + account.getPassword() + "," + account.getRole() + "\n");
       }
     } catch (IOException e) {
       System.err.println("Error writing to file: " + e.getMessage());
@@ -211,6 +211,8 @@ public class MenuScene extends BaseScene {
     PasswordField passwordInput = new PasswordField();
     passwordInput.setPromptText("Password");
 
+    RoleCheckBoxes roleCheckBoxes = new RoleCheckBoxes();
+
     Button registerButton = new Button();
     styleButton(registerButton, MaterialDesign.MDI_ACCOUNT_PLUS, "Register");
     registerButton.setOnAction(e -> {
@@ -221,16 +223,18 @@ public class MenuScene extends BaseScene {
         showAlert("Please enter a username and password.");
       } else if (isUsernameTaken(username)) {
         showAlert("Username is already taken.");
+      } else if (roleCheckBoxes.isSelectedNull()) {
+        showAlert("Please select a role.");
       } else {
-        accounts.add(new Account(username, password));
+        accounts.add(new Account(username, password, roleCheckBoxes.getSelectedRole()));
         saveAccountsToFile();
         registrationStage.close();
       }
     });
 
-    registrationVBox.getChildren().addAll(new Label("Username:"), usernameInput, new Label("Password:"), passwordInput, registerButton);
+    registrationVBox.getChildren().addAll(new Label("Username:"), usernameInput, new Label("Password:"), passwordInput, new Label("Role:"), roleCheckBoxes,registerButton);
 
-    Scene registrationScene = new Scene(registrationVBox, 300, 200);
+    Scene registrationScene = new Scene(registrationVBox, 300, 300);
     registrationStage.setScene(registrationScene);
     registrationStage.showAndWait();
   }
@@ -255,6 +259,7 @@ public class MenuScene extends BaseScene {
   private boolean authenticateUser(String username, String password) {
     for (Account account : accounts) {
       if (account.getUsername().equals(username) && account.getPassword().equals(password)) {
+        app.setLoggedInAccount(account); // Set account in MainApplication when user is authenticated!
         return true;
       }
     }

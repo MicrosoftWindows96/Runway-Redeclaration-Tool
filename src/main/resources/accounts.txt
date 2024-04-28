@@ -1,3 +1,4 @@
-admin,password
-user,password123
-zag,test
+admin,password,admin
+user,password123,editor
+zag,test,admin
+ant,test,viewer

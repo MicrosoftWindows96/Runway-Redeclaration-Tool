@@ -14,6 +14,7 @@ import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
+import org.universityofsouthampton.runwayredeclarationtool.users.Account;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
@@ -32,6 +33,7 @@ public class MainApplication extends Application {
     private static AnimatedPatternBackground background;
     private ArrayList<Airport> airports; // Imported airports
     private ArrayList<Obstacle> obstacles; // Imported obstacles
+    private Account loggedInAccount; // Account currently logged in
 
     @Override
     public void start(Stage primaryStage) {
@@ -219,4 +221,15 @@ public class MainApplication extends Application {
     public static boolean isDarkMode() {
         return background.isDarkMode;
     }
+
+    public Account getLoggedInAccount() {
+        return loggedInAccount;
+    }
+
+    public void setLoggedInAccount (Account account) {
+        this.loggedInAccount = account;
+        System.out.println("Logged in account: " + account.getUsername());
+        System.out.println("Role: " + loggedInAccount.getRole());
+    }
+
 }

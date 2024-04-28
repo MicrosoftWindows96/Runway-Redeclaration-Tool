@@ -204,6 +204,7 @@ public class AirportListScene extends BaseScene {
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
             exportXML exporter = new exportXML(importedAirports, new ArrayList<>(), file);
+            exporter.buildAirportsXML();
             exporter.writeXML();
             app.showNotification("Airport Export", "Airport file has been exported.");
         }

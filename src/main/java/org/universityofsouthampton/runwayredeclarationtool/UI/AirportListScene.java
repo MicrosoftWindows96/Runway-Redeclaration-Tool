@@ -57,13 +57,12 @@ public class AirportListScene extends BaseScene {
         VBox leftBox = new VBox(5,airportScroll);
 
         // For ADMINS initialise the "Users" button to access user management
-        if (app.getLoggedInAccount().getRole().equals("admin")) {
+        if (app.getAccountManager().getLoggedInAccount().getRole().equals("admin")) {
             Button usersButton = new Button("Users"); // Button to Import xml file to add onto airport list
             styleButton(usersButton, MaterialDesign.MDI_EMOTICON, "Users");
-            usersButton.setOnAction(e -> {});
+            usersButton.setOnAction(e -> {app.displayUsersScene();});
             leftBox.getChildren().add(usersButton);
         }
-
 
         // Set infoBox's positioning
         infoBox.setPadding(new Insets(10));
@@ -85,7 +84,7 @@ public class AirportListScene extends BaseScene {
     ArrayList<Button> addButtons() {
         ArrayList<Button> buttons = new ArrayList<>();
 
-        if (app.getLoggedInAccount().getRole().equals("admin")) { // ADMIN EXCLUSIVE BUTTONS
+        if (app.getAccountManager().getLoggedInAccount().getRole().equals("admin")) { // ADMIN EXCLUSIVE BUTTONS
             Button addAirport = new Button(); // Button to add a new airport
             styleButton(addAirport, MaterialDesign.MDI_PLUS_BOX, "Add");
             addAirport.setOnAction(e -> {
@@ -108,7 +107,8 @@ public class AirportListScene extends BaseScene {
             buttons.add(deleteButton);
         }
 
-        if (app.getLoggedInAccount().getRole().equals("admin") || app.getLoggedInAccount().getRole().equals("editor")) { // BUTTONS ACCESSED BY ADMIN AND EDITOR
+        if (app.getAccountManager().getLoggedInAccount().getRole().equals("admin") ||
+            app.getAccountManager().getLoggedInAccount().getRole().equals("editor")) { // BUTTONS ACCESSED BY ADMIN AND EDITOR
 
         Button modifyButton = new Button("Modify"); // Button to edit a selected airport
         styleButton(modifyButton, MaterialDesign.MDI_WRENCH, "Modify");
@@ -187,7 +187,7 @@ public class AirportListScene extends BaseScene {
                 styleButton(configureButton, MaterialDesign.MDI_LOGIN, "Access");
                 runwayButtonsBox.getChildren().add(configureButton);
 
-                if (app.getLoggedInAccount().getRole().equals("admin")) { // ONLY ADMINS CAN ADD/DELETE RUNWAYS
+                if (app.getAccountManager().getLoggedInAccount().getRole().equals("admin")) { // ONLY ADMINS CAN ADD/DELETE RUNWAYS
                     Button deleteRunwayButton = new Button("Delete");
                     deleteRunwayButton.setOnAction(e -> {
                         airport.getParallelRunwaySets().remove(pRunwaySet);
@@ -208,7 +208,7 @@ public class AirportListScene extends BaseScene {
 
             VBox detailsBox = new VBox(5, airportName, airportCode, numRunways, runwaysScrollPane);
 
-            if (app.getLoggedInAccount().getRole().equals("admin")) {
+            if (app.getAccountManager().getLoggedInAccount().getRole().equals("admin")) {
                 Button addRunwayButton = new Button("Add Runway");
                 addRunwayButton.setOnAction(e -> promptAddRunway());
                 styleButton(addRunwayButton, MaterialDesign.MDI_PLUS_BOX, "Add");

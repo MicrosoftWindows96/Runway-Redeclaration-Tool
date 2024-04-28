@@ -24,16 +24,10 @@ public class MenuScene extends BaseScene {
 
   private final MainApplication app;
   private final List<Account> accounts;
-  private static final String ACCOUNTS_FILE = "accounts.txt";
 
   public MenuScene(MainApplication app) {
     this.app = app;
-
-    this.accounts = loadAccountsFromFile();
-
-    // some sample accounts
-//    accounts.add(new Account("admin", "password"));
-//    accounts.add(new Account("user", "password123"));
+    this.accounts = app.getAccountManager().getAccounts();
 
     this.setAlignment(Pos.TOP_CENTER);
     this.setSpacing(200);
@@ -63,77 +57,6 @@ public class MenuScene extends BaseScene {
 
     // Add nodes
     this.getChildren().addAll(title, buttons);
-  }
-
-  private List<Account> loadAccountsFromFile() {
-    List<Account> accounts = new ArrayList<>();
-
-    // Specify the file path relative to the project's root directory
-
-    String filePath = "src/main/resources/accounts.txt";
-
-    // Create the accounts file
-    File accountsFile = new File(filePath);
-
-    // Create the file if it doesn't exist
-    if (!accountsFile.exists()) {
-      try {
-        boolean created = accountsFile.createNewFile();
-        if (!created) {
-          System.err.println("Failed to create file: " + accountsFile.getAbsolutePath());
-          return accounts;
-        }
-      } catch (IOException e) {
-        System.err.println("Error creating file: " + e.getMessage());
-        return accounts;
-      }
-    }
-
-    // Read the account data from the file
-    try (BufferedReader reader = new BufferedReader(new FileReader(accountsFile))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-        String[] parts = line.split(",");
-        if (parts.length == 3) {
-          accounts.add(new Account(parts[0], parts[1], parts[2]));
-        }
-      }
-    } catch (IOException e) {
-      System.err.println("Error reading from file: " + e.getMessage());
-    }
-
-    return accounts;
-  }
-
-  private void saveAccountsToFile() {
-    // Specify the file path relative to the project's root directory
-    String filePath = "src/main/resources/accounts.txt";
-
-    // Create the accounts file
-    File accountsFile = new File(filePath);
-
-    // Create the file if it doesn't exist
-    if (!accountsFile.exists()) {
-      try {
-        boolean created = accountsFile.createNewFile();
-        if (!created) {
-          System.err.println("Failed to create file: " + accountsFile.getAbsolutePath());
-          return;
-        }
-      } catch (IOException e) {
-        System.err.println("Error creating file: " + e.getMessage());
-        return;
-      }
-    }
-
-    // Write the account data to the file
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(accountsFile))) {
-      for (Account account : accounts) {
-        writer.write(account.getUsername() + "," + account.getPassword() + "," + account.getRole() + "\n");
-      }
-    } catch (IOException e) {
-      System.err.println("Error writing to file: " + e.getMessage());
-    }
   }
 
   private void toggleDarkMode() {
@@ -184,82 +107,17 @@ public class MenuScene extends BaseScene {
       }
     });
 
-    Button registerButton = new Button();
-    styleButton(registerButton, MaterialDesign.MDI_ACCOUNT_PLUS, "Register");
-    registerButton.setOnAction(e -> promptRegistration(loginStage));
-
-    loginVBox.getChildren().addAll(new Label("Username:"), usernameInput, new Label("Password:"), passwordInput, loginButton, registerButton);
+    loginVBox.getChildren().addAll(new Label("Username:"), usernameInput, new Label("Password:"), passwordInput, loginButton);
 
     Scene loginScene = new Scene(loginVBox, 300, 200);
     loginStage.setScene(loginScene);
     loginStage.showAndWait();
   }
 
-  private void promptRegistration(Stage parentStage) {
-    Stage registrationStage = new Stage();
-    registrationStage.initOwner(parentStage);
-    registrationStage.initModality(Modality.WINDOW_MODAL);
-    registrationStage.setTitle("Register");
-
-    VBox registrationVBox = new VBox(10);
-    registrationVBox.setAlignment(Pos.CENTER);
-    registrationVBox.setPadding(new Insets(20));
-
-    TextField usernameInput = new TextField();
-    usernameInput.setPromptText("Username");
-
-    PasswordField passwordInput = new PasswordField();
-    passwordInput.setPromptText("Password");
-
-    RoleCheckBoxes roleCheckBoxes = new RoleCheckBoxes();
-
-    Button registerButton = new Button();
-    styleButton(registerButton, MaterialDesign.MDI_ACCOUNT_PLUS, "Register");
-    registerButton.setOnAction(e -> {
-      String username = usernameInput.getText();
-      String password = passwordInput.getText();
-
-      if (username.isEmpty() || password.isEmpty()) {
-        showAlert("Please enter a username and password.");
-      } else if (isUsernameTaken(username)) {
-        showAlert("Username is already taken.");
-      } else if (roleCheckBoxes.isSelectedNull()) {
-        showAlert("Please select a role.");
-      } else {
-        accounts.add(new Account(username, password, roleCheckBoxes.getSelectedRole()));
-        saveAccountsToFile();
-        registrationStage.close();
-      }
-    });
-
-    registrationVBox.getChildren().addAll(new Label("Username:"), usernameInput, new Label("Password:"), passwordInput, new Label("Role:"), roleCheckBoxes,registerButton);
-
-    Scene registrationScene = new Scene(registrationVBox, 300, 300);
-    registrationStage.setScene(registrationScene);
-    registrationStage.showAndWait();
-  }
-
-  private boolean isUsernameTaken(String username) {
-    for (Account account : accounts) {
-      if (account.getUsername().equals(username)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void showAlert(String message) {
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Error");
-    alert.setHeaderText(null);
-    alert.setContentText(message);
-    alert.showAndWait();
-  }
-
   private boolean authenticateUser(String username, String password) {
     for (Account account : accounts) {
       if (account.getUsername().equals(username) && account.getPassword().equals(password)) {
-        app.setLoggedInAccount(account); // Set account in MainApplication when user is authenticated!
+        app.getAccountManager().setLoggedInAccount(account); // Set account in MainApplication when user is authenticated!
         return true;
       }
     }

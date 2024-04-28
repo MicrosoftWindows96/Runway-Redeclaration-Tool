@@ -1,4 +1,4 @@
 admin,password,admin
 user,password123,editor
 zag,test,admin
-ant,test,viewer
+ant,ant,viewer

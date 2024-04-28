@@ -10,8 +10,14 @@ public class Account {
     public Account(String username, String password, String role) {
         this.username = username;
         this.password = password;
+        setRole(role);
+    }
 
-        // Assigned roles in initialisation
+    public void setRole(String role) {
+        // Reset boolean flags
+        isAdmin = false;
+        isEditor = false;
+        isViewer = false;
         switch (role) {
             case "admin" -> isAdmin = true;
             case "editor" -> isEditor = true;

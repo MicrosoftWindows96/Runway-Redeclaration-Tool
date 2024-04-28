@@ -38,16 +38,23 @@ public class RoleCheckBoxes extends BaseScene {
     }
     if (selectedBox.isSelected()) {
       this.selectedBox = selectedBox;
+      System.out.println("SELECTED BOX: " + selectedBox.getText());
     } else {
       this.selectedBox = null;
+      System.out.println("SELECTED BOX: null");
     }
-    System.out.println("SELECTED BOX: " + selectedBox.getText());
   }
 
-  public Boolean isSelectedNull () { // Checks if a checkBox is SELECTED
+  public void setCheckBox(String role) { // This method sets an already set box (for editing accounts)
+    for (CheckBox checkBox : checkBoxes) {
+      checkBox.setSelected(checkBox.getText().equals(role));
+      this.selectedBox = checkBox;
+    }
+  }
+
+  public Boolean isSelectedNull() { // Checks if a checkBox is SELECTED
     return selectedBox == null;
   }
-
   public String getSelectedRole() {
     return selectedBox.getText();
   }

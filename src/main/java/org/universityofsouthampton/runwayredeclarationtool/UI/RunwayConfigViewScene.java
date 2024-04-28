@@ -95,7 +95,8 @@ public class RunwayConfigViewScene extends BaseScene {
   ArrayList<Button> addButtons() {
     ArrayList<Button> buttons = new ArrayList<>();
 
-    if (app.getLoggedInAccount().getRole().equals("admin") || app.getLoggedInAccount().getRole().equals("editor")) {
+    if (app.getAccountManager().getLoggedInAccount().getRole().equals("admin") ||
+        app.getAccountManager().getLoggedInAccount().getRole().equals("editor")) {
 
       Button runwayUpdateButton = new Button();
       styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");

@@ -240,4 +240,14 @@ public class MainApplication extends Application {
         root.getChildren().setAll(background, helpGuideScene);
 
     }
+
+    public void displayHowToUseScene() {
+        HowToUseScene howToUseScene = new HowToUseScene(this);
+        root.getChildren().setAll(background, howToUseScene);
+    }
+
+    public void displayFAQScene() {
+        FAQScene FAQscene = new FAQScene(this);
+        root.getChildren().setAll(background, FAQscene);
+    }
 }

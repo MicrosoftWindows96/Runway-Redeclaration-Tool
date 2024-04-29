@@ -28,16 +28,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class HelpGuideScene extends BaseScene {
+public class FAQScene extends BaseScene {
 
-    public HelpGuideScene(MainApplication app) {
+    public FAQScene(MainApplication app) {
         this.app = app;
         setPadding(new Insets(20));
         setSpacing(10);
         setAlignment(Pos.CENTER);
 
         // Set title
-        Text title = new Text("Help Guide");
+        Text title = new Text("FAQs");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         title.setStroke(Color.WHITE);
 
@@ -51,29 +51,14 @@ public class HelpGuideScene extends BaseScene {
 
     @Override
     ArrayList<Button> addButtons() {
-        Button howToUseButton = new Button();
-        styleButton(howToUseButton, MaterialDesign.MDI_HELP, "How To Use");
-        howToUseButton.setPrefWidth(150);
-        howToUseButton.setOnAction(e -> app.displayHowToUseScene());
 
-        Button FAQButton = new Button();
-        styleButton(FAQButton, MaterialDesign.MDI_HELP, "FAQs");
-        FAQButton.setPrefWidth(150);
-        FAQButton.setOnAction(e -> app.displayFAQScene());
-
-//        Button issueButton = new Button();
-//        styleButton(issueButton, MaterialDesign.MDI_HELP, "Known Issues");
-//        issueButton.setPrefWidth(150);
-////        bothViewButton.setOnAction(e -> {
-//////            app.display2DbothViewScene(runwayManager);
-//////        });
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_CLOSE, "Return");
-                backButton.setOnAction(e -> {
-            app.displayAirportListScene();
+        backButton.setOnAction(e -> {
+            app.displayHelpGuideScene();
         });
 
 
-        return new ArrayList<>(Arrays.asList(howToUseButton, FAQButton, backButton));
+        return new ArrayList<>(Arrays.asList(backButton));
     }
 }

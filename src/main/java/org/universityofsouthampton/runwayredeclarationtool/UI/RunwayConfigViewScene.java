@@ -89,6 +89,17 @@ public class RunwayConfigViewScene extends BaseScene {
     buttonBox2.getChildren().addAll(nextButton,oppositeButton);
     getChildren().add(buttonBox2);
 
+//    VBox helpBox = new VBox(10);
+//    helpBox.setAlignment(Pos.TOP_RIGHT);
+//    Button helpButton = new Button();
+//    styleDarkButton(helpButton, MaterialDesign.MDI_WEATHER_NIGHT, "");
+////        darkModeToggle.setOnAction(e -> toggleDarkMode());
+//    helpButton.setLayoutX(20);
+//    helpButton.setLayoutY(20);
+//    helpBox.getChildren().add(helpButton);
+////        this.getChildren().add(helpBox);
+//    getChildren().add(helpBox);
+
   }
 
   @Override

@@ -5,11 +5,13 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -55,53 +57,41 @@ public class BothViewScene extends BaseScene {
         VBox distanceInfoBox = new VBox();
 
         if (obstacles.isEmpty()) {
-            distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
-            distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
-            distanceInfoBox.setSpacing(1); // Spacing between labels
+            distanceInfoBox.setAlignment(Pos.TOP_CENTER);
+            distanceInfoBox.setPadding(new Insets(5));
+            distanceInfoBox.setSpacing(1);
+
             Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
-            // tora label has pink background
             toraLabel.setStyle("-fx-background-color: #FFC0CB;");
+
             Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
-            // yellow background
             todaLabel.setStyle("-fx-background-color: #FFFF00;");
+
             Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
-            // light green background
             asdaLabel.setStyle("-fx-background-color: #90EE90;");
+
             Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
-            // blue background
             ldaLabel.setStyle("-fx-background-color: #ADD8E6;");
+
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-//            if (MainApplication.isDarkMode()) {
-//                //set text color to white
-//                toraLabel.setTextFill(Color.WHITE);
-//                todaLabel.setTextFill(Color.WHITE);
-//                asdaLabel.setTextFill(Color.WHITE);
-//                ldaLabel.setTextFill(Color.WHITE);
-//            }
         } else {
-            distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
-            distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
-            distanceInfoBox.setSpacing(1); // Spacing between labels
-            Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
-            // tora label has pink background
+            distanceInfoBox.setAlignment(Pos.TOP_CENTER);
+            distanceInfoBox.setPadding(new Insets(5));
+            distanceInfoBox.setSpacing(1);
+
+            Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m  |  " + currentRunway.getNewTORA() + "m");
             toraLabel.setStyle("-fx-background-color: #FFC0CB;");
-            Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
-            // yellow background
+
+            Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m  |  " + currentRunway.getNewTODA() + "m");
             todaLabel.setStyle("-fx-background-color: #FFFF00;");
-            Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
-            // light green background
+
+            Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m  |  " + currentRunway.getNewASDA() + "m");
             asdaLabel.setStyle("-fx-background-color: #90EE90;");
-            Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
-            // blue background
+
+            Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m  |  " + currentRunway.getNewLDA() + "m");
             ldaLabel.setStyle("-fx-background-color: #ADD8E6;");
+
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-//            if (MainApplication.isDarkMode()) {
-//                //set text color to white
-//                toraLabel.setTextFill(Color.WHITE);
-//                todaLabel.setTextFill(Color.WHITE);
-//                asdaLabel.setTextFill(Color.WHITE);
-//                ldaLabel.setTextFill(Color.WHITE);
-//            }
         }
 
         VBox topLayout = new VBox();
@@ -124,7 +114,59 @@ public class BothViewScene extends BaseScene {
 
         borderPane.setCenter(viewSplitPane);
 
+        drawCompass(compassCanvas, calculateBearingFromRunwayName(currentRunway.getName()));
+        compassCanvas.relocate(20, 20); // Set the position of the compass canvas within the pane
+        compassPane.relocate(600, 30); // Set the position of the compass pane within the root layout
+        borderPane.getChildren().add(compassPane); // Add the compass pane to the borderPane
+
         this.getChildren().add(borderPane);
+    }
+
+    private int calculateBearingFromRunwayName(String runwayName) {
+        try {
+            String numericPart = runwayName.replaceAll("\\D+", "");
+            return Integer.parseInt(numericPart) * 10;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private Canvas compassCanvas = new Canvas(150, 150);
+    private Pane compassPane = new Pane(compassCanvas);
+
+    private void drawCompass(Canvas canvas, int bearing) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        double radius = 40;
+        double compassX = canvas.getWidth() - radius * 2 - 10; // Position the compass 10 units from the right edge
+        double compassY = radius + 10; // Position the compass 10 units below the top edge
+
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
+        gc.strokeOval(compassX, compassY, radius * 2, radius * 2);
+        gc.setFill(Color.LIGHTGRAY);
+        gc.fillOval(compassX, compassY, radius * 2, radius * 2);
+
+        Font oldFont = gc.getFont();
+        gc.setFont(new Font("Arial", 12));
+        gc.setFill(Color.BLACK);
+        gc.fillText("N", compassX + radius - 5, compassY + 15);
+        gc.fillText("S", compassX + radius - 5, compassY + radius * 2 - 5);
+        gc.fillText("E", compassX + radius * 2 - 15, compassY + radius + 5);
+        gc.fillText("W", compassX + 5, compassY + radius + 5);
+
+        gc.setFont(oldFont);
+
+        double endX = compassX + radius + radius * 0.8 * Math.sin(Math.toRadians(bearing));
+        double endY = compassY + radius - radius * 0.8 * Math.cos(Math.toRadians(bearing));
+        gc.setStroke(Color.RED);
+        gc.setLineWidth(2);
+        gc.strokeLine(compassX + radius, compassY + radius, endX, endY);
+
+        gc.setFill(Color.RED);
+        gc.fillOval(compassX + radius - 3, compassY + radius - 3, 6, 6);
+
+        gc.setFill(Color.BLACK);
+        gc.fillText(bearing + "°", compassX + radius - 10, compassY + radius);
     }
 
     private Stage secondaryStage;

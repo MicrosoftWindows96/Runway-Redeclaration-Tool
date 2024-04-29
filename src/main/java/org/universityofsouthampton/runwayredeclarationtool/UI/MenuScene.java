@@ -12,16 +12,23 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+import org.universityofsouthampton.runwayredeclarationtool.users.Account;
 
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MenuScene extends BaseScene {
 
-  private MainApplication app;
+  private final MainApplication app;
+  private final List<Account> accounts;
 
   public MenuScene(MainApplication app) {
     this.app = app;
+    this.accounts = app.getAccountManager().getAccounts();
+
     this.setAlignment(Pos.TOP_CENTER);
     this.setSpacing(200);
 
@@ -36,7 +43,7 @@ public class MenuScene extends BaseScene {
     darkMode.setAlignment(Pos.TOP_RIGHT);
     Button darkModeToggle = new Button();
     styleDarkButton(darkModeToggle, MaterialDesign.MDI_WEATHER_NIGHT, "");
-    darkModeToggle.setOnAction(e -> toggleDarkMode());
+    darkModeToggle.setOnAction(e -> app.displayHelpGuideScene());
     darkModeToggle.setLayoutX(20);
     darkModeToggle.setLayoutY(20);
     darkMode.getChildren().add(darkModeToggle);
@@ -88,7 +95,11 @@ public class MenuScene extends BaseScene {
     Button loginButton = new Button();
     styleButton(loginButton, MaterialDesign.MDI_KEY, "Login");
     loginButton.setOnAction(e -> {
-      if ("".equals(usernameInput.getText()) && "".equals(passwordInput.getText())) {
+      String username = usernameInput.getText();
+      String password = passwordInput.getText();
+
+      boolean isAuthenticated = authenticateUser(username, password);
+      if (isAuthenticated) {
         app.displayAirportListScene();
         loginStage.close();
       } else {
@@ -101,6 +112,16 @@ public class MenuScene extends BaseScene {
     Scene loginScene = new Scene(loginVBox, 300, 200);
     loginStage.setScene(loginScene);
     loginStage.showAndWait();
+  }
+
+  private boolean authenticateUser(String username, String password) {
+    for (Account account : accounts) {
+      if (account.getUsername().equals(username) && account.getPassword().equals(password)) {
+        app.getAccountManager().setLoggedInAccount(account); // Set account in MainApplication when user is authenticated!
+        return true;
+      }
+    }
+    return false;
   }
 
   private void showAlert() {

@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.universityofsouthampton.runwayredeclarationtool.users.Account;
 
 import static org.universityofsouthampton.runwayredeclarationtool.MainApplication.secondaryStage;
 
@@ -88,10 +89,35 @@ public class RunwayConfigViewScene extends BaseScene {
     buttonBox2.getChildren().addAll(nextButton,oppositeButton);
     getChildren().add(buttonBox2);
 
+//    VBox helpBox = new VBox(10);
+//    helpBox.setAlignment(Pos.TOP_RIGHT);
+//    Button helpButton = new Button();
+//    styleDarkButton(helpButton, MaterialDesign.MDI_WEATHER_NIGHT, "");
+////        darkModeToggle.setOnAction(e -> toggleDarkMode());
+//    helpButton.setLayoutX(20);
+//    helpButton.setLayoutY(20);
+//    helpBox.getChildren().add(helpButton);
+////        this.getChildren().add(helpBox);
+//    getChildren().add(helpBox);
+
   }
 
   @Override
   ArrayList<Button> addButtons() {
+    ArrayList<Button> buttons = new ArrayList<>();
+
+    if (app.getAccountManager().getLoggedInAccount().getRole().equals("admin") ||
+        app.getAccountManager().getLoggedInAccount().getRole().equals("editor")) {
+
+      Button runwayUpdateButton = new Button();
+      styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
+      runwayUpdateButton.setOnAction(e -> {
+        if (secondaryStage != null) {
+          secondaryStage.close();
+        }
+        promptEditRunway();
+      });
+
     Button obstacleUpdateButton = new Button();
     styleButton(obstacleUpdateButton, MaterialDesign.MDI_SETTINGS, "Obstacles");
     obstacleUpdateButton.setOnAction(e -> {
@@ -101,15 +127,18 @@ public class RunwayConfigViewScene extends BaseScene {
       }
     });
 
-    Button runwayUpdateButton = new Button();
-    styleButton(runwayUpdateButton, MaterialDesign.MDI_WRENCH, "Modify");
-    runwayUpdateButton.setOnAction(e -> {
-      if (secondaryStage != null) {
-        secondaryStage.close();
-      }
+    buttons.add(runwayUpdateButton);
+    buttons.add(obstacleUpdateButton);
 
-      promptEditRunway();
-    });
+    }
+
+    Button viewsButton = new Button("Render");
+    styleButton(viewsButton, MaterialDesign.MDI_VIEW_AGENDA, "Render");
+    viewsButton.setOnAction(e -> app.displayViewsSceneBeta(runwayManager));
+
+    Button exportButton = new Button("Export");
+    styleButton(exportButton, MaterialDesign.MDI_UPLOAD, "Export");
+    exportButton.setOnAction(e -> exportCalculationBreakdown());
 
     Button backButton = new Button();
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
@@ -121,15 +150,11 @@ public class RunwayConfigViewScene extends BaseScene {
       }
     });
 
-    Button exportButton = new Button("Export");
-    styleButton(exportButton, MaterialDesign.MDI_UPLOAD, "Export");
-    exportButton.setOnAction(e -> exportCalculationBreakdown());
+    buttons.add(viewsButton);
+    buttons.add(exportButton);
+    buttons.add(backButton);
 
-    Button viewsButton = new Button("Render");
-    styleButton(viewsButton, MaterialDesign.MDI_VIEW_AGENDA, "Render");
-    viewsButton.setOnAction(e -> app.displayViewsSceneBeta(runwayManager));
-
-    return new ArrayList<>(Arrays.asList(runwayUpdateButton, obstacleUpdateButton, viewsButton, exportButton, backButton));
+    return buttons; //new ArrayList<>(Arrays.asList(runwayUpdateButton, obstacleUpdateButton, viewsButton, exportButton, backButton));
   }
 
   private VBox createCalculationBreakdownSection() {

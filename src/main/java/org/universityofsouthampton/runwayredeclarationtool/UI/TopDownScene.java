@@ -46,6 +46,7 @@ public class TopDownScene extends BaseScene {
     private final double iconSize = 24;
     private final double speed = 1.0;
     private final Random random = new Random();
+    private boolean isRotated = false;
 
     public TopDownScene(MainApplication app, ParallelRunways runwayManager) {
         this.app = app;
@@ -75,60 +76,49 @@ public class TopDownScene extends BaseScene {
         title.setStroke(Color.WHITE);
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
+
+
         VBox buttons = new VBox(10);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(addButtons());
-
         VBox distanceInfoBox = new VBox();
 
         if (obstacles.isEmpty()) {
-            distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
-            distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
-            distanceInfoBox.setSpacing(1); // Spacing between labels
+            distanceInfoBox.setAlignment(Pos.TOP_CENTER);
+            distanceInfoBox.setPadding(new Insets(5));
+            distanceInfoBox.setSpacing(1);
+
             Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
-            // tora label has pink background
             toraLabel.setStyle("-fx-background-color: #FFC0CB;");
+
             Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
-            // yellow background
             todaLabel.setStyle("-fx-background-color: #FFFF00;");
+
             Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
-            // light green background
             asdaLabel.setStyle("-fx-background-color: #90EE90;");
+
             Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
-            // blue background
             ldaLabel.setStyle("-fx-background-color: #ADD8E6;");
+
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-//            if (MainApplication.isDarkMode()) {
-//                //set text color to white
-//                toraLabel.setTextFill(Color.WHITE);
-//                todaLabel.setTextFill(Color.WHITE);
-//                asdaLabel.setTextFill(Color.WHITE);
-//                ldaLabel.setTextFill(Color.WHITE);
-//            }
         } else {
-            distanceInfoBox.setAlignment(Pos.TOP_CENTER); // Align the box in the center, below the button
-            distanceInfoBox.setPadding(new Insets(5)); // Padding around the box
-            distanceInfoBox.setSpacing(1); // Spacing between labels
-            Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
-            // tora label has pink background
+            distanceInfoBox.setAlignment(Pos.TOP_CENTER);
+            distanceInfoBox.setPadding(new Insets(5));
+            distanceInfoBox.setSpacing(1);
+
+            Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m  |  " + currentRunway.getNewTORA() + "m");
             toraLabel.setStyle("-fx-background-color: #FFC0CB;");
-            Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m");
-            // yellow background
+
+            Label todaLabel = new Label("TODA: " + currentRunway.getTODA() + "m  |  " + currentRunway.getNewTODA() + "m");
             todaLabel.setStyle("-fx-background-color: #FFFF00;");
-            Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m");
-            // light green background
+
+            Label asdaLabel = new Label("ASDA: " + currentRunway.getASDA() + "m  |  " + currentRunway.getNewASDA() + "m");
             asdaLabel.setStyle("-fx-background-color: #90EE90;");
-            Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m");
-            // blue background
+
+            Label ldaLabel = new Label("LDA: " + currentRunway.getLDA() + "m  |  " + currentRunway.getNewLDA() + "m");
             ldaLabel.setStyle("-fx-background-color: #ADD8E6;");
+
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
-//            if (MainApplication.isDarkMode()) {
-//                //set text color to white
-//                toraLabel.setTextFill(Color.WHITE);
-//                todaLabel.setTextFill(Color.WHITE);
-//                asdaLabel.setTextFill(Color.WHITE);
-//                ldaLabel.setTextFill(Color.WHITE);
-//            }
         }
 
 
@@ -141,8 +131,15 @@ public class TopDownScene extends BaseScene {
 
         Canvas runwayCanvas = new Canvas(800, 600);
         drawRunway(runwayCanvas);
+        //drawCompass(runwayCanvas, calculateBearingFromRunwayName(currentRunway.getName()));
 
         borderPane.setCenter(runwayCanvas);
+
+        drawCompass(compassCanvas, calculateBearingFromRunwayName(currentRunway.getName()));
+        compassCanvas.relocate(20, 20); // Set the position of the compass canvas within the pane
+        compassPane.relocate(600, 30); // Set the position of the compass pane within the root layout
+        borderPane.getChildren().add(compassPane); // Add the compass pane to the borderPane
+
         this.getChildren().add(borderPane);
     }
 
@@ -197,7 +194,7 @@ public class TopDownScene extends BaseScene {
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        double centerLineY = canvas.getHeight() / 2;
+        double centerLineY = canvas.getHeight() / 2 - 50;
         double runwayLength = (double) currentRunway.getTORA() / 6;
         double runwayStartX = 100;
         double runwayStartY = centerLineY - 20;
@@ -222,7 +219,7 @@ public class TopDownScene extends BaseScene {
         double spaceLength = 10;
         double runwayEndX = runwayStartX + runwayLength;
 
-        for (double x = runwayStartX+5; x < runwayEndX; x += dashLength + spaceLength) {
+        for (double x = runwayStartX + 5; x < runwayEndX; x += dashLength + spaceLength) {
             double dashEndX = x + dashLength - 5;
             if (dashEndX > runwayEndX) {
                 dashEndX = runwayEndX - 5;
@@ -243,7 +240,6 @@ public class TopDownScene extends BaseScene {
         gc.fillRect(runwayStartX - stopwayWidth - clearwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway left
         gc.fillRect(runwayStartX + runwayLength + stopwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway right
 
-
         Font labelFont = Font.font("Arial", 14);
         gc.setFont(labelFont);
         if (MainApplication.isDarkMode()) {
@@ -252,10 +248,9 @@ public class TopDownScene extends BaseScene {
             gc.setFill(Color.BLACK);
         }
 
-        // b. Draw threshold indicators
         if (!obstacles.isEmpty()) {
             Obstacle obstacle = obstacles.getFirst();
-            double fromCentreline = (double) obstacle.getDistanceFromCentreline() /6;
+            double fromCentreline = (double) obstacle.getDistanceFromCentreline() / 6;
             double obstacleX = runwayStartX + ((double) obstacle.getDistanceFromThreshold() / 6);
             double obstacleHeight = obstacle.getHeight();
             double obstacleY = centerLineY + fromCentreline;
@@ -271,28 +266,15 @@ public class TopDownScene extends BaseScene {
             this.ASDA = (double) currentRunway.getNewASDA() / 6;
             this.LDA = (double) currentRunway.getNewLDA() / 6;
 
-            if (obstacle.getDistanceFromThreshold() < (1000 /6)) {
+            if (obstacle.getDistanceFromThreshold() < (1000 / 6)) {
                 this.slopeDistance = obstacleX + ((double) obstacle.getHeight() / 6 * 50);
 
                 gc.setFill(Color.ORANGE);
-                gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
+                gc.fillRect(obstacleX + obstacleWidth, runwayStartY, this.RESA, runwayHeight);
 
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
-
-                gc.setStroke(Color.LIGHTPINK);
-                gc.strokeLine(RESADistance, centerLineY - 20 + 40, RESADistance + this.TORA, centerLineY - 20 + 40); // TORA line
-                gc.setStroke(Color.YELLOW);
-                gc.strokeLine(RESADistance, centerLineY - 20 + 55, RESADistance + this.TODA, centerLineY - 20 + 55); // TODA line
-                gc.setStroke(Color.LIGHTGREEN);
-                gc.strokeLine(RESADistance, centerLineY - 20 + 70, RESADistance + this.ASDA, centerLineY - 20 + 70); // ASDA line
-                gc.setStroke(Color.BLUE);
-                gc.strokeLine(slopeDistance, centerLineY - 20 + 85, slopeDistance + this.LDA, centerLineY - 20 + 85); // LDA line
-
-
-
-            } else if (obstacle.getDistanceFromThreshold() >= (1000 /6)) {
-                // Original opposite diagonal line points
-                double oppositeStartX = obstacleX + obstacleWidth - ((double) obstacle.getHeight() /6 * 50 );
+            } else if (obstacle.getDistanceFromThreshold() >= (1000 / 6)) {
+                double oppositeStartX = obstacleX + obstacleWidth - ((double) obstacle.getHeight() / 6 * 50);
                 double oppositeStartY = obstacleY + obstacleHeight;
                 double oppositeEndX = obstacleX;
                 double oppositeEndY = obstacleY;
@@ -301,34 +283,36 @@ public class TopDownScene extends BaseScene {
 
                 double extensionLength = 30;
 
-                double newEndX = oppositeEndX + (extensionLength / Math.sqrt(1 + slope * slope)); // Note the '+' here
+                double newEndX = oppositeEndX + (extensionLength / Math.sqrt(1 + slope * slope));
 
                 this.slopeDistance = oppositeStartX;
 
                 gc.setFill(Color.ORANGE);
                 gc.fillRect(obstacleX - this.RESA, runwayStartY, this.RESA, runwayHeight);
-
-                gc.setStroke(Color.LIGHTPINK);
-                gc.strokeLine(runwayStartX, centerLineY - 20 + 40, slopeDistance -10, centerLineY - 20 + 40); // TORA line
-                gc.setStroke(Color.YELLOW);
-                gc.strokeLine(runwayStartX, centerLineY - 20 + 55, slopeDistance -10, centerLineY - 20 + 55); // TODA line
-                gc.setStroke(Color.LIGHTGREEN);
-                gc.strokeLine(runwayStartX, centerLineY - 20 + 70, slopeDistance -10, centerLineY - 20 + 70); // ASDA line
-                gc.setStroke(Color.BLUE);
-                gc.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + 85, runwayStartX + displacedThresholdOffset + this.LDA - ((double) (currentRunway.getRESA()+60) /6), centerLineY - 20 + 85); // LDA line
-
             }
+        }
 
-        }else {
+        double lineOffsetY = 40;
+        double lineSpacing = 15;
+
+        if (currentRunway.getDirection().equals("R")) {
             gc.setStroke(Color.LIGHTPINK);
-            gc.strokeLine(runwayStartX, centerLineY - 20 + 40, runwayStartX + this.TORA, centerLineY - 20 + 40); // TORA line
+            gc.strokeLine(runwayEndX - this.TORA, centerLineY - 20 + lineOffsetY, runwayEndX, centerLineY - 20 + lineOffsetY); // TORA line
             gc.setStroke(Color.YELLOW);
-            gc.strokeLine(runwayStartX, centerLineY - 20 + 55, runwayStartX + this.TODA, centerLineY - 20 + 55); // TODA line
+            gc.strokeLine(runwayEndX - this.TODA, centerLineY - 20 + lineOffsetY + lineSpacing, runwayEndX, centerLineY - 20 + lineOffsetY + lineSpacing); // TODA line
             gc.setStroke(Color.LIGHTGREEN);
-            gc.strokeLine(runwayStartX, centerLineY - 20 + 70, runwayStartX + this.ASDA, centerLineY - 20 + 70); // ASDA line
+            gc.strokeLine(runwayEndX - this.ASDA, centerLineY - 20 + lineOffsetY + lineSpacing * 2, runwayEndX, centerLineY - 20 + lineOffsetY + lineSpacing * 2); // ASDA line
             gc.setStroke(Color.BLUE);
-            gc.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + 85, runwayStartX +displacedThresholdOffset + this.LDA, centerLineY - 20 + 85); // LDA line
-
+            gc.strokeLine(runwayEndX - this.LDA - displacedThresholdOffset, centerLineY - 20 + lineOffsetY + lineSpacing * 3, runwayEndX - displacedThresholdOffset, centerLineY - 20 + lineOffsetY + lineSpacing * 3); // LDA line
+        } else {
+            gc.setStroke(Color.LIGHTPINK);
+            gc.strokeLine(runwayStartX, centerLineY - 20 + lineOffsetY, runwayStartX + this.TORA, centerLineY - 20 + lineOffsetY); // TORA line
+            gc.setStroke(Color.YELLOW);
+            gc.strokeLine(runwayStartX, centerLineY - 20 + lineOffsetY + lineSpacing, runwayStartX + this.TODA, centerLineY - 20 + lineOffsetY + lineSpacing); // TODA line
+            gc.setStroke(Color.LIGHTGREEN);
+            gc.strokeLine(runwayStartX, centerLineY - 20 + lineOffsetY + lineSpacing * 2, runwayStartX + this.ASDA, centerLineY - 20 + lineOffsetY + lineSpacing * 2); // ASDA line
+            gc.setStroke(Color.BLUE);
+            gc.strokeLine(runwayStartX + displacedThresholdOffset, centerLineY - 20 + lineOffsetY + lineSpacing * 3, runwayStartX + displacedThresholdOffset + this.LDA, centerLineY - 20 + lineOffsetY + lineSpacing * 3); // LDA line
         }
 
         if (displacedThresholdOffset > 0) {
@@ -348,13 +332,10 @@ public class TopDownScene extends BaseScene {
         gc.fillText(leftRunwayName, runwayStartX, centerLineY - 25);
         gc.fillText("Take-off/Landing →", runwayStartX, centerLineY - 40);
 
-
         String rightRunwayName = runwayManager.getDegree2() + runwayManager.getSndRunway().getDirection();
         int stringWidth = metrics.stringWidth(rightRunwayName);
         gc.fillText(rightRunwayName, runwayStartX + runwayLength - stringWidth, centerLineY - 25);
-        gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth -100, centerLineY - 40);
-
-        drawCompass(canvas, calculateBearingFromRunwayName(currentRunway.getName()));
+        gc.fillText("← Take-off/Landing", runwayStartX + runwayLength - stringWidth - 100, centerLineY - 40);
     }
 
     private int calculateBearingFromRunwayName(String runwayName) {
@@ -366,43 +347,78 @@ public class TopDownScene extends BaseScene {
         }
     }
 
+    private Canvas compassCanvas = new Canvas(150, 150);
+    private Pane compassPane = new Pane(compassCanvas);
+
     private void drawCompass(Canvas canvas, int bearing) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         double radius = 40;
+        double compassX = canvas.getWidth() - radius * 2 - 10; // Position the compass 10 units from the right edge
+        double compassY = radius + 10; // Position the compass 10 units below the top edge
 
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
-        gc.strokeOval((double) 700 - radius, (double) 50 - radius, radius * 2, radius * 2);
+        gc.strokeOval(compassX, compassY, radius * 2, radius * 2);
         gc.setFill(Color.LIGHTGRAY);
-        gc.fillOval((double) 700 - radius, (double) 50 - radius, radius * 2, radius * 2);
+        gc.fillOval(compassX, compassY, radius * 2, radius * 2);
 
         Font oldFont = gc.getFont();
         gc.setFont(new Font("Arial", 12));
         gc.setFill(Color.BLACK);
-        gc.fillText("N", (double) 700 - 5, (double) 50 - radius + 15);
-        gc.fillText("S", (double) 700 - 5, (double) 50 + radius - 5);
-        gc.fillText("E", (double) 700 + radius - 15, (double) 50 + 5);
-        gc.fillText("W", (double) 700 - radius + 5, (double) 50 + 5);
+        gc.fillText("N", compassX + radius - 5, compassY + 15);
+        gc.fillText("S", compassX + radius - 5, compassY + radius * 2 - 5);
+        gc.fillText("E", compassX + radius * 2 - 15, compassY + radius + 5);
+        gc.fillText("W", compassX + 5, compassY + radius + 5);
 
         gc.setFont(oldFont);
 
-        double endX = (double) 700 + radius * 0.8 * Math.sin(Math.toRadians(bearing));
-        double endY = (double) 50 - radius * 0.8 * Math.cos(Math.toRadians(bearing));
+        double endX = compassX + radius + radius * 0.8 * Math.sin(Math.toRadians(bearing));
+        double endY = compassY + radius - radius * 0.8 * Math.cos(Math.toRadians(bearing));
         gc.setStroke(Color.RED);
         gc.setLineWidth(2);
-        gc.strokeLine(700, 50, endX, endY);
+        gc.strokeLine(compassX + radius, compassY + radius, endX, endY);
 
         gc.setFill(Color.RED);
-        gc.fillOval((double) 700 - 3, (double) 50 - 3, 6, 6);
+        gc.fillOval(compassX + radius - 3, compassY + radius - 3, 6, 6);
 
         gc.setFill(Color.BLACK);
-        gc.fillText(bearing + "°", 700 - 10, 50);
+        gc.fillText(bearing + "°", compassX + radius - 10, compassY + radius);
     }
 
     private Stage secondaryStage;
 
     public void setSecondaryStage(Stage stage) {
         this.secondaryStage = stage;
+    }
+
+    private void rotateRunway(int bearing) {
+        // Get the canvas and its graphics context
+        Canvas runwayCanvas = (Canvas) ((BorderPane) getChildren().get(0)).getCenter();
+        GraphicsContext gc = runwayCanvas.getGraphicsContext2D();
+
+        // Save the current transform state
+        gc.save();
+
+        // Translate to the center of the canvas
+        double centerX = runwayCanvas.getWidth() / 2;
+        double centerY = runwayCanvas.getHeight() / 2;
+        gc.translate(centerX, centerY);
+
+        // Rotate the canvas by the desired angle if not rotated, or reset if rotated
+        double rotationAngle = isRotated ? 0 : bearing - 90; // Adjust the angle based on your requirements
+        gc.rotate(Math.toRadians(rotationAngle));
+
+        // Translate back to the original position
+        gc.translate(-centerX, -centerY);
+
+        // Draw the runway with the new rotation
+        drawRunway(runwayCanvas);
+
+        // Restore the previous transform state
+        gc.restore();
+
+        // Toggle the rotation state
+        isRotated = !isRotated;
     }
 
     @Override
@@ -419,6 +435,10 @@ public class TopDownScene extends BaseScene {
             }
         });
 
-        return new ArrayList<>(List.of(backButton));
+        Button rotateButton = new Button();
+        styleButton(rotateButton, MaterialDesign.MDI_ROTATE_3D, "Rotate");
+        rotateButton.setOnAction(e -> rotateRunway(calculateBearingFromRunwayName(currentRunway.getName())));
+
+        return new ArrayList<>(List.of(backButton, rotateButton));
     }
 }

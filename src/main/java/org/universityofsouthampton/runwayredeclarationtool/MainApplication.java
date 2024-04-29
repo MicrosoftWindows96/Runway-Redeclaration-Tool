@@ -1,5 +1,6 @@
 package org.universityofsouthampton.runwayredeclarationtool;
 
+import java.util.List;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +15,8 @@ import org.universityofsouthampton.runwayredeclarationtool.UI.*;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
+import org.universityofsouthampton.runwayredeclarationtool.users.Account;
+import org.universityofsouthampton.runwayredeclarationtool.users.AccountManager;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 
@@ -32,6 +35,7 @@ public class MainApplication extends Application {
     private static AnimatedPatternBackground background;
     private ArrayList<Airport> airports; // Imported airports
     private ArrayList<Obstacle> obstacles; // Imported obstacles
+    private AccountManager accountManager; // This class holds all account information for the system
 
     @Override
     public void start(Stage primaryStage) {
@@ -40,6 +44,9 @@ public class MainApplication extends Application {
         root = new StackPane();
         background = AnimatedPatternBackground.getInstance();
         root.getChildren().add(background);
+
+        accountManager = new AccountManager();
+        accountManager.loadAccountsFromFile();
 
         initialiseAirports();
         displayMenu();
@@ -85,7 +92,6 @@ public class MainApplication extends Application {
         }
     }
 
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -103,6 +109,11 @@ public class MainApplication extends Application {
     public void displayRunwayConfigScene(Airport airport,  ParallelRunways runwaySet) {
         RunwayConfigViewScene runwayConfigScene = new RunwayConfigViewScene(this,airport, runwaySet);
         root.getChildren().setAll(background, runwayConfigScene);
+    }
+
+    public void displayUsersScene() {
+        UsersScene usersScene = new UsersScene(this);
+        root.getChildren().setAll(background, usersScene);
     }
 
     public void updateXMLs() { // Method to update XMl files in the resources folder
@@ -218,5 +229,25 @@ public class MainApplication extends Application {
 
     public static boolean isDarkMode() {
         return background.isDarkMode;
+    }
+
+    public AccountManager getAccountManager() {
+        return accountManager;
+    }
+
+    public void displayHelpGuideScene() {
+        HelpGuideScene helpGuideScene = new HelpGuideScene(this);
+        root.getChildren().setAll(background, helpGuideScene);
+
+    }
+
+    public void displayHowToUseScene() {
+        HowToUseScene howToUseScene = new HowToUseScene(this);
+        root.getChildren().setAll(background, howToUseScene);
+    }
+
+    public void displayFAQScene() {
+        FAQScene FAQscene = new FAQScene(this);
+        root.getChildren().setAll(background, FAQscene);
     }
 }

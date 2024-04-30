@@ -13,10 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -58,7 +55,7 @@ public class BothViewScene extends BaseScene {
         title.setStroke(Color.WHITE);
         VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
-        VBox buttons = new VBox(10);
+        HBox buttons = new HBox(10);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(addButtons());
 
@@ -102,44 +99,44 @@ public class BothViewScene extends BaseScene {
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
         }
 
-        Button exportButton = new Button("Export to PDF");
-        exportButton.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save PDF");
-            // Set extension filter
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
-            fileChooser.getExtensionFilters().add(extFilter);
-            // Show save file dialog
-            File file = fileChooser.showSaveDialog(null); // Replace 'null' with a reference to your `Stage` if necessary
-            if (file != null) {
-                try {
-                    // Convert the scene or specific Pane (e.g., borderPane) to a BufferedImage
-                    WritableImage writableImage = borderPane.snapshot(new SnapshotParameters(), null);
-                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
-
-                    // Save or process the image as PDF at the chosen path
-                    ExportImagePDF.writeImageToPDF(bufferedImage, file.getAbsolutePath());
-
-                    // Show success message
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Export Success");
-                    alert.setHeaderText(null);
-                    alert.setContentText("PDF exported successfully to " + file.getAbsolutePath());
-                    alert.showAndWait();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-
-                    // Show error message
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Export Failed");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Failed to export PDF: " + ex.getMessage());
-                    alert.showAndWait();
-                }
-            }
-        });
-
-        distanceInfoBox.getChildren().add(exportButton);
+//        Button exportButton = new Button("Export to PDF");
+//        exportButton.setOnAction(e -> {
+//            FileChooser fileChooser = new FileChooser();
+//            fileChooser.setTitle("Save PDF");
+//            // Set extension filter
+//            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+//            fileChooser.getExtensionFilters().add(extFilter);
+//            // Show save file dialog
+//            File file = fileChooser.showSaveDialog(null); // Replace 'null' with a reference to your `Stage` if necessary
+//            if (file != null) {
+//                try {
+//                    // Convert the scene or specific Pane (e.g., borderPane) to a BufferedImage
+//                    WritableImage writableImage = borderPane.snapshot(new SnapshotParameters(), null);
+//                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
+//
+//                    // Save or process the image as PDF at the chosen path
+//                    ExportImagePDF.writeImageToPDF(bufferedImage, file.getAbsolutePath());
+//
+//                    // Show success message
+//                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//                    alert.setTitle("Export Success");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("PDF exported successfully to " + file.getAbsolutePath());
+//                    alert.showAndWait();
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//
+//                    // Show error message
+//                    Alert alert = new Alert(Alert.AlertType.ERROR);
+//                    alert.setTitle("Export Failed");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Failed to export PDF: " + ex.getMessage());
+//                    alert.showAndWait();
+//                }
+//            }
+//        });
+//
+//        distanceInfoBox.getChildren().add(exportButton);
 
         VBox topLayout = new VBox();
         topLayout.setAlignment(Pos.TOP_CENTER);
@@ -236,7 +233,45 @@ public class BothViewScene extends BaseScene {
             }
         });
 
+        Button exportButton = new Button();
+        styleButton(exportButton, MaterialDesign.MDI_FILE_PDF_BOX, "Export");
+        exportButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save PDF");
+            // Set extension filter
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+            fileChooser.getExtensionFilters().add(extFilter);
+            // Show save file dialog
+            File file = fileChooser.showSaveDialog(null); // Replace 'null' with a reference to your `Stage` if necessary
 
-        return new ArrayList<>(List.of(backButton));
+            if (file != null) {
+                try {
+                    // Convert the scene or specific Pane (e.g., borderPane) to a BufferedImage
+                    WritableImage writableImage = ((BorderPane) getChildren().get(0)).snapshot(new SnapshotParameters(), null);
+                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
+
+                    // Save or process the image as PDF at the chosen path
+                    ExportImagePDF.writeImageToPDF(bufferedImage, file.getAbsolutePath());
+
+                    // Show success message
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Export Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("PDF exported successfully to " + file.getAbsolutePath());
+                    alert.showAndWait();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+
+                    // Show error message
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Export Failed");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to export PDF: " + ex.getMessage());
+                    alert.showAndWait();
+                }
+            }
+        });
+
+        return new ArrayList<>(List.of(backButton, exportButton));
     }
 }

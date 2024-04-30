@@ -70,7 +70,7 @@ public class HelpGuideScene extends BaseScene {
         Button backButton = new Button();
         styleButton(backButton, MaterialDesign.MDI_CLOSE, "Return");
                 backButton.setOnAction(e -> {
-            app.displayAirportListScene();
+            app.returnFromHelpScene();
         });
 
 

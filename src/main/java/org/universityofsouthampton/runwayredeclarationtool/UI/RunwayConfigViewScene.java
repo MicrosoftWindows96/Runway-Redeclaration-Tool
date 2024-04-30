@@ -84,21 +84,22 @@ public class RunwayConfigViewScene extends BaseScene {
       }
     });
 
+    VBox helpBox = new VBox(10);
+    helpBox.setAlignment(Pos.TOP_RIGHT);
+    Button helpButton = new Button();
+    styleDarkButton(helpButton, MaterialDesign.MDI_HELP, "");
+    helpButton.setOnAction(e -> app.displayHelpGuideScene());
+    helpButton.setLayoutX(20);
+    helpButton.setLayoutY(20);
+    helpButton.setPrefWidth(5);
+    helpBox.getChildren().add(helpButton);
+
     HBox buttonBox2 = new HBox(10);
     buttonBox2.setAlignment(Pos.CENTER);
     buttonBox2.getChildren().addAll(nextButton,oppositeButton);
-    getChildren().add(buttonBox2);
+    getChildren().addAll(buttonBox2,helpBox);
 
-//    VBox helpBox = new VBox(10);
-//    helpBox.setAlignment(Pos.TOP_RIGHT);
-//    Button helpButton = new Button();
-//    styleDarkButton(helpButton, MaterialDesign.MDI_WEATHER_NIGHT, "");
-////        darkModeToggle.setOnAction(e -> toggleDarkMode());
-//    helpButton.setLayoutX(20);
-//    helpButton.setLayoutY(20);
-//    helpBox.getChildren().add(helpButton);
-////        this.getChildren().add(helpBox);
-//    getChildren().add(helpBox);
+
 
   }
 

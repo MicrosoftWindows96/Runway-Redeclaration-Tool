@@ -37,6 +37,12 @@ public class MainApplication extends Application {
     private ArrayList<Obstacle> obstacles; // Imported obstacles
     private AccountManager accountManager; // This class holds all account information for the system
 
+    private String currentReturnScene;
+
+    private Airport airport;
+    private ParallelRunways runwaySet;
+    private ParallelRunways runwayManager;
+
     @Override
     public void start(Stage primaryStage) {
         playBackgroundMusic();
@@ -72,6 +78,7 @@ public class MainApplication extends Application {
     public void displayMenu() {
         MenuScene menuScene = new MenuScene(this);
         root.getChildren().setAll(background, menuScene);
+        this.currentReturnScene = "Menu";
     }
 
     private void playBackgroundMusic() {
@@ -97,23 +104,29 @@ public class MainApplication extends Application {
     }
 
     public void displayObstacleListScene(Airport airport, ParallelRunways runwaySet) {
+        this.airport = airport;
+        this.runwaySet = runwaySet;
         ObstacleListScene obstacleListScene = new ObstacleListScene(this, airport, runwaySet);
         root.getChildren().setAll(background, obstacleListScene);
+        this.currentReturnScene = "displayObstacleList";
     }
 
     public void displayAirportListScene() {
         AirportListScene airportListScene = new AirportListScene(this);
         root.getChildren().setAll(background, airportListScene);
+        this.currentReturnScene = "displayAirportList";
     }
 
     public void displayRunwayConfigScene(Airport airport,  ParallelRunways runwaySet) {
         RunwayConfigViewScene runwayConfigScene = new RunwayConfigViewScene(this,airport, runwaySet);
         root.getChildren().setAll(background, runwayConfigScene);
+        this.currentReturnScene = "displayRunwayConfig";
     }
 
     public void displayUsersScene() {
         UsersScene usersScene = new UsersScene(this);
         root.getChildren().setAll(background, usersScene);
+        this.currentReturnScene = "displayUsers";
     }
 
     public void updateXMLs() { // Method to update XMl files in the resources folder
@@ -160,6 +173,7 @@ public class MainApplication extends Application {
     public static Stage secondaryStage;
 
     public void displayViewsSceneBeta(ParallelRunways runwayManager) {
+        this.runwayManager = runwayManager;
         Stage primaryStage = (Stage) root.getScene().getWindow();
 
         if (secondaryStage == null) {
@@ -181,6 +195,7 @@ public class MainApplication extends Application {
         secondaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo.jpg"))));
 
         secondaryStage.show();
+        this.currentReturnScene = "ViewSelection";
     }
 
     public void display2DsideViewScene(ParallelRunways runwayManager) {
@@ -193,6 +208,7 @@ public class MainApplication extends Application {
         Scene sideViewSceneScene = new Scene(sideViewScene, 800, 600);
         secondaryStage.setScene(sideViewSceneScene);
         secondaryStage.show();
+        this.currentReturnScene = "SideViewSelection";
     }
 
 
@@ -208,6 +224,7 @@ public class MainApplication extends Application {
         Scene topDownSceneScene = new Scene(topDownScene, 800, 600);
         secondaryStage.setScene(topDownSceneScene);
         secondaryStage.show();
+        this.currentReturnScene = "TopDownSelection";
     }
 
     public void display2DbothViewScene(ParallelRunways runwayManager) {
@@ -238,6 +255,38 @@ public class MainApplication extends Application {
     public void displayHelpGuideScene() {
         HelpGuideScene helpGuideScene = new HelpGuideScene(this);
         root.getChildren().setAll(background, helpGuideScene);
+
+    }
+
+    public void returnFromHelpScene(){
+        switch (currentReturnScene) {
+            case "displayObstacleList":
+                displayObstacleListScene(this.airport, this.runwaySet);
+                break;
+            case "displayAirportList":
+                displayAirportListScene();
+                // Handle the case when the current return scene is for displaying airport list
+                break;
+            case "displayRunwayConfig":
+                // Handle the case when the current return scene is for displaying runway configuration
+                displayRunwayConfigScene(this.airport,this.runwaySet);
+                break;
+            case "displayUsers":
+                displayUsersScene();
+                // Handle the case when the current return scene is for displaying users list
+                break;
+            case "ViewSelection":
+                displayViewsSceneBeta(this.runwayManager);
+                // Handle the case when the current return scene is for view selection
+                break;
+            case "Menu":
+                displayMenu();
+
+                break;
+            default:
+                // Handle any other cases or provide a default behavior
+                break;
+        }
 
     }
 

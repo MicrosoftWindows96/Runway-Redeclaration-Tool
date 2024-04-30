@@ -39,15 +39,19 @@ public class MenuScene extends BaseScene {
     title.setStroke(Color.WHITE);
     VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
-    VBox darkMode = new VBox(10);
-    darkMode.setAlignment(Pos.TOP_RIGHT);
-    Button darkModeToggle = new Button();
-    styleDarkButton(darkModeToggle, MaterialDesign.MDI_WEATHER_NIGHT, "");
-    darkModeToggle.setOnAction(e -> app.displayHelpGuideScene());
-    darkModeToggle.setLayoutX(20);
-    darkModeToggle.setLayoutY(20);
-    darkMode.getChildren().add(darkModeToggle);
-    this.getChildren().add(darkMode);
+    VBox helpBox = new VBox(10);
+    helpBox.setAlignment(Pos.TOP_RIGHT);
+    Button helpButton = new Button();
+    styleDarkButton(helpButton, MaterialDesign.MDI_HELP, "");
+    helpButton.setOnAction(e -> app.displayHelpGuideScene());
+    helpButton.setLayoutX(20);
+    helpButton.setLayoutY(20);
+    helpButton.setPrefWidth(5);
+    helpBox.getChildren().add(helpButton);
+
+
+
+
 
     // Make the screen buttons
     VBox buttons = new VBox(10);
@@ -56,7 +60,7 @@ public class MenuScene extends BaseScene {
 
 
     // Add nodes
-    this.getChildren().addAll(title, buttons);
+    this.getChildren().addAll(title, buttons,helpBox);
   }
 
   private void toggleDarkMode() {
@@ -73,6 +77,18 @@ public class MenuScene extends BaseScene {
     Button quit = new Button(); // Button to close the Application
     styleButton(quit, MaterialDesign.MDI_CLOSE, "Quit");
     quit.setOnAction(e -> System.exit(0));
+
+//    VBox helpBox = new VBox(10);
+//    helpBox.setAlignment(Pos.TOP_CENTER);
+//    Button helpButton = new Button();
+//    styleDarkButton(helpButton, MaterialDesign.MDI_HELP, "");
+//    helpButton.setOnAction(e -> app.displayHelpGuideScene());
+//    helpButton.setLayoutX(20);
+//    helpButton.setLayoutY(20);
+//    helpButton.setPrefWidth(5);
+//    helpBox.getChildren().add(helpButton);
+
+
 
     return new ArrayList<>(Arrays.asList(login, quit));
   }

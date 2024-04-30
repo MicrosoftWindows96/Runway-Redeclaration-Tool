@@ -41,6 +41,16 @@ public class ObstacleListScene extends BaseScene {
         setPadding(new Insets(20));
         setSpacing(10);
 
+        VBox helpBox = new VBox(10);
+        helpBox.setAlignment(Pos.TOP_RIGHT);
+        Button helpButton = new Button();
+        styleDarkButton(helpButton, MaterialDesign.MDI_HELP, "");
+        helpButton.setOnAction(e -> app.displayHelpGuideScene());
+        helpButton.setLayoutX(20);
+        helpButton.setLayoutY(20);
+        helpButton.setPrefWidth(5);
+        helpBox.getChildren().add(helpButton);
+
         // Initialise selectedObstacle if there's a pre-determined obstacle in the runway
         if (!currentRunway.getObstacles().isEmpty()) {
             selectedObstacle = currentRunway.getObstacles().get(0);
@@ -67,7 +77,7 @@ public class ObstacleListScene extends BaseScene {
         HBox buttonBox = new HBox(10);
         buttonBox.getChildren().addAll(addButtons());
 
-        this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox);
+        this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox,helpBox);
     }
 
     @Override

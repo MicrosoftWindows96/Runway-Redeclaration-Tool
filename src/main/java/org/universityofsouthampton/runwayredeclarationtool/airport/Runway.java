@@ -188,6 +188,9 @@ public class Runway {
     }
 
     // Setter + getter methods
+    public String getNameDirection() {
+        return getName() + getDirection();
+    }
     public String getName() {
         return name;
     }

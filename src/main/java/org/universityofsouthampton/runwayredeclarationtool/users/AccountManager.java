@@ -95,8 +95,6 @@ public class AccountManager {
 
   public void setLoggedInAccount(Account loggedInAccount) {
     this.loggedInAccount = loggedInAccount;
-    System.out.println("Logged in account: " + loggedInAccount.getUsername());
-    System.out.println("Role: " + loggedInAccount.getRole());
   }
 
   public Account getLoggedInAccount() {

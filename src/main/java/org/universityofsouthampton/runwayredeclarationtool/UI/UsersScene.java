@@ -73,14 +73,17 @@ public class UsersScene extends BaseScene {
     styleButton(registerButton, MaterialDesign.MDI_ACCOUNT_PLUS, "Register");
     registerButton.setOnAction(e -> promptRegistration());
 
+    Button exportLogsButton = new Button();
+    styleButton(exportLogsButton, MaterialDesign.MDI_ACCOUNT_LOCATION, "Save Logs");
+    exportLogsButton.setOnAction(e -> app.getAccountLogger().exportReport());
+
     Button backButton = new Button();
     styleButton(backButton, MaterialDesign.MDI_KEYBOARD_RETURN, "Return");
     backButton.setOnAction(e -> {
         app.displayAirportListScene();
-        // Ensure saved changes
     });
 
-    return new ArrayList<>(Arrays.asList(registerButton, backButton));
+    return new ArrayList<>(Arrays.asList(registerButton, exportLogsButton, backButton));
   }
 
   private HBox makeAccountBox(Account account) {
@@ -158,6 +161,7 @@ public class UsersScene extends BaseScene {
         accountManager.getAccounts().add(new Account(username, password, roleCheckBoxes.getSelectedRole()));
         app.getAccountManager().saveAccountsToFile();
         updateList();
+        app.logOperation("created a new account [" + username + "/" + roleCheckBoxes.getSelectedRole() + "] added to the system.");
         registrationStage.close();
       }
     });
@@ -181,8 +185,9 @@ public class UsersScene extends BaseScene {
     Text username = new Text("User: " + account.getUsername());
     username.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
+    String oldRole = account.getRole();
     RoleCheckBoxes roleCheckBoxes = new RoleCheckBoxes();
-    roleCheckBoxes.setCheckBox(account.getRole());
+    roleCheckBoxes.setCheckBox(oldRole);
 
     Button confirmButton = new Button();
     styleButton(confirmButton, MaterialDesign.MDI_CHECK, "Confirm");
@@ -193,6 +198,9 @@ public class UsersScene extends BaseScene {
         account.setRole(roleCheckBoxes.getSelectedRole());
         app.getAccountManager().saveAccountsToFile();
         updateList();
+        if (!roleCheckBoxes.getSelectedRole().equals(oldRole)) {
+          app.logOperation("edited account role of " + account.getUsername() + " " + oldRole + " -> " + roleCheckBoxes.getSelectedRole());
+        }
         registrationStage.close();
       }
     });

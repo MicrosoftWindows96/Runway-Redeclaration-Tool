@@ -191,6 +191,8 @@ public class RunwayConfigViewScene extends BaseScene {
         alert.setHeaderText(null);
         alert.setContentText("Calculation breakdown has been successfully exported.");
         alert.showAndWait();
+        app.logOperation("exported calculation breakdown from Runway " + runwayManager.getFstRunway().getNameDirection()
+            + "/" + runwayManager.getSndRunway().getNameDirection() + " in Airport " + airport.getAirportName() + "/" + airport.getAirportCode());
         app.showNotification("Runway Update", "Runway " + currentRunway.getName() + " has been updated.");
       } catch (IOException ex) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -371,6 +373,8 @@ public class RunwayConfigViewScene extends BaseScene {
             runwayManager.runCalcOnBothRunways();
           }
 
+          app.logOperation("edited Runway " + runwayManager.getFstRunway().getNameDirection()
+              + "/" + runwayManager.getSndRunway().getNameDirection() + " in Airport " + airport.getAirportName() + "/" + airport.getAirportCode());
           app.showNotification("Logical Runways",
               degree1 + runwayManager.getFstRunway().getDirection() + "/" + degree1 + runwayManager.getSndRunway().getDirection() + " updated!");
           app.updateXMLs();

@@ -92,16 +92,15 @@ public class ObstacleListScene extends BaseScene {
                     // Replace the current Obstacle with selected one
                     Obstacle existingObstacle = this.currentRunway.getObstacles().get(0);
                     this.otherObstacles.add(existingObstacle);
-
                     // update runway object
                     runwayManager.removeObstacle(existingObstacle);
-
-
                 }
                 runwayManager.placeObstacle(selectedObstacle);
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
 
+                app.logOperation("added Obstacle " + selectedObstacle.getName() + " to Runway " + runwayManager.getFstRunway().getNameDirection()
+                    + "/" + runwayManager.getSndRunway().getNameDirection() + " in Airport " + currentAirport.getAirportName() + "/" + currentAirport.getAirportCode());
                 app.showNotification("Obstacle Add", "Obstacle " + selectedObstacle.getName() + " has been added.");
 
             }
@@ -119,6 +118,8 @@ public class ObstacleListScene extends BaseScene {
                     runwayManager.removeObstacle(selectedObstacle);
                 }
                 updateObstaclesList();
+                app.logOperation("removed Obstacle " + selectedObstacle.getName() + " from Runway " + runwayManager.getFstRunway().getNameDirection()
+                    + "/" + runwayManager.getSndRunway().getNameDirection() + " in Airport " + currentAirport.getAirportName() + "/" + currentAirport.getAirportCode());
                 app.showNotification("Obstacle Remove", "Obstacle " + selectedObstacle.getName() + " has been removed.");
             }
         });
@@ -145,6 +146,7 @@ public class ObstacleListScene extends BaseScene {
             } else if  (this.currentRunway.getObstacles().isEmpty() || !this.currentRunway.getObstacles().contains(this.selectedObstacle)) {
                 this.otherObstacles.remove(this.selectedObstacle);
                 updateObstaclesList();
+                app.logOperation("deleted Obstacle " + selectedObstacle.getName() + " from the system.");
                 app.showNotification("Obstacle Delete", "Obstacle " + selectedObstacle.getName() + " has been deleted.");
                 app.updateXMLs();
 
@@ -233,6 +235,7 @@ public class ObstacleListScene extends BaseScene {
 
                 updateObstaclesList();
                 ((Stage) promptWindow.getScene().getWindow()).close();
+                app.logOperation("created and added Obstacle " + newObstacle.getName() + " to the system.");
                 app.showNotification("Obstacle Created", "Obstacle " + name + " created successfully.");
             } else {
                 showErrorDialog(errorMessage);
@@ -304,9 +307,9 @@ public class ObstacleListScene extends BaseScene {
                 selectedObstacle.setDistanceFromThreshold(distFromThre);
                 selectedObstacle.setDistanceFromCentreline(distFromCent);
 
-
                 updateObstaclesList();
                 ((Stage) promptWindow.getScene().getWindow()).close();
+                app.logOperation("edited Obstacle " + selectedObstacle.getName() + " in the system.");
                 app.showNotification("Obstacle Updated", "Obstacle " + name + " updated successfully.");
             } else {
                 showErrorDialog(errorMessage);
@@ -340,6 +343,8 @@ public class ObstacleListScene extends BaseScene {
                     runwayManager.runCalcOnBothRunways();
                     app.displayRunwayConfigScene(currentAirport,runwayManager);
                     app.updateXMLs();
+                    app.logOperation("calculated new parameters in Runway " + runwayManager.getFstRunway().getNameDirection()
+                        + "/" + runwayManager.getSndRunway().getNameDirection() + " in Airport " + currentAirport.getAirportName() + "/" + currentAirport.getAirportCode());
                     Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
 

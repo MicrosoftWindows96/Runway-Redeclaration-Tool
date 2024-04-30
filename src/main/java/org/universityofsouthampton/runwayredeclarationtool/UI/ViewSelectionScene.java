@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
+import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
 
@@ -67,16 +68,26 @@ public class ViewSelectionScene extends BaseScene {
 
         Button sideViewButton = new Button();
         styleButton(sideViewButton, MaterialDesign.MDI_LOGIN, "Side");
-        sideViewButton.setOnAction(e -> app.display2DsideViewScene(runwayManager));
+        sideViewButton.setOnAction(e -> {
+            app.display2DsideViewScene(runwayManager);
+            app.logOperation("viewed 2D side view of Runway " + runwayManager.getFstRunway().getNameDirection()
+                + runwayManager.getSndRunway().getNameDirection());
+        });
 
         Button topDownViewButton = new Button();
         styleButton(topDownViewButton, MaterialDesign.MDI_LOGIN, "Aerial");
-        topDownViewButton.setOnAction(e -> app.display2DtopDownViewScene(runwayManager, false));
+        topDownViewButton.setOnAction(e -> {
+            app.display2DtopDownViewScene(runwayManager, false);
+            app.logOperation("viewed 2D top-down view of Runway " + runwayManager.getFstRunway().getNameDirection()
+                + runwayManager.getSndRunway().getNameDirection());
+        });
 
         Button bothViewButton = new Button();
         styleButton(bothViewButton, MaterialDesign.MDI_LOGIN, "Both");
         bothViewButton.setOnAction(e -> {
             app.display2DbothViewScene(runwayManager);
+            app.logOperation("viewed BOTH 2D side AND top-down view of Runway " + runwayManager.getFstRunway().getNameDirection()
+                + runwayManager.getSndRunway().getNameDirection());
         });
 
         Button backButton = new Button();

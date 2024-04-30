@@ -1,5 +1,7 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import java.io.File;
+import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,18 +17,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import kotlin.coroutines.AbstractCoroutineContextElement;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
-import org.universityofsouthampton.runwayredeclarationtool.users.Account;
 import org.universityofsouthampton.runwayredeclarationtool.utility.exportXML;
 import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class AirportListScene extends BaseScene {
 
@@ -73,7 +69,7 @@ public class AirportListScene extends BaseScene {
         if (app.getAccountManager().getLoggedInAccount().getRole().equals("admin")) {
             Button usersButton = new Button("Users"); // Button to Import xml file to add onto airport list
             styleButton(usersButton, MaterialDesign.MDI_EMOTICON, "Users");
-            usersButton.setOnAction(e -> {app.displayUsersScene();});
+            usersButton.setOnAction(e -> app.displayUsersScene());
             leftBox.getChildren().add(usersButton);
         }
 
@@ -111,6 +107,7 @@ public class AirportListScene extends BaseScene {
             deleteButton.setOnAction(e -> {
                 importedAirports.remove(selectedAirport);
                 updateList();
+                app.logOperation("deleted the Airport: " + selectedAirport.getAirportName() + "/" + selectedAirport.getAirportCode());
                 app.showNotification("Delete Airport", "Airport " + selectedAirport.getAirportName() + " has been deleted.");
                 app.updateXMLs();
                 updateAirportInfo(null);
@@ -148,7 +145,10 @@ public class AirportListScene extends BaseScene {
 
         Button backButton = new Button("Log Out"); // Button to return to the login screen
         styleButton(backButton, MaterialDesign.MDI_LOCK, "Log Out");
-        backButton.setOnAction(e -> app.displayMenu());
+        backButton.setOnAction(e -> {
+            app.logOperation("logged out of system.");
+            app.displayMenu();
+        });
 
         buttons.add(importXMLButton);
         buttons.add(exportXMLButton);
@@ -206,6 +206,7 @@ public class AirportListScene extends BaseScene {
                         airport.getParallelRunwaySets().remove(pRunwaySet);
                         app.updateXMLs();
                         updateAirportInfo(airport);
+                        app.logOperation("deleted Runway set " + pRunwaySet.getDegree1() + "/" + pRunwaySet.getDegree2() + " from the Airport: " + selectedAirport.getAirportName() + "/" + selectedAirport.getAirportCode());
                         app.showNotification("Runway Delete", "Runway " + pRunwaySet.getDegree1() + "/" + pRunwaySet.getDegree2() + " has been deleted");
                     });
                     styleButton(deleteRunwayButton, MaterialDesign.MDI_MINUS_BOX, "Delete");
@@ -246,6 +247,7 @@ public class AirportListScene extends BaseScene {
             ArrayList<Airport> airports = importer.makeAirportsXML();
             app.mergeAirport(airports);
             updateList();
+            app.logOperation("Imported a local file " + file.getName() + " to the system.");
             app.showNotification("Airport Import", "Airport file has been imported.");
         }
     }
@@ -258,6 +260,7 @@ public class AirportListScene extends BaseScene {
             exportXML exporter = new exportXML(this.importedAirports, new ArrayList<>(), file);
             exporter.buildAirportsXML();
             exporter.writeXML();
+            app.logOperation("Exported airport file to a local file " + file.getName() + " from the system.");
             app.showNotification("Airport Export", "Airport file has been exported.");
         }
     }
@@ -303,6 +306,7 @@ public class AirportListScene extends BaseScene {
                 app.addAirport(newAirport);
                 app.updateXMLs();
                 ((Stage) promptWindow.getScene().getWindow()).close();
+                app.logOperation("added a new Airport: " + newAirport.getAirportName() + "/" + newAirport.getAirportCode());
                 app.showNotification("Add Airport", "Airport " + newAirport.getAirportName() + " has been added.");
             } else {
                 showErrorDialog(validationError);
@@ -383,7 +387,8 @@ public class AirportListScene extends BaseScene {
                     updateAirportInfo(selectedAirport);
                     Stage stage = (Stage) promptWindow.getScene().getWindow();
                     stage.close();
-                    app.showNotification("Runway Add ", "Runway " + testRunway1.getName()+"/"+testRunway2.getName()+"has been added");
+                    app.logOperation("added a new Runway " + testRunway1.getName()+"/"+testRunway2.getName() + " to the Airport: " + selectedAirport.getAirportName() + "/" + selectedAirport.getAirportCode());
+                    app.showNotification("Runway Add ", "Runway " + testRunway1.getName()+"/"+testRunway2.getName()+" has been added");
         } else {
             showErrorDialog(validationError); // Show the first encountered validation error
         }
@@ -421,7 +426,6 @@ public class AirportListScene extends BaseScene {
         PromptWindow promptWindow = new PromptWindow(app);
         var nameBox = promptWindow.editParameterField("Airport Name", airport.getAirportName());
         var codeBox = promptWindow.editParameterField("Airport Code", airport.getAirportCode());
-
         Button submitButton = new Button("Save Changes");
         styleButton(submitButton, MaterialDesign.MDI_CHECK, "Save");
         submitButton.setOnAction(e -> {
@@ -432,6 +436,7 @@ public class AirportListScene extends BaseScene {
             updateAirportInfo(airport);
             Stage stage = (Stage) promptWindow.getScene().getWindow();
             stage.close();
+            app.logOperation("updated name/code of an Airport" + " -> " +  selectedAirport.getAirportName() + "/" + selectedAirport.getAirportCode());
             app.showNotification("Airport Update", "Airport " + selectedAirport.getAirportName() + " has been updated.");
         });
 

@@ -116,6 +116,7 @@ public class MenuScene extends BaseScene {
 
       boolean isAuthenticated = authenticateUser(username, password);
       if (isAuthenticated) {
+        app.logOperation("logged into system.");
         app.displayAirportListScene();
         loginStage.close();
       } else {

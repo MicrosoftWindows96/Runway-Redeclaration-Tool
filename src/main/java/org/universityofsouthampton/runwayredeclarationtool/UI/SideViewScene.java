@@ -103,10 +103,11 @@ public class SideViewScene extends BaseScene {
 
         VBox distanceInfoBox = new VBox();
 
+        distanceInfoBox.setAlignment(Pos.TOP_CENTER);
+        distanceInfoBox.setPadding(new Insets(5));
+        distanceInfoBox.setSpacing(1);
+
         if (obstacles.isEmpty()) {
-            distanceInfoBox.setAlignment(Pos.TOP_CENTER);
-            distanceInfoBox.setPadding(new Insets(5));
-            distanceInfoBox.setSpacing(1);
 
             Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m");
             toraLabel.setStyle("-fx-background-color: #FFC0CB;");
@@ -122,9 +123,7 @@ public class SideViewScene extends BaseScene {
 
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
         } else {
-            distanceInfoBox.setAlignment(Pos.TOP_CENTER);
-            distanceInfoBox.setPadding(new Insets(5));
-            distanceInfoBox.setSpacing(1);
+
 
             Label toraLabel = new Label("TORA: " + currentRunway.getTORA() + "m  |  " + currentRunway.getNewTORA() + "m");
             toraLabel.setStyle("-fx-background-color: #FFC0CB;");
@@ -199,7 +198,8 @@ public class SideViewScene extends BaseScene {
         });
 
 
-        rightButtons.getChildren().addAll(button1, button2, button3,button4,exportButton);
+        rightButtons.getChildren().addAll(button1, button2, button3,button4);
+        distanceInfoBox.getChildren().add(exportButton);
 
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);

@@ -1,14 +1,18 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -16,13 +20,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
 import org.universityofsouthampton.runwayredeclarationtool.airport.ParallelRunways;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
+import org.universityofsouthampton.runwayredeclarationtool.utility.ExportImagePDF;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +101,45 @@ public class BothViewScene extends BaseScene {
 
             distanceInfoBox.getChildren().addAll(toraLabel, todaLabel, asdaLabel, ldaLabel);
         }
+
+        Button exportButton = new Button("Export to PDF");
+        exportButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save PDF");
+            // Set extension filter
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+            fileChooser.getExtensionFilters().add(extFilter);
+            // Show save file dialog
+            File file = fileChooser.showSaveDialog(null); // Replace 'null' with a reference to your `Stage` if necessary
+            if (file != null) {
+                try {
+                    // Convert the scene or specific Pane (e.g., borderPane) to a BufferedImage
+                    WritableImage writableImage = borderPane.snapshot(new SnapshotParameters(), null);
+                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
+
+                    // Save or process the image as PDF at the chosen path
+                    ExportImagePDF.writeImageToPDF(bufferedImage, file.getAbsolutePath());
+
+                    // Show success message
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Export Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("PDF exported successfully to " + file.getAbsolutePath());
+                    alert.showAndWait();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+
+                    // Show error message
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Export Failed");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to export PDF: " + ex.getMessage());
+                    alert.showAndWait();
+                }
+            }
+        });
+
+        distanceInfoBox.getChildren().add(exportButton);
 
         VBox topLayout = new VBox();
         topLayout.setAlignment(Pos.TOP_CENTER);

@@ -257,6 +257,13 @@ public class TopDownScene extends BaseScene {
         this.ASDA = (double) currentRunway.getASDA() / 6;
         this.LDA = (double) currentRunway.getLDA() / 6;
 
+        double clearedAndGradedWidth = 150 / 6; // 75m on each side of the runway centerline
+        double clearedAndGradedLength = runwayLength + 120 / 6; // 60m beyond each end of the runway
+
+        gc.setFill(Color.LIGHTGRAY);
+        gc.fillRect(runwayStartX - clearedAndGradedWidth, centerLineY - 20 - clearedAndGradedWidth,
+                clearedAndGradedLength + 2 * clearedAndGradedWidth, 2 * clearedAndGradedWidth + 40);
+
         gc.setFill(Color.GRAY);
         gc.fillRect(runwayStartX, centerLineY - 20, runwayLength, 40);
 

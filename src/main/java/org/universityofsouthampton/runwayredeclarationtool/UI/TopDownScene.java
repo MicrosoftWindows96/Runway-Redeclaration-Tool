@@ -72,7 +72,7 @@ public class TopDownScene extends BaseScene {
 
         cloudLayer.setPrefSize(800, 50);
         createPattern();
-        animatePattern();
+        animatePattern(); // Animate the cloud pattern
 
 
         Text title = new Text("Aerial View");

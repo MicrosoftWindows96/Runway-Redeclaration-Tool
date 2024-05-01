@@ -130,6 +130,8 @@ public class MainApplication extends Application {
     }
 
     public void displayRunwayConfigScene(Airport airport,  ParallelRunways runwaySet) {
+        this.airport = airport;
+        this.runwaySet = runwaySet;
         RunwayConfigViewScene runwayConfigScene = new RunwayConfigViewScene(this,airport, runwaySet);
         root.getChildren().setAll(background, runwayConfigScene);
         this.currentReturnScene = "displayRunwayConfig";

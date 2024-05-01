@@ -72,7 +72,7 @@ public class TopDownScene extends BaseScene {
 
         cloudLayer.setPrefSize(800, 50);
         createPattern();
-        animatePattern(); // Animate the cloud pattern
+        animatePattern();
 
 
         Text title = new Text("Aerial View");
@@ -285,7 +285,7 @@ public class TopDownScene extends BaseScene {
         // e. Draw Stopway/Clearway
         gc.setFill(Color.DARKBLUE);
         gc.fillRect(runwayStartX - stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway left
-        gc.fillRect(runwayStartX + stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway right
+        gc.fillRect(runwayStartX + runwayLength, runwayStartY, stopwayWidth, runwayHeight); // Stopway right
 
         gc.setFill(Color.LIGHTBLUE);
         gc.fillRect(runwayStartX - stopwayWidth - clearwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway left
@@ -455,8 +455,17 @@ public class TopDownScene extends BaseScene {
         double centerY = runwayCanvas.getHeight() / 2;
         gc.translate(centerX, centerY);
 
-        // Rotate the canvas by the desired angle if not rotated, or reset if rotated
-        double rotationAngle = isRotated ? 0 : bearing - 90; // Adjust the angle based on your requirements
+        // Calculate the rotation angle based on the runway heading and the desired orientation
+        double runwayHeading = bearing; // The runway heading in degrees
+        double rotationAngle;
+        if (isRotated) {
+            // Reset the rotation
+            rotationAngle = 0;
+        } else {
+            // Rotate the runway to align with the compass bearing
+            rotationAngle = 90 - runwayHeading;
+        }
+
         gc.rotate(Math.toRadians(rotationAngle));
 
         // Translate back to the original position

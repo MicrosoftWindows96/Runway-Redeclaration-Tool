@@ -14,13 +14,6 @@ public class Airport {
         this.code = code;
     }
 
-    public void addRunway (Runway runway){
-        this.runways.add(runway);
-    }
-    public void removeRunway (Runway deleteRunway) {
-        runways.remove(deleteRunway);
-    }
-
     public void addNewRunway (Runway runway1, Runway runway2) { // Logic for adding runway to parallel runways
         if (parallelRunwaySets.size() == 0) {
             makeNewParallelRunwaySet(runway1,runway2);
@@ -50,9 +43,6 @@ public class Airport {
     public String getAirportCode() { return this.code; }
     public void setAirportCode(String code){
         this.code = code;
-    }
-    public ArrayList<Runway> getRunways(){
-        return this.runways;
     }
     public ArrayList<ParallelRunways> getParallelRunwaySets() {
         return this.parallelRunwaySets;

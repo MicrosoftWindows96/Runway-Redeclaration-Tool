@@ -1,0 +1,2 @@
+anthony,password1,viewer
+tricia,password2,editor

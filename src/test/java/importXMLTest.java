@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class importXMLTest {
     ArrayList<Airport> airports; // Imported airports
     ArrayList<Obstacle> obstacles; // Imported obstacles
-    String OLD_AIRPORTS_XML_PATH = "src/main/resources/XML/testAirports.xml"; // airport file to import from to compare
-    String OLD_OBSTACLES_XML_PATH = "src/main/resources/XML/testObstacles.xml"; // obstacle file to import from to compare
+    String OLD_AIRPORTS_XML_PATH = "src/main/resources/test/XML/testAirports.xml"; // airport file to import from to compare
+    String OLD_OBSTACLES_XML_PATH = "src/main/resources/test/XML/testObstacles.xml"; // obstacle file to import from to compare
 
     @BeforeEach
     void setUp() {

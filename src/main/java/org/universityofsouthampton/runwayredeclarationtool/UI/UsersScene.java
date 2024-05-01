@@ -112,7 +112,7 @@ public class UsersScene extends BaseScene {
         accountManager.getAccounts().remove(account);
       }
       updateList();
-      accountManager.saveAccountsToFile();
+      accountManager.saveAccountsToFile("src/main/resources/accounts.txt");
     });
 
     accountBox.getChildren().addAll(accountInfo, editButton, deleteButton);
@@ -159,7 +159,7 @@ public class UsersScene extends BaseScene {
         showAlert("Please select a role.");
       } else {
         accountManager.getAccounts().add(new Account(username, password, roleCheckBoxes.getSelectedRole()));
-        app.getAccountManager().saveAccountsToFile();
+        app.getAccountManager().saveAccountsToFile("src/main/resources/accounts.txt");
         updateList();
         app.logOperation("created a new account [" + username + "/" + roleCheckBoxes.getSelectedRole() + "] added to the system.");
         registrationStage.close();
@@ -196,7 +196,7 @@ public class UsersScene extends BaseScene {
         showAlert("Please select a role.");
       } else {
         account.setRole(roleCheckBoxes.getSelectedRole());
-        app.getAccountManager().saveAccountsToFile();
+        app.getAccountManager().saveAccountsToFile("src/main/resources/accounts.txt");
         updateList();
         if (!roleCheckBoxes.getSelectedRole().equals(oldRole)) {
           app.logOperation("edited account role of " + account.getUsername() + " " + oldRole + " -> " + roleCheckBoxes.getSelectedRole());

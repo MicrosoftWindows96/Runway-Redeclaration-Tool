@@ -128,7 +128,7 @@ public class AnimatedPatternBackground extends Pane {
                 5, javafx.scene.paint.Color.GRAY);
         smoke.setOpacity(0.3);
 
-        planeLayer.getChildren().addFirst(smoke);
+        planeLayer.getChildren().add(smoke);
 
         smokeTrail.add(smoke);
 

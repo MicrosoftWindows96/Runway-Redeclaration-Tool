@@ -21,10 +21,8 @@ public class AccountManager {
     accounts = new ArrayList<>();
   }
 
-  public void loadAccountsFromFile() {
+  public void loadAccountsFromFile(String filePath) {
     // Specify the file path relative to the project's root directory
-
-    String filePath = "src/main/resources/accounts.txt";
 
     // Create the accounts file
     File accountsFile = new File(filePath);
@@ -58,10 +56,7 @@ public class AccountManager {
 
   }
 
-  public void saveAccountsToFile() {
-    // Specify the file path relative to the project's root directory
-    String filePath = "src/main/resources/accounts.txt";
-
+  public void saveAccountsToFile(String filePath) {
     // Create the accounts file
     File accountsFile = new File(filePath);
 

@@ -76,7 +76,7 @@ public class SideViewScene extends BaseScene {
         this.obstacles = currentRunway.getObstacles();
         this.RESA = (double) 240 /6;
         if (!obstacles.isEmpty()) {
-            this.obstacle = obstacles.getFirst();
+            this.obstacle = obstacles.get(0);
         }
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(800.0, 600.0);
@@ -393,7 +393,7 @@ public class SideViewScene extends BaseScene {
 
     private void setObstacles() {
         if (obstacles != null && !obstacles.isEmpty()) {
-            Obstacle currentObstacle = obstacles.getFirst();
+            Obstacle currentObstacle = obstacles.get(0);
         }
     }
 

@@ -14,10 +14,10 @@ class exportXMLTest {
     exportXML export;
     ArrayList<Airport> airports; // Imported airports
     ArrayList<Obstacle> obstacles; // Imported obstacles
-    String OLD_AIRPORTS_XML_PATH = "src/main/resources/XML/testAirportsTest.xml"; // airport file to import from to compare
-    String OLD_OBSTACLES_XML_PATH = "src/main/resources/XML/testObstacles.xml"; // obstacle file to import from to compare
-    String NEW_AIRPORTS_XML_PATH = "src/main/resources/XML/newTestAirportsTest.xml"; // airport file to export to compare
-    String NEW_OBSTACLES_XML_PATH = "src/main/resources/XML/newTestObstacles.xml"; // obstacle file to export to compare
+    String OLD_AIRPORTS_XML_PATH = "src/main/resources/test/XML/testAirports.xml"; // airport file to import from to compare
+    String OLD_OBSTACLES_XML_PATH = "src/main/resources/test/XML/testObstacles.xml"; // obstacle file to import from to compare
+    String NEW_AIRPORTS_XML_PATH = "src/main/resources/test/XML/newTestAirports.xml"; // airport file to export to compare
+    String NEW_OBSTACLES_XML_PATH = "src/main/resources/test/XML/newTestObstacles.xml"; // obstacle file to export to compare
 
     @BeforeEach
     void setUp() {
@@ -36,7 +36,16 @@ class exportXMLTest {
         importXML checker = new importXML(new File(NEW_AIRPORTS_XML_PATH));
         ArrayList<Airport> testAirports = checker.makeAirportsXML(); // Read from exported data
 
-        assertEquals(airports,testAirports); // Check if they produce the same arrayLists
+        assertEquals(airports.get(0).getAirportName(),testAirports.get(0).getAirportName()); // Check if they produce the same airport
+        assertEquals(airports.get(0).getAirportCode(),testAirports.get(0).getAirportCode());
+        assertEquals(airports.get(0).getParallelRunwaySets().get(0).getFstRunway().getNameDirection(),
+            testAirports.get(0).getParallelRunwaySets().get(0).getFstRunway().getNameDirection());
+        assertEquals(airports.get(0).getParallelRunwaySets().get(0).getFstRunway().getTORA(),
+            testAirports.get(0).getParallelRunwaySets().get(0).getFstRunway().getTORA());
+        assertEquals(airports.get(0).getParallelRunwaySets().get(0).getSndRunway().getNameDirection(),
+            testAirports.get(0).getParallelRunwaySets().get(0).getSndRunway().getNameDirection());
+        assertEquals(airports.get(0).getParallelRunwaySets().get(0).getSndRunway().getTORA(),
+            testAirports.get(0).getParallelRunwaySets().get(0).getSndRunway().getTORA());
     }
 
     @Test

@@ -1,10 +1,9 @@
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Airport;
 import org.universityofsouthampton.runwayredeclarationtool.airport.Runway;
-import org.universityofsouthampton.runwayredeclarationtool.airport.Obstacle;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class AirportTest {
 

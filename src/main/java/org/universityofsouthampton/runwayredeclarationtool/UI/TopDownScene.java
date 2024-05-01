@@ -60,7 +60,7 @@ public class TopDownScene extends BaseScene {
         this.obstacles = currentRunway.getObstacles();
         this.RESA = (double) 240 /6;
         if (!obstacles.isEmpty()) {
-            this.obstacle = obstacles.getFirst();
+            this.obstacle = obstacles.get(0);
         }
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(800.0,600.0);
@@ -300,7 +300,7 @@ public class TopDownScene extends BaseScene {
         }
 
         if (!obstacles.isEmpty()) {
-            Obstacle obstacle = obstacles.getFirst();
+            Obstacle obstacle = obstacles.get(0);
             double fromCentreline = (double) obstacle.getDistanceFromCentreline() / 6;
             double obstacleX = runwayStartX + ((double) obstacle.getDistanceFromThreshold() / 6);
             double obstacleHeight = obstacle.getHeight();

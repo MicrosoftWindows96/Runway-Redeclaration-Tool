@@ -40,7 +40,7 @@ import org.universityofsouthampton.runwayredeclarationtool.utility.importXML;
 public class MainApplication extends Application {
 
     private static final String AIRPORTS_XML_PATH = "src/main/resources/XML/newAirports.xml";
-    private static final String OBSTACLES_XML_PATH = "src/main/resources/XML/testObstacles.xml";
+    private static final String OBSTACLES_XML_PATH = "src/main/resources/XML/newObstacles.xml";
     private StackPane root; // The root node to hold the scenes
     private static AnimatedPatternBackground background;
     private ArrayList<Airport> airports; // Imported airports
@@ -63,7 +63,7 @@ public class MainApplication extends Application {
         root.getChildren().add(background);
 
         accountManager = new AccountManager();
-        accountManager.loadAccountsFromFile();
+        accountManager.loadAccountsFromFile("src/main/resources/accounts.txt"); // Specify the file path relative to the project's root directory
         accountLogger = new AccountLogger();
 
         initialiseAirports();

@@ -4,7 +4,7 @@ public class Start {
 
   public static void main(String[] args) {
 
-    MainApplication.main(null);
+    MainApplication.main(null); // Run the main application class MainApplication.java
   }
 
 }

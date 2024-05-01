@@ -209,7 +209,7 @@ public class MainApplication extends Application {
         secondaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo.jpg"))));
 
         secondaryStage.show();
-
+        this.currentReturnScene = "ViewSelection";
     }
 
     public void display2DsideViewScene(ParallelRunways runwayManager) {
@@ -222,7 +222,7 @@ public class MainApplication extends Application {
         Scene sideViewSceneScene = new Scene(sideViewScene, 800, 600);
         secondaryStage.setScene(sideViewSceneScene);
         secondaryStage.show();
-
+        this.currentReturnScene = "SideViewSelection";
     }
 
 
@@ -238,7 +238,7 @@ public class MainApplication extends Application {
         Scene topDownSceneScene = new Scene(topDownScene, 800, 600);
         secondaryStage.setScene(topDownSceneScene);
         secondaryStage.show();
-
+        this.currentReturnScene = "TopDownSelection";
     }
 
     public void display2DbothViewScene(ParallelRunways runwayManager) {
@@ -296,6 +296,10 @@ public class MainApplication extends Application {
             case "displayUsers":
                 displayUsersScene();
                 // Handle the case when the current return scene is for displaying users list
+                break;
+            case "ViewSelection":
+                displayViewsSceneBeta(this.runwayManager);
+                // Handle the case when the current return scene is for view selection
                 break;
             case "Menu":
                 displayMenu();

@@ -59,6 +59,7 @@ public class MenuScene extends BaseScene {
     buttons.getChildren().addAll(addButtons());
 
 
+
     // Add nodes
     this.getChildren().addAll(title, buttons,helpBox);
   }

@@ -212,6 +212,7 @@ public class MainApplication extends Application {
 
     }
 
+
     public void display2DsideViewScene(ParallelRunways runwayManager) {
         if (secondaryStage == null) {
             secondaryStage = new Stage();
@@ -279,7 +280,7 @@ public class MainApplication extends Application {
         root.getChildren().setAll(background, helpGuideScene);
 
     }
-
+//comment
     public void returnFromHelpScene(){
         switch (currentReturnScene) {
             case "displayObstacleList":

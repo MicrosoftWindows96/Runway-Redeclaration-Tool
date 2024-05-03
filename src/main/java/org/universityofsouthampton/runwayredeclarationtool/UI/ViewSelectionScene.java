@@ -52,8 +52,7 @@ public class ViewSelectionScene extends BaseScene {
 
         borderPane.setTop(topLayout);
 
-
-        this.getChildren().add(borderPane);
+        this.getChildren().addAll(borderPane);
     }
 
     private Stage secondaryStage;

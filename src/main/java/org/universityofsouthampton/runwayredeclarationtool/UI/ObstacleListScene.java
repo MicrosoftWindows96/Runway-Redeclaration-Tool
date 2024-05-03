@@ -80,6 +80,7 @@ public class ObstacleListScene extends BaseScene {
         this.getChildren().addAll(title,title2,this.currentObstacleScroll,title3,this.otherObstaclesScroll,buttonBox,helpBox);
     }
 
+
     @Override
     ArrayList<Button> addButtons() {
         Button addButton = new Button();

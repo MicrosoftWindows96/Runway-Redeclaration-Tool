@@ -34,6 +34,7 @@ public class HelpGuideScene extends BaseScene {
         this.getChildren().addAll(title,buttons);
 
     }
+    //help buttons
 
     @Override
     ArrayList<Button> addButtons() {

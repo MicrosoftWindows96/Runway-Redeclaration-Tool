@@ -85,6 +85,7 @@ public class RunwayConfigViewScene extends BaseScene {
     });
 
 
+    //help buttons
     VBox helpBox = new VBox(10);
     helpBox.setAlignment(Pos.TOP_RIGHT);
     Button helpButton = new Button();

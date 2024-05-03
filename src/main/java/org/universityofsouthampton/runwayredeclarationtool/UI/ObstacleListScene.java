@@ -41,6 +41,8 @@ public class ObstacleListScene extends BaseScene {
         setPadding(new Insets(20));
         setSpacing(10);
 
+
+        //help buttons
         VBox helpBox = new VBox(10);
         helpBox.setAlignment(Pos.TOP_RIGHT);
         Button helpButton = new Button();

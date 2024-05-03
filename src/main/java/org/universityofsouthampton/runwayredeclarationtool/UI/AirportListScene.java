@@ -43,7 +43,7 @@ public class AirportListScene extends BaseScene {
         title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         title.setStroke(Color.WHITE);
 
-
+        //helpbutton
         VBox helpBox = new VBox(10);
         helpBox.setAlignment(Pos.TOP_RIGHT);
         Button helpButton = new Button();
@@ -53,8 +53,6 @@ public class AirportListScene extends BaseScene {
         helpButton.setLayoutY(20);
         helpButton.setPrefWidth(5);
         helpBox.getChildren().add(helpButton);
-
-
 
         // Initialise the screen contents and airportScroll
         BorderPane mainPane = new BorderPane();

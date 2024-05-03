@@ -34,6 +34,7 @@ public class ViewSelectionScene extends BaseScene {
             borderPane.setBackground(Background.fill(Color.rgb(201,233,246)));
         }
 
+        //help buttons
 
         Text title = new Text("Visualisations");
         title.setFont(Font.font("Arial", 24));

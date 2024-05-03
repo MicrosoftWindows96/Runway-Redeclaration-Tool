@@ -39,6 +39,7 @@ public class MenuScene extends BaseScene {
     title.setStroke(Color.WHITE);
     VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
+    //help buttons
     VBox helpBox = new VBox(10);
     helpBox.setAlignment(Pos.TOP_RIGHT);
     Button helpButton = new Button();

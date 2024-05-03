@@ -20,27 +20,27 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>22-ea+16</version>
+            <version>22</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>22-ea+16</version>
+            <version>22</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>22-ea+16</version>
+            <version>22</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
-            <version>22-ea+16</version>
+            <version>22</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
-            <version>22-ea+16</version>
+            <version>22</version>
         </dependency>
         <dependency>
             <groupId>org.controlsfx</groupId>
@@ -62,36 +62,26 @@
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-core</artifactId>
             <version>12.3.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/stupid/ikonli-core-12.3.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-javafx</artifactId>
             <version>12.3.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/stupid/ikonli-javafx-12.3.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-fontawesome-pack</artifactId>
             <version>12.3.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/stupid/ikonli-fontawesome-pack-12.3.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-materialdesign-pack</artifactId>
             <version>12.3.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/stupid/ikonli-materialdesign-pack-12.3.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-fontawesome5-pack</artifactId>
             <version>12.3.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/stupid/ikonli-fontawesome5-pack-12.3.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.synedra</groupId>
@@ -161,15 +151,45 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>22-ea+16</version>
+            <version>22</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>22</version>
         </dependency>
 
         <!-- Core iText module -->
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/itext7-core -->
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/itext7-core -->
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itext7-core</artifactId>
-            <version>7.1.16</version>
+            <version>8.0.4</version>
             <type>pom</type>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/io -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>io</artifactId>
+            <version>7.1.6</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/layout -->
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/kernel -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>kernel</artifactId>
+            <version>7.1.6</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/layout -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>layout</artifactId>
+            <version>7.1.6</version>
         </dependency>
 
         <dependency>
@@ -186,7 +206,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -227,6 +247,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
+                    <executable>java</executable>
                     <mainClass>org.universityofsouthampton.runwayredeclarationtool.Start</mainClass>
                 </configuration>
             </plugin>

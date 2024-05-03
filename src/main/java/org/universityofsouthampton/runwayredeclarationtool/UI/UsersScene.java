@@ -1,15 +1,9 @@
 package org.universityofsouthampton.runwayredeclarationtool.UI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,7 +17,11 @@ import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.users.Account;
 import org.universityofsouthampton.runwayredeclarationtool.users.AccountManager;
 
-public class UsersScene extends BaseScene {
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class
+UsersScene extends BaseScene {
 
   private final AccountManager accountManager; // This class needs the accountManager to modify accounts
   private final ScrollPane userScroll = new ScrollPane(); // Scroll to hold user data

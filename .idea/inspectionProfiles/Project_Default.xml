@@ -1,0 +1,41 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="VulnerableLibrariesLocal" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="isIgnoringEnabled" value="true" />
+      <option name="ignoredModules">
+        <list>
+          <option value="RunwayRedeclarationTool" />
+          <option value="All libs from Runway-Redeclaration-Tool-SEGP-Group-45" />
+          <option value="All libs from Runway-Redeclaration-Tool-SEGP-Group-45" />
+          <option value="All libs from Runway-Redeclaration-Tool-SEGP-Group-45" />
+          <option value="RunwayRedeclarationTool" />
+          <option value="All libs from Runway-Redeclaration-Tool-SEGP-Group-45" />
+          <option value="All libs from Runway-Redeclaration-Tool-SEGP-Group-45" />
+        </list>
+      </option>
+      <option name="ignoredPackages">
+        <list>
+          <option value="org.apache.pdfbox:pdfbox:2.0.4" />
+          <option value="org.bouncycastle:bcprov-jdk15on:1.68" />
+          <option value="org.apache.pdfbox:pdfbox:2.0.4" />
+          <option value="com.itextpdf:io:7.1.16" />
+          <option value="com.itextpdf:itext7-core:7.1.16" />
+          <option value="org.apache.pdfbox:fontbox:2.0.4" />
+          <option value="com.itextpdf:kernel:7.1.16" />
+        </list>
+      </option>
+      <option name="ignoredReasons">
+        <list>
+          <option value="In progress" />
+          <option value="In progress" />
+          <option value="In progress" />
+          <option value="In progress" />
+          <option value="In progress" />
+          <option value="In progress" />
+          <option value="In progress" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

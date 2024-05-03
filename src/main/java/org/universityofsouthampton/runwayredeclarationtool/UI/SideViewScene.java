@@ -403,7 +403,7 @@ public class SideViewScene extends BaseScene {
         if (MainApplication.isDarkMode()) {
             skyColor = Color.rgb(18, 18, 18);
         } else {
-            skyColor = Color.rgb(201,233,246);
+            skyColor = Color.rgb(201, 233, 246);
         }
         gc.setFill(skyColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -434,11 +434,10 @@ public class SideViewScene extends BaseScene {
         gc.fillRect(runwayStartX, runwayStartY, thresholdWidth, runwayHeight);
         gc.fillRect(runwayStartX + runwayWidth - thresholdWidth, runwayStartY, thresholdWidth, runwayHeight);
 
-
         // e. Draw Stopway/Clearway
         gc.setFill(Color.DARKBLUE);
         gc.fillRect(runwayStartX - stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway left
-        gc.fillRect(runwayStartX + stopwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway right
+        gc.fillRect(runwayStartX + runwayWidth, runwayStartY, stopwayWidth, runwayHeight); // Stopway right
 
         gc.setFill(Color.LIGHTBLUE);
         gc.fillRect(runwayStartX - stopwayWidth - clearwayWidth, runwayStartY, clearwayWidth, runwayHeight); // Clearway left
@@ -469,11 +468,11 @@ public class SideViewScene extends BaseScene {
             this.ASDA = (double) currentRunway.getNewASDA() / 6;
             this.LDA = (double) currentRunway.getNewLDA() / 6;
 
-            if (obstacle.getDistanceFromThreshold() < 1000 ) {
+            if (obstacle.getDistanceFromThreshold() < 1000) {
                 // Original diagonal line points
                 double startX = obstacleX + obstacleWidth; // Top-right corner of the obstacle
                 double startY = obstacleY; // Top-right corner of the obstacle
-                double endX = obstacleX + (obstacleHeight * 50 ); // Bottom-left corner of the obstacle
+                double endX = obstacleX + (obstacleHeight * 50); // Bottom-left corner of the obstacle
                 double endY = obstacleY + obstacleHeight; // Bottom-left corner of the obstacle
 
                 double slope = (endY - startY) / (endX - startX);
@@ -489,7 +488,7 @@ public class SideViewScene extends BaseScene {
                 this.slopeDistance = endX;
 
                 gc.setFill(Color.ORANGE);
-                gc.fillRect(obstacleX + obstacleWidth , runwayStartY, this.RESA, runwayHeight);
+                gc.fillRect(obstacleX + obstacleWidth, runwayStartY, this.RESA, runwayHeight);
 
                 this.RESADistance = obstacleX + obstacleWidth + this.RESA;
 
@@ -498,15 +497,13 @@ public class SideViewScene extends BaseScene {
                 gc.setStroke(Color.YELLOW);
                 gc.strokeLine(RESADistance, runwayStartY + 30, RESADistance + this.TODA, runwayStartY + 30); // TODA line
                 gc.setStroke(Color.LIGHTGREEN);
-                gc.strokeLine(RESADistance, runwayStartY + 45, RESADistance + this.ASDA + stopwayWidth, runwayStartY + 45); // ASDA line
+                gc.strokeLine(RESADistance, runwayStartY + 45, RESADistance + this.ASDA + stopwayWidth + clearwayWidth, runwayStartY + 45); // ASDA line
                 gc.setStroke(Color.BLUE);
                 gc.strokeLine(slopeDistance, runwayStartY + 60, slopeDistance + this.LDA, runwayStartY + 60); // LDA line
 
-
-
             } else if (obstacle.getDistanceFromThreshold() >= 1000) {
                 // Original opposite diagonal line points
-                double oppositeStartX = obstacleX + obstacleWidth - (obstacleHeight * 50 );
+                double oppositeStartX = obstacleX + obstacleWidth - (obstacleHeight * 50);
                 double oppositeStartY = obstacleY + obstacleHeight;
                 double oppositeEndX = obstacleX;
                 double oppositeEndY = obstacleY;
@@ -530,24 +527,23 @@ public class SideViewScene extends BaseScene {
                 gc.fillRect(obstacleX - this.RESA, runwayStartY, this.RESA, runwayHeight);
 
                 gc.setStroke(Color.LIGHTPINK);
-                gc.strokeLine(runwayStartX, runwayStartY + 15, slopeDistance -10, runwayStartY + 15); // TORA line
+                gc.strokeLine(runwayStartX, runwayStartY + 15, slopeDistance - 10, runwayStartY + 15); // TORA line
                 gc.setStroke(Color.YELLOW);
-                gc.strokeLine(runwayStartX, runwayStartY + 30, slopeDistance-10, runwayStartY + 30); // TODA line
+                gc.strokeLine(runwayStartX, runwayStartY + 30, slopeDistance - 10, runwayStartY + 30); // TODA line
                 gc.setStroke(Color.LIGHTGREEN);
-                gc.strokeLine(runwayStartX, runwayStartY + 45, slopeDistance-10, runwayStartY + 45); // ASDA line
+                gc.strokeLine(runwayStartX, runwayStartY + 45, slopeDistance - 10, runwayStartY + 45); // ASDA line
                 gc.setStroke(Color.BLUE);
-                gc.strokeLine(runwayStartX +displacedThresholdOffset, runwayStartY + 60, runwayStartX + displacedThresholdOffset + this.LDA - ((double) (currentRunway.getRESA()+60) /6), runwayStartY + 60); // LDA line
-
+                gc.strokeLine(runwayStartX + displacedThresholdOffset, runwayStartY + 60, runwayStartX + displacedThresholdOffset + this.LDA - ((double) (currentRunway.getRESA() + 60) / 6), runwayStartY + 60); // LDA line
 
             }
 
-        }else {
+        } else {
             gc.setStroke(Color.LIGHTPINK);
             gc.strokeLine(runwayStartX, runwayStartY + 15, runwayStartX + this.TORA, runwayStartY + 15); // TORA line
             gc.setStroke(Color.YELLOW);
-            gc.strokeLine(runwayStartX, runwayStartY + 30, runwayStartX + this.TODA, runwayStartY + 30); // TODA line
+            gc.strokeLine(runwayStartX, runwayStartY + 30, runwayStartX + this.TODA + clearwayWidth, runwayStartY + 30); // TODA line
             gc.setStroke(Color.LIGHTGREEN);
-            gc.strokeLine(runwayStartX, runwayStartY + 45, runwayStartX + this.ASDA + stopwayWidth , runwayStartY + 45); // ASDA line
+            gc.strokeLine(runwayStartX, runwayStartY + 45, runwayStartX + this.ASDA + stopwayWidth + clearwayWidth, runwayStartY + 45); // ASDA line
             gc.setStroke(Color.BLUE);
             gc.strokeLine(runwayStartX + displacedThresholdOffset, runwayStartY + 60, runwayStartX + displacedThresholdOffset + this.LDA, runwayStartY + 60); // LDA line
 

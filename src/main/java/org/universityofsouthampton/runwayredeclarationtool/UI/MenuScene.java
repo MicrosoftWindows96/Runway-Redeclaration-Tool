@@ -4,18 +4,18 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.universityofsouthampton.runwayredeclarationtool.MainApplication;
 import org.universityofsouthampton.runwayredeclarationtool.users.Account;
 
-import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,34 +39,40 @@ public class MenuScene extends BaseScene {
     title.setStroke(Color.WHITE);
     VBox.setMargin(title, new Insets(10, 0, 10, 0));
 
-    //help buttons
-    VBox helpBox = new VBox(10);
-    helpBox.setAlignment(Pos.TOP_RIGHT);
+
+    HBox topButtonsBox = new HBox(10);
+    topButtonsBox.setAlignment(Pos.TOP_RIGHT);
+
     Button helpButton = new Button();
     styleDarkButton(helpButton, MaterialDesign.MDI_HELP, "");
     helpButton.setOnAction(e -> app.displayHelpGuideScene());
-    helpButton.setLayoutX(20);
-    helpButton.setLayoutY(20);
-    helpButton.setPrefWidth(5);
-    helpBox.getChildren().add(helpButton);
 
+    Button darkModeToggle = createDarkModeToggleButton();
 
-
-
+    topButtonsBox.getChildren().addAll(helpButton, darkModeToggle);
 
     // Make the screen buttons
     VBox buttons = new VBox(10);
     buttons.setAlignment(Pos.CENTER);
     buttons.getChildren().addAll(addButtons());
 
-
-
     // Add nodes
-    this.getChildren().addAll(title, buttons,helpBox);
+    this.getChildren().addAll(title, buttons, topButtonsBox);
   }
 
   private void toggleDarkMode() {
     app.toggleDarkMode();
+  }
+
+  private Button createDarkModeToggleButton() {
+    Button darkModeToggle = new Button();
+    styleDarkButton(darkModeToggle, MainApplication.isDarkMode() ? MaterialDesign.MDI_WEATHER_NIGHT : MaterialDesign.MDI_WEATHER_SUNNY, "");
+    darkModeToggle.setOnAction(e -> {
+      toggleDarkMode();
+      // Update the icon based on the current dark mode state
+      darkModeToggle.setGraphic(FontIcon.of(MainApplication.isDarkMode() ? MaterialDesign.MDI_WEATHER_NIGHT : MaterialDesign.MDI_WEATHER_SUNNY, 20));
+    });
+    return darkModeToggle;
   }
 
   @Override
